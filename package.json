@@ -1,0 +1,14 @@
+{
+    "id": "xt-seach",
+    "name": "下拉选择搜索组件",
+    "version": "1.1",
+    "description": "下拉选择搜索组件",
+    "keywords": [
+        "下拉选择搜索组件",
+        "下拉选择",
+        "搜索"
+    ],
+    "dependencies": {
+        "uni-simple-router": "^1.5.5"
+    }
+}
