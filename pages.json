@@ -35,42 +35,18 @@
 		{
 			"path" :"pages/mine/certification",
 			"style" : {}
+		},
+		{
+			"path": "pages/mine/uploadActivityInfo",
+			"style" : {}
+		}
+		,{
+			"path": "pages/mine/teamAuth",
+			"style" : {}
 		}
         ,{
-            "path" : "pages/forHelp/forHelp",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/community/community",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/register/register",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/mine/certification",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
+            "path" : "pages/mine/captainGuide",
+            "style" : {}                                                                                   
         }
     ],
 	"globalStyle": {

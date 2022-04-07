@@ -48,5 +48,26 @@ const routes = [
 		      title: '实名认证',
 		  },
 	},
+	{
+		"path": "/pages/mine/uploadActivityInfo",
+		name: 'uploadActivityInfo',
+		  meta: {
+		      title: '活动信息上传',
+		  },
+	},
+	{
+		"path": "/pages/mine/teamAuth",
+		name: 'teamAuth',
+		  meta: {
+		      title: '组团与团队认证申请',
+		  },
+	},
+	{
+		"path": "/pages/mine/captainGuide",
+		name: 'captainGuide',
+		  meta: {
+		      title: '领队认证申请',
+		  },
+	},
 ]
 export default routes;

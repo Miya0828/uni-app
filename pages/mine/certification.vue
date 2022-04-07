@@ -5,23 +5,23 @@
 			<block slot="content">实名认证</block>
 		</cu-custom>
 		<scroll-view>
-			<form @submit="onSMRegister" @reset="formReset">
+			<form @submit="onAuth" @reset="formReset">
 				<view>
 					<view class="cu-form-group margin-tb-sm">
 						<view class="title">姓名</view>
-						<input placeholder="请输入真实姓名" name="input"></input>
+						<input placeholder="请输入真实姓名" name="username"></input>
 					</view>
 					<view class="cu-form-group margin-top-sm">
 						<view class="title">区号</view>
-						<input placeholder="86" name="input"></input>
+						<input placeholder="86" disabled="true"></input>
 					</view>
 					<view class="cu-form-group margin-bottom-sm">
 						<view class="title">手机号码</view>
-						<input placeholder="请输入手机号码" name="input"></input>
+						<input placeholder="请输入手机号码" name="phone"></input>
 					</view>
 					<view class="cu-form-group margin-tb-sm">
 						<view class="title">身份证号</view>
-						<input placeholder="请输入证件号码" name="input"></input>
+						<input placeholder="请输入证件号码" name="idCardNo"></input>
 					</view>
 					<view class="cu-list menu card-menu margin-tb-sm">
 						<view class="cu-item arrow">
@@ -51,7 +51,7 @@
 			this.screenHeight = uni.getSystemInfoSync().windowHeight
 		},
 		methods: {
-			
+			onAuth(){}
 		}
 	}
 </script>
@@ -86,7 +86,7 @@
 	.btn{
 		width: 100%;
 		position: absolute;  
-		bottom: 80upx;
+		bottom: 100upx;
 		button{
 			border-radius: 38upx;
 			background: rgba(0, 134, 255, 0.1);
