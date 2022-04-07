@@ -4,9 +4,6 @@
 			<block slot="backText"></block>
 		</cu-custom>
 		<view class="text-lg padding-lr-xl text-bold text-xxl">新用户注册</view>
-	<uni-section title="密码框" subTitle="指定属性 type=password 使用密码框,右侧会显示眼睛图标" type="line" padding>
-		<uni-easyinput type="password" v-model="password" placeholder="请输入密码"></uni-easyinput>
-	</uni-section>
 		<form @submit="onSMRegister" @reset="formReset" class="margin-lr-xl">
 			<view class="padding-lr-xl">
 				<view class="cu-form-group margin-top form-item">
@@ -61,9 +58,6 @@
 				<view class="text-center text-blue margin-top">
 					<navigator url="/pages/login/login" hover-class="none">已有账号？返回登录</navigator>
 				</view>
-				<uni-section title="密码框" subTitle="指定属性 type=password 使用密码框,右侧会显示眼睛图标" type="line" padding>
-					<uni-easyinput type="password" v-model="password" placeholder="请输入密码"></uni-easyinput>
-				</uni-section>
 				<view class="cu-modal" :class="modalName=='Modal'?'show':''">
 					<view class="cu-dialog">
 						<view class="cu-bar bg-white justify-end">

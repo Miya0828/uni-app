@@ -1,5 +1,5 @@
 <template>
-	<view class="certificationPage">
+	<view class="certificationPage"  :style="{height:screenHeight+'px'}" >
 		<cu-custom bgColor="bg-white"  backColor="text-black"  :isBack="true">
 			<block slot="backText"></block>
 			<block slot="content">实名认证</block>
@@ -32,6 +32,9 @@
 						</view>
 					</view>
 				</view>
+				<view class="btn">
+					<button class="text-blue margin-lr-xl">提交</button>
+				</view>
 			</form>
 		</scroll-view>
 	</view>
@@ -41,8 +44,11 @@
 	export default {
 		data() {
 			return {
-				
+				screenHeight:0,
 			}
+		},
+		mounted(){
+			this.screenHeight = uni.getSystemInfoSync().windowHeight
 		},
 		methods: {
 			
@@ -53,6 +59,10 @@
 <style lang="less">
 .certificationPage{
 	background-color:rgba(248, 248, 248, 1);
+	position: relative;
+	uni-scroll-view {
+	    height: calc(100% - 45px);
+	}
 	.cu-list.card-menu{
 		margin-left: 0;
 		margin-right: 0;
@@ -72,6 +82,18 @@
 	}
 	.cu-form-group{
 		min-height: 57px;;
+	}
+	.btn{
+		width: 100%;
+		position: absolute;  
+		bottom: 80upx;
+		button{
+			border-radius: 38upx;
+			background: rgba(0, 134, 255, 0.1);
+		}
+		uni-button:after{
+			border: 0;
+		}
 	}
 }
 </style>

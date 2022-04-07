@@ -111,7 +111,12 @@
 import { ACCESS_TOKEN, USER_NAME, USER_INFO } from '@/common/util/constants';
 export default {
 	data() {
-		return {};
+		return {
+			screenHeight:0
+		};
+	},
+	mounted(){
+		this.screenHeight = uni.getSystemInfoSync().windowHeight
 	},
 	methods: {
 		logout() {
@@ -130,7 +135,7 @@ export default {
 	color:rgba(102, 102, 102, 1);
 	.UCenter-bg {
 		height: 340rpx;
-		padding-top: 40rpx;
+		padding-top: 88rpx;
 		overflow: hidden;
 		color: #fff;
 		font-weight: 300;
