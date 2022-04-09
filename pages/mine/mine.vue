@@ -1,5 +1,5 @@
 <template>
-	<scroll-view scroll-y class="minePage">
+	<view class="minePage">
 		<view class="UCenter-bg" @click="remove">
 			<view class="flex response margin-lr-lg  text-black">
 				<view>
@@ -104,7 +104,7 @@
 			<button class="bg-white  margin-top-lg text-bold logout" @tap="logout">退出</button>
 		</view>
 		<view class="cu-tabbar-height"></view>
-	</scroll-view>
+	</view>
 </template>
 
 <script>
@@ -121,8 +121,10 @@ export default {
 	methods: {
 		logout() {
 			uni.setStorageSync(ACCESS_TOKEN, '');
-			this.$Router.replaceAll({
-				name: 'login'
+			uni.navigateTo({
+				url: '/pages/login/login',
+				animationType: 'slide-in-left',
+				animationDuration: 200
 			});
 		}
 	}
@@ -130,29 +132,18 @@ export default {
 </script>
 
 <style lang="less">
-	page {
-		&::after {
-			content: ' ';
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-			height: 1rpx;
-			background-color: rgba(220, 220, 220, 0.5);
-			box-shadow: 0rpx -2rpx 2rpx 0rpx rgba(220, 220, 220, 0.5);
-		}
-	}
 .minePage {
-	background-color:RGBA(247, 248, 254, 1);
-	color:rgba(102, 102, 102, 1);
+	background-color:#f7f8fe;
+	color:#666666;
 	.UCenter-bg {
-		height: 340rpx;
-		padding-top: 88rpx;
+		height: 360rpx;
+		padding-top: 108rpx;
 		overflow: hidden;
 		color: #fff;
 		font-weight: 300;
 		.username{
 		  overflow-wrap: break-word;
-		  color: rgba(51, 51, 51, 1);
+		  color: #333333;
 		  font-size: 20px;
 		  text-align: left;
 		  white-space: nowrap;

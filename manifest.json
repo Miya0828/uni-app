@@ -58,12 +58,7 @@
             /* SDK配置 */
             "sdkConfigs" : {
                 "oauth" : {},
-                "maps" : {
-                    "baidu" : {
-                        "appkey_ios" : "",
-                        "appkey_android" : ""
-                    }
-                }
+                "maps" : {}
             }
         }
     },

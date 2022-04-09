@@ -1,9 +1,5 @@
 <template>
 	<view class="captainGuide">
-		<cu-custom bgColor="bg-white"  backColor="text-black"  :isBack="true">
-			<block slot="backText"></block>
-			<block slot="content">领队认证申请</block>
-		</cu-custom>
 		<view class="cu-modal show">
 			<view class="cu-dialog">
 				<view class="padding-xl">
