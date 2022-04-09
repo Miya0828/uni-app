@@ -3,17 +3,27 @@
 		{
 			"path": "pages/home/home",
 			"style": {
-				
-				"navigationBarTitleText": "当前路线",				
+				"navigationBarTitleText": "当前路线",
 				"app-plus": {
 					"titleNView": {
-						"titleSize":"20px",
+						"titleSize": "20px",
 						"buttons": [{
-							"color":"#00C435",
+							"color": "#00C435",
 							"text": "\ue656",
 							"fontSrc": "/static/font/iconfont.ttf",
 							"fontSize": "22px"
 						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/home/layer",
+			"style": {
+				"navigationBarTitleText": "图层",
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px"
 					}
 				}
 			}

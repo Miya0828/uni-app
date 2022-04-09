@@ -16,7 +16,7 @@
 					<image src="/static/home/ic_feedback@3x.png" mode="aspectFit"></image>
 					<view class="border-bottom">反馈</view>
 				</view>
-				<view class="home-container-right-top-tuceng">
+				<view class="home-container-right-top-tuceng" @click="chooseLayer">
 					<image src="/static/home/ic_layer@3x.png" mode="aspectFit"></image>
 					<view class="border-bottom">图层</view>
 				</view>
@@ -50,10 +50,18 @@
 				option: {
 					longitude: 0,
 					latitude: 0,
+					currentLayer: 0,
 				}
 			}
 		},
 		methods: {
+			chooseLayer() {
+				uni.navigateTo({
+					url: '/pages/home/layer?currentLayer=' + this.option.currentLayer,
+					animationType: 'slide-in-left',
+					animationDuration: 200
+				});
+			},
 			// 未登录去登录
 			isLogin() {
 				let token = uni.getStorageSync(ACCESS_TOKEN);
@@ -68,11 +76,14 @@
 		},
 		onLoad() {
 			this.isLogin()
-			
+			uni.$on('update', (data) => {
+				this.option.currentLayer = data.layer
+				console.log('监听到事件来自 update ，携带参数 msg 为：' + data.layer);
+			})
 		},
 		onShow() {
 			console.log('home show')
-			setTimeout(()=>{
+			setTimeout(() => {
 				uni.getLocation({
 					type: 'wgs84',
 					success: (res) => {
@@ -82,51 +93,52 @@
 						this.option.latitude = res.latitude
 					}
 				});
-			},1000)
+			}, 1000)
 		}
 	}
 </script>
 
 <script module="map" lang="renderjs">
 	let map
+	let cacheLayers = []
 	export default {
 		mounted() {
 			if (typeof window.T === 'function') {
-				this.initEcharts()
+				this.initMap()
 			} else {
 				// 动态引入较大类库避免影响页面展示
 				const script = document.createElement('script')
 				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
 				script.src = 'http://api.tianditu.gov.cn/api?v=4.0&tk=db90eeb1243c57a713f5b12fd6662871'
 
-				script.onload = this.initEcharts.bind(this)
+				script.onload = this.initMap.bind(this)
 				document.head.appendChild(script)
 			}
 		},
 		methods: {
 			update(newValue, oldValue, ownerInstance, instance) {
-				map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 18);
+				// currentLayer
+				if (newValue.currentLayer != oldValue.currentLayer) {
+					this.changeLayer(newValue.currentLayer)					
+				} else {
+					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 18);
+				}
 			},
-			initEcharts() {
+			changeLayer(layerIndex) {
+				
+				
+				var layer = ['vec', 'img', 'ter']
+				var id = layer[layerIndex] || ''
 
-				var zoom = 18;
-
-				map = new T.Map('map', {
-					center: [37.550339, 104.114129],
-					maxZoom: 18,
-					zoom: 10,
-				});
-
-				var cacheLayers = [];
 				// 移除前图层
 				for (var c = 0; c < cacheLayers.length; c++) {
 					map.removeLayer(cacheLayers[c]);
 				}
 
-
 				// 清空缓存图层
 				cacheLayers = [];
-				var id = 'img'
+
+
 				var mapType = '';
 				if (id.indexOf('vec') == 0) {
 					mapType = 'vec';
@@ -180,7 +192,7 @@
 						"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=db90eeb1243c57a713f5b12fd6662871";
 					//创建自定义图层对象
 					var mapLayer = new T.TileLayer(imageURL, {
-						minZoom: 3,
+						minZoom: 9,
 						maxZoom: layerZoom
 					});
 
@@ -197,12 +209,22 @@
 						// }
 					}
 
-					map.setMinZoom(3);
+					map.setMinZoom(9);
 					map.setMaxZoom(mapZoom);
-
 
 					return mapLayer;
 				}
+				
+			},
+			initMap() {
+				
+
+				map = new T.Map('map', {
+					center: [37.550339, 104.114129],
+					maxZoom: 18,
+					minZoom: 9,
+					zoom: 10,
+				});
 
 			}
 		}
@@ -263,26 +285,27 @@
 			.home-container-right-top-lvyou,
 			.home-container-right-top-quanlan {
 				text-align: center;
-				
-				
+
+
 				image {
 					width: 48rpx;
 					height: 48rpx;
-					
+
 				}
 
 				view {
-					
+
 					font-size: 18rpx;
 					color: #333333;
-						margin-top: -10rpx;
+					margin-top: -10rpx;
 				}
-				.border-bottom{
+
+				.border-bottom {
 					padding-bottom: 12rpx;
-					border-bottom: 2rpx solid #D8D8D8;					
+					border-bottom: 2rpx solid #D8D8D8;
 					margin-bottom: 10rpx;
 				}
-				
+
 			}
 		}
 
