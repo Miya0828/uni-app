@@ -4,7 +4,7 @@
 		<form @submit="onSMRegister" @reset="formReset" class="margin-lr-xl">
 			<view class="padding-lr-xl">
 				<view class="cu-form-group form-item">
-					<picker @change="bindPickerChange" :value="index" :range="array">
+					<picker class="angle" @change="bindPickerChange" :value="index" :range="array">
 						<view class="uni-input">{{array[index]}}</view>
 					</picker>
 					<input placeholder="请输入手机号" type="number" maxlength="11" name="phone" v-model="phoneNo"></input>
@@ -18,27 +18,42 @@
 					<input placeholder="请输入账号" name="account"></input>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input placeholder="密码为6-12位数字及字母组成" password name="password"></input>
+					<input placeholder="输入密码" password name="password"></input>
+				</view>
+				<view class="cu-form-group margin-top form-item">
+					<input ref="input1" placeholder="输入密码确认" password name="surePassword"></input>
 				</view>
 				<view class="cu-form-group margin-top form-item">
 					<input placeholder="请输入姓名" name="userName"></input>
 				</view>
-				<view class="cu-form-group margin-top form-item">
-					<input placeholder="请输入年龄" name="age"></input>
+				<view class="cu-form-group flex margin-top form-item">
+					<text class="item uni-input-placeholder">请选择出生日期</text>
+					<view class="flex birthday">
+						<picker mode="date" :value="birthday" @change="bindDateChange">
+							<view class="flex justify-end" >
+								<view class="uni-input">{{birthday==0?'':birthday}}</view>
+								<image src="/static/register/ic_date.png"></image>
+							</view>
+						</picker>
+					</view>
+					
 				</view>
 				<view class="cu-form-group margin-top form-item" >
 					<input placeholder="请选择性别" name="sex"></input>
 					<radio-group name="gender">
 						<label>
-							<radio value="男" class="form-radio" /><text>男</text>
+							<radio value="先生" class="form-radio" /><text>先生</text>
 						</label>
 						<label>
-							<radio value="女" checked="true" class="form-radio"/><text>女</text>
+							<radio value="女士" checked="true" class="form-radio"/><text>女士</text>
 						</label>
 					</radio-group>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input placeholder="请输入紧急联系人电话"  type="number" maxlength="11"  name="iosPhone"></input>
+					<input placeholder="紧急联系人"  type="number" maxlength="11"  name="iosName"></input>
+				</view>
+				<view class="cu-form-group margin-top form-item">
+					<input placeholder="紧急联系人号码"  type="number" maxlength="11"  name="iosPhone"></input>
 				</view>
 				<view class="margin-top-xl">
 					<button class="bg-blue line-blue text-white register-btn"  form-type="submit">注册</button>
@@ -84,6 +99,7 @@
 				index: 0,
 				smsCountDown: 0,
 				modalName:'',
+				birthday: 0,
 			}
 		},
 		computed: {
@@ -102,7 +118,7 @@
 			onSMSSend() {
 				let smsParams = {};
 				smsParams.mobile = this.phoneNo;
-				smsParams.smsmode = "0";
+				smsParams.smsmode = "1";
 				let checkPhone = new RegExp(/^[1]([3-9])[0-9]{9}$/);
 				if (!smsParams.mobile || smsParams.mobile.length == 0) {
 					this.$tip.toast('请输入手机号');
@@ -130,18 +146,38 @@
 					}
 				}, 1000);
 			},
+			bindDateChange(e) {
+				this.birthday = e.detail.value
+			},
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
 			onSMRegister(e){
+				console.log(this.$refs.input1)
 				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
 				//定义表单规则
 				var rule = [
 					{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
 					{name:'smsCode',checkType:'zipcode',errorMsg:'请输入6位数的验证码'},
 					{name:"account", checkType : "notnull", checkRule:"",  errorMsg:"请输入账号"},
-				    {name:"password", checkType : "reg", checkRule:/^((?=.*[a-zA-Z])(?=.*[0-9]))[a-zA-Z0-9]{6,12}$/,errorMsg:"密码格式不正确"},
+				    {name:"password", checkType : "password", checkRule:"",errorMsg:"密码格式不正确"},
+					{name:"surePassword", checkType : "notsame", checkRule:"password",errorMsg:"两次密码不一致"},
 					{name:"userName", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
-					{name:"age", checkType : "notnull", checkRule:"",  errorMsg:"年龄格式不正确"},
+					{name:"birthday", checkType : "notnull", checkRule:"",  errorMsg:"请输入出生日期"},
 				    {name:"gender", checkType : "in", checkRule:"男,女",  errorMsg:"请选择性别"},
-				    {name:"iosPhone", checkType : "phoneno", checkRule:"",  errorMsg:"请输入正确的手机号码"}
+					{name:"iosName", checkType : "notnull", checkRule:"",  errorMsg:"请输入紧急联系人"},
+				    {name:"iosPhone", checkType : "phoneno", checkRule:"",  errorMsg:"请输入正确的紧急联系人号码"}
 				];
 				//进行表单检查
 				var formData = e.detail.value;
@@ -174,8 +210,29 @@
 	}
 	.cu-form-group{
 		padding:0;
-		uni-picker {
+		position: relative;
+		uni-picker.angle {
 			flex: 0.1;
+			font-size: 32upx;
+			.uni-input::after{
+				content: "";
+				width: 0px;
+				height: 0px;
+				border-top: 12upx solid #333333;
+				border-left: 8upx solid transparent;
+				border-right: 8upx solid transparent;
+				position: absolute;
+				top: 14upx;
+				left: 62upx;
+			}
+		}
+		.birthday{
+			flex:1;
+			text-align: right;
+			uni-image{
+				width: 40upx;
+				height: 40upx;
+			}
 		}
 	}
 	.form-radio{

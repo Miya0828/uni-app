@@ -112,11 +112,7 @@ import { ACCESS_TOKEN, USER_NAME, USER_INFO } from '@/common/util/constants';
 export default {
 	data() {
 		return {
-			screenHeight:0
 		};
-	},
-	mounted(){
-		this.screenHeight = uni.getSystemInfoSync().windowHeight
 	},
 	methods: {
 		logout() {

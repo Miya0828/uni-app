@@ -89,6 +89,9 @@
 		"selectedColor": "#2684FF",
 		"borderStyle": "#FFFFFF",
 		"backgroundColor": "#FFFFFF",
+		"fontSize":"12px",
+		"spacing": "8px",
+		"iconWidth": "20px",
 		"list": [{
 				"pagePath": "pages/home/home",
 				"iconPath": "static/tabBar/ic_home.png",

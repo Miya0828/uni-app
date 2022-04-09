@@ -57,7 +57,6 @@
 	export default {
 		data() {
 			return {
-				screenHeight:0,
 				activityTypeIndex:0,
 				activityType:['徒步','登山','雪山','沙漠','攀冰','骑行','攀岩','滑翔伞','探洞','漂流','皮划艇','速降'],
 				date: this.getDate({format: true}),
@@ -70,9 +69,6 @@
 			endDate() {
 				return this.getDate('end');
 			}
-		},
-		mounted(){
-			this.screenHeight = uni.getSystemInfoSync().windowHeight;
 		},
 		methods: {
 			onUploadActivityInfo(){},

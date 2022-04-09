@@ -70,6 +70,10 @@ export default {
 					var reg = /^1[0-9]{10,10}$/;
 					if (!reg.test(data[rule[i].name])) { this.error = rule[i].errorMsg; return false; }
 				break;
+				case 'password':
+					var reg = /^(?=.*[0-9])(?=.*[a-zA-Z])([0-9a-zA-Z]){6,12}$/;
+					if (!reg.test(data[rule[i].name])) { this.error = rule[i].errorMsg; return false; }
+				break;
 				case 'zipcode':
 					var reg = /^[0-9]{6}$/;
 					if (!reg.test(data[rule[i].name])) { this.error = rule[i].errorMsg; return false; }
