@@ -2,7 +2,7 @@ let BASE_URL = ''
 
 
 if (process.env.NODE_ENV == 'development') {
-    BASE_URL = 'http://127.0.0.1:8080' // 开发环境
+    BASE_URL = 'http://119.23.214.166:8080/tour-pal' // 开发环境
 } else {
 	BASE_URL = 'http://:8080' // 生产环境
 }

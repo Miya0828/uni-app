@@ -60,7 +60,8 @@
 		ACCESS_TOKEN,
 		USER_NAME,
 		USER_INFO
-	} from "@/common/util/constants"
+	} from "@/common/util/constants";
+	import { loginService } from "@/api/index.js";
 	export default {
 		data() {
 			return {
@@ -112,7 +113,7 @@
 			onSMSSend() {
 				let smsParams = {};
 				smsParams.mobile = this.phoneNo;
-				smsParams.smsmode = "0";
+				smsParams.smsmode = "1";
 				let checkPhone = new RegExp(/^[1]([3-9])[0-9]{9}$/);
 				if (!smsParams.mobile || smsParams.mobile.length == 0) {
 					this.$tip.toast('请输入手机号');
@@ -122,7 +123,7 @@
 					this.$tip.toast('请输入正确的手机号');
 					return false;
 				}
-				this.$http.post("/sys/sms", smsParams).then(res => {
+				loginService.sendCaptcha(smsParams,true).then(res => {
 					if (res.data.success) {
 						this.smsCountDown = 60;
 						this.startSMSTimer();
