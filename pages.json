@@ -3,10 +3,11 @@
 		{
 			"path": "pages/home/home",
 			"style": {
-				"navigationBarTitleText": "当前路径",
-				"navigationStyle": "default",
+				
+				"navigationBarTitleText": "当前路线",				
 				"app-plus": {
 					"titleNView": {
+						"titleSize":"20px",
 						"buttons": [{
 							"color":"#00C435",
 							"text": "\ue656",
@@ -54,10 +55,9 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		"navigationStyle": "custom"
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
 	},
 	"tabBar": {
 		"color": "#333333",
