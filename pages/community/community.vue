@@ -94,7 +94,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+	page {
+		&::after {
+			content: ' ';
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			height: 1rpx;
+			background-color: rgba(220, 220, 220, 0.5);
+			box-shadow: 0rpx -2rpx 2rpx 0rpx rgba(220, 220, 220, 0.5);
+		}
+	}
 .cover-image {
 		position: absolute;
 		left: 0;

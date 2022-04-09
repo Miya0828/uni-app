@@ -1,12 +1,21 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-		    "path" : "pages/home/home",
-		    "style" : {}                                                                                   
-		},
-		{
-		    "path" : "pages/index/index",
-		    "style" : {}                                                                                   
+			"path": "pages/home/home",
+			"style": {
+				"navigationBarTitleText": "当前路径",
+				"navigationStyle": "default",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"color":"#00C435",
+							"text": "\ue656",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "22px"
+						}]
+					}
+				}
+			}
 		},
 		{
 			"path": "pages/login/login",
@@ -15,40 +24,34 @@
 		{
 			"path": "pages/register/register",
 			"style": {}
-		}
-        ,{
-            "path" : "pages/home/home",
-            "style" : {}                                                                                   
-        }
-        ,{
-            "path" : "pages/forHelp/forHelp",
-            "style" : {}                                                                                   
-        }
-		,{
-		    "path" : "pages/forHelp/chat",
-		    "style" : {}                                                                                   
-		}
-        ,{
-            "path" : "pages/mine/mine",
-            "style" : {}
-        },
+		}, {
+			"path": "pages/community/community",
+			"style": {}
+		}, {
+			"path": "pages/forHelp/forHelp",
+			"style": {}
+		}, {
+			"path": "pages/forHelp/chat",
+			"style": {}
+		}, {
+			"path": "pages/mine/mine",
+			"style": {}
+		},
 		{
-			"path" :"pages/mine/certification",
-			"style" : {}
+			"path": "pages/mine/certification",
+			"style": {}
 		},
 		{
 			"path": "pages/mine/uploadActivityInfo",
-			"style" : {}
-		}
-		,{
+			"style": {}
+		}, {
 			"path": "pages/mine/teamAuth",
-			"style" : {}
+			"style": {}
+		}, {
+			"path": "pages/mine/captainGuide",
+			"style": {}
 		}
-        ,{
-            "path" : "pages/mine/captainGuide",
-            "style" : {}                                                                                   
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -56,13 +59,34 @@
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom"
 	},
-	"usingComponts": true,
-	"condition": { //模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
+	"tabBar": {
+		"color": "#333333",
+		"selectedColor": "#2684FF",
+		"borderStyle": "#FFFFFF",
+		"backgroundColor": "#FFFFFF",
 		"list": [{
-			"name": "表单", //模式名称
-			"path": "pages/index/index", //启动页面
-			"query": "" //启动参数
-		}]
+				"pagePath": "pages/home/home",
+				"iconPath": "static/tabBar/ic_home.png",
+				"selectedIconPath": "static/tabBar/ic_clickhome.png",
+				"text": "首页"
+			}, {
+				"pagePath": "pages/forHelp/forHelp",
+				"iconPath": "static/tabBar/ic_help.png",
+				"selectedIconPath": "static/tabBar/ic_clickhelp.png",
+				"text": "求助"
+			},
+			{
+				"pagePath": "pages/community/community",
+				"iconPath": "static/tabBar/ic_community.png",
+				"selectedIconPath": "static/tabBar/ic_clickcommunity.png",
+				"text": "社区"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"iconPath": "static/tabBar/ic_mine.png",
+				"selectedIconPath": "static/tabBar/ic_clickmine.png",
+				"text": "我的"
+			}
+		]
 	}
 }

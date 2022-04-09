@@ -74,6 +74,21 @@
 				screenHeight:0
 			};
 		},
+		onBackPress() {  
+		   uni.showModal({
+		     title: '提示',  
+		     content: '是否退出驴友通？',  
+		     success: function(res) {  
+		         if (res.confirm) {  
+		             // 退出当前应用，改方法只在App中生效  
+		             plus.runtime.quit();  
+		         } else if (res.cancel) {  
+		             console.log('用户点击取消');  
+		         }  
+		     }  
+		   });  
+		   return true  
+		},
 		computed: {
 			isSendSMSEnable() {
 				return this.smsCountDown <= 0 && this.phoneNo.length > 4;

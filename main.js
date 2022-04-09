@@ -1,7 +1,7 @@
 import App from './App';
 import tip from'./common/util/tip.js';
-import router from './common/router'
-import {RouterMount} from './plugin/uni-simple-router/index.js'
+// import router from './common/router'
+// import {RouterMount} from './plugin/uni-simple-router/index.js'
 
 
 // #ifndef VUE3

@@ -130,6 +130,17 @@ export default {
 </script>
 
 <style lang="less">
+	page {
+		&::after {
+			content: ' ';
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			height: 1rpx;
+			background-color: rgba(220, 220, 220, 0.5);
+			box-shadow: 0rpx -2rpx 2rpx 0rpx rgba(220, 220, 220, 0.5);
+		}
+	}
 .minePage {
 	background-color:RGBA(247, 248, 254, 1);
 	color:rgba(102, 102, 102, 1);
