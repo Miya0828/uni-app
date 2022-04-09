@@ -32,7 +32,7 @@
 			<view class="home-container-right-tianqi">
 				<image src="/static/home/ic_weather@3x.png" mode="aspectFit"></image>
 			</view>
-			<view class="home-container-right-dingwei">
+			<view class="home-container-right-dingwei" @click="location">
 				<image src="/static/home/ic_aim@3x.png" mode="aspectFit"></image>
 			</view>
 		</view>
@@ -43,7 +43,7 @@
 	import {
 		ACCESS_TOKEN
 	} from '@/common/util/constants.js'
-
+	import data from './data/demo.js'
 	export default {
 		data() {
 			return {
@@ -51,10 +51,34 @@
 					longitude: 0,
 					latitude: 0,
 					currentLayer: 0,
+					init: false,
+					footprintsjson: [],
+					trackjson: [],
 				}
 			}
 		},
 		methods: {
+			initData() {
+				setTimeout(() => {
+					this.option.footprintsjson = data.footprintsjson
+					this.option.trackjson = data.trackjson
+				}, 1000)
+			},
+			location() {
+				uni.getLocation({
+					type: 'wgs84',
+					success: (res) => {
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+						this.option.longitude = 0
+						this.option.latitude = 0
+						setTimeout(() => {
+							this.option.longitude = res.longitude
+							this.option.latitude = res.latitude
+						})
+					}
+				});
+			},
 			chooseLayer() {
 				uni.navigateTo({
 					url: '/pages/home/layer?currentLayer=' + this.option.currentLayer,
@@ -80,20 +104,12 @@
 				this.option.currentLayer = data.layer
 				console.log('监听到事件来自 update ，携带参数 msg 为：' + data.layer);
 			})
+			this.initData()
 		},
 		onShow() {
-			console.log('home show')
 			setTimeout(() => {
-				uni.getLocation({
-					type: 'wgs84',
-					success: (res) => {
-						console.log('当前位置的经度：' + res.longitude);
-						console.log('当前位置的纬度：' + res.latitude);
-						this.option.longitude = res.longitude
-						this.option.latitude = res.latitude
-					}
-				});
-			}, 1000)
+				this.option.init = true
+			})
 		}
 	}
 </script>
@@ -101,32 +117,107 @@
 <script module="map" lang="renderjs">
 	let map
 	let cacheLayers = []
+	let longitude = 116.40769
+	let latitude = 39.89945
+	let _ownerInstance = null
 	export default {
 		mounted() {
+			if (typeof window.turf === 'undefined') {
+				// 动态引入较大类库避免影响页面展示
+				const script = document.createElement('script')
+				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
+				script.src = 'static/js/turf.min.js'
+				script.onload = function() {
+					console.log("加载turf")
+				}
+				document.head.appendChild(script)
+			}
 			if (typeof window.T === 'function') {
 				this.initMap()
 			} else {
 				// 动态引入较大类库避免影响页面展示
-				const script = document.createElement('script')
+				let script = document.createElement('script')
 				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
 				script.src = 'http://api.tianditu.gov.cn/api?v=4.0&tk=db90eeb1243c57a713f5b12fd6662871'
-
 				script.onload = this.initMap.bind(this)
+
 				document.head.appendChild(script)
 			}
 		},
 		methods: {
 			update(newValue, oldValue, ownerInstance, instance) {
-				// currentLayer
-				if (newValue.currentLayer != oldValue.currentLayer) {
-					this.changeLayer(newValue.currentLayer)					
-				} else {
-					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 18);
+				if (oldValue.init == false) {
+					console.log("初始化地图")
+					_ownerInstance = ownerInstance
+				} else if (newValue.currentLayer != oldValue.currentLayer) {
+					console.log("更新图层")
+					this.changeLayer(newValue.currentLayer)
+				} else if (newValue.longitude != oldValue.longitude) {
+					console.log("更新经纬度")
+					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 14);
+				} else if (newValue.trackjson != oldValue.trackjson) {
+					console.log("更新路线")
+					this.drawPath(newValue.trackjson, newValue.footprintsjson)
 				}
+
+			},
+			drawPath(trackjson, footprintsjson) {
+
+
+				footprintsjson.forEach(foot => {
+					//创建标注对象
+					var marker = new T.Marker(new T.LngLat(foot[2], foot[1]), {
+						icon: new T.Icon({
+							iconUrl: 'static/logo.png',
+							iconSize:  new T.Point(15, 15),
+						}),
+						title: foot[0]
+					});
+					//注册标注的点击事件
+					marker.addEventListener("click", function({
+						type,
+						target,
+						lnglat,
+						containerPoint
+					}) {
+						console.log(type, target.options, lnglat, containerPoint);
+					});
+					//向地图上添加标注
+					map.addOverLay(marker);
+				})
+
+				// 绘制线段
+				var pointsline = [];
+				trackjson.forEach(track => {
+					pointsline.push(new T.LngLat(track[2], track[1]));
+				})
+				//创建线对象
+				var line = new T.Polyline(pointsline, {
+					color: 'blue',
+					weight: 4,
+					opacity: 1
+				});
+				//向地图上添加线
+				map.addOverLay(line);
+
+				// 根据提供的坐标点数组设置地图视野，调整后的视野会保证包含提供的坐标点。
+				map.setViewport(pointsline)
+
+			},
+			initMap() {
+				map = new T.Map('map', {
+					maxZoom: 18,
+					minZoom: 9,
+					zoom: 5,
+				});
+				console.log(2222)
+				map.centerAndZoom(new T.LngLat(longitude, latitude), 14);
+
+				_ownerInstance.callMethod('location')
 			},
 			changeLayer(layerIndex) {
-				
-				
+
+
 				var layer = ['vec', 'img', 'ter']
 				var id = layer[layerIndex] || ''
 
@@ -214,19 +305,9 @@
 
 					return mapLayer;
 				}
-				
+
 			},
-			initMap() {
-				
 
-				map = new T.Map('map', {
-					center: [37.550339, 104.114129],
-					maxZoom: 18,
-					minZoom: 9,
-					zoom: 10,
-				});
-
-			}
 		}
 	}
 </script>
