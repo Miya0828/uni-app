@@ -1,6 +1,5 @@
 <template>
 	<scroll-view scroll-y class="page">
-		<cu-custom bgColor="bg-white"><block slot="content">社区与消息</block></cu-custom>
 		<map
 			v-if="polyline[0].points.length > 0"
 			id="myMap"

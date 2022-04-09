@@ -1,6 +1,6 @@
 <template>
-	<scroll-view scroll-y class="login-view" :style="{height:screenHeight+'px'}" >
-		<view class="logo margin-left-xl margin-top-xl">
+	<view class="login-view">
+		<view class="logo margin-left-xl">
 			<image style="width: 100upx; height: 100upx; background-color: #eeeeee;" src="../../static/logo.png">
 			</image>
 		</view>
@@ -53,7 +53,7 @@
 				</view>
 			</view>
 		</block>
-	</scroll-view>
+	</view>
 </template>
 <script>
 	import {
@@ -160,13 +160,17 @@
 				};
 				uni.setStorageSync(ACCESS_TOKEN, '111');
 				this.$tip.success('登录成功!')
-				this.$Router.replaceAll({
-					name: 'index'
-				})
+				uni.reLaunch({
+					url: '/pages/home/home',
+					animationType: 'slide-in-left',
+					animationDuration: 200
+				});
 			},
 			goToRegister(){
-				this.$Router.push({
-					name: 'register'
+				uni.navigateTo({
+					url: '/pages/register/register',
+					animationType: 'slide-in-left',
+					animationDuration: 200
 				});
 			},
 			showModal(e) {
@@ -187,9 +191,7 @@
 <style lang="less">
 	.login-view {
 		position: relative;
-		.logo{
-			margin-top:250upx;
-		}
+		height: 100vh;
 		.login-tip {
 			margin-top: 36upx;
 		}

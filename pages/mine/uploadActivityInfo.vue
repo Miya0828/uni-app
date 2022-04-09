@@ -1,61 +1,55 @@
 <template>
-	<view class="uploadActivityInfo"  :style="{height:screenHeight+'px'}" >
-		<cu-custom bgColor="bg-white"  backColor="text-black"  :isBack="true">
-			<block slot="backText"></block>
-			<block slot="content">活动信息上传</block>
-		</cu-custom>
-		<scroll-view>
-			<form @submit="onUploadActivityInfo" @reset="formReset">
-				<view class="cu-list menu card-menu shadow-lg margin-top-sm">
-					<view class="cu-item arrow">
-						<view class="content flex">
-							<text class="item">活动类型</text>
-							<picker @change="bindPickerChange" :value="activityTypeIndex" :range="activityType">
-								<view class="uni-input">{{activityType[activityTypeIndex]}}</view>
-							</picker>
-						</view>
+	<view class="uploadActivityInfo">
+		<form @submit="onUploadActivityInfo" @reset="formReset">
+			<view class="cu-list menu card-menu shadow-lg margin-top-sm">
+				<view class="cu-item arrow">
+					<view class="content flex">
+						<text class="item">活动类型</text>
+						<picker @change="bindPickerChange" :value="activityTypeIndex" :range="activityType">
+							<view class="uni-input">{{activityType[activityTypeIndex]}}</view>
+						</picker>
 					</view>
-				</view>	
-				<view class="cu-list menu card-menu shadow-lg">
-					<view class="cu-item arrow">
-						<view class="content flex">
-							<text class="item">活动地址</text>
-						</view>
-					</view>
-				</view>	
-				<view class="cu-form-group">
-					<view class="title ">活动人数</view>
-					<input name="username"></input>
 				</view>
-				<view class="cu-list menu card-menu shadow-lg">
-					<view class="cu-item arrow">
-						<view class="content flex">
-							<text class="item">活动时间</text>
-							<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
-								<view class="uni-input">{{date}}</view>
-							</picker>
-						</view>
+			</view>	
+			<view class="cu-list menu card-menu shadow-lg">
+				<view class="cu-item arrow">
+					<view class="content flex">
+						<text class="item">活动地址</text>
 					</view>
-				</view>	
-				<view class="cu-list menu card-menu shadow-lg">
-					<view class="cu-item arrow">
-						<view class="content flex">
-							<text class="item">活动路线</text>
-						</view>
-					</view>
-				</view>	
-				<view class="cu-list menu card-menu shadow-lg">
-					<view class="cu-item arrow">
-						<view class="content flex">
-							<text class="item">材料提交</text>
-						</view>
-					</view>
-				</view>	
-				<view class="btn">
-					<button class="text-blue margin-lr-xl">提交审核</button>
 				</view>
-			</form>
-		</scroll-view>
+			</view>	
+			<view class="cu-form-group">
+				<view class="title ">活动人数</view>
+				<input name="username"></input>
+			</view>
+			<view class="cu-list menu card-menu shadow-lg">
+				<view class="cu-item arrow">
+					<view class="content flex">
+						<text class="item">活动时间</text>
+						<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
+							<view class="uni-input">{{date}}</view>
+						</picker>
+					</view>
+				</view>
+			</view>	
+			<view class="cu-list menu card-menu shadow-lg">
+				<view class="cu-item arrow">
+					<view class="content flex">
+						<text class="item">活动路线</text>
+					</view>
+				</view>
+			</view>	
+			<view class="cu-list menu card-menu shadow-lg">
+				<view class="cu-item arrow">
+					<view class="content flex">
+						<text class="item">材料提交</text>
+					</view>
+				</view>
+			</view>	
+			<view class="btn">
+				<button class="text-blue margin-lr-xl">提交审核</button>
+			</view>
+		</form>
 	</view>
 </template>
 
@@ -104,6 +98,7 @@
 .uploadActivityInfo{
 	background-color:rgba(248, 248, 248, 1);
 	position: relative;
+	height: 100vh;
 	uni-scroll-view {
 	    height: calc(100% - 45px);
 	}

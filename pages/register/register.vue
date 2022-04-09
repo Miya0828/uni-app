@@ -1,12 +1,9 @@
 <template>
-	<scroll-view scroll-y class="registerPage">
-		<cu-custom bgColor="bg-white" backColor="text-black" :isBack="true">
-			<block slot="backText"></block>
-		</cu-custom>
-		<view class="text-lg padding-lr-xl text-bold text-xxl">新用户注册</view>
+	<view class="registerPage">
+		<view class="text-lg padding-lr text-bold text-xxl">新用户注册</view>
 		<form @submit="onSMRegister" @reset="formReset" class="margin-lr-xl">
 			<view class="padding-lr-xl">
-				<view class="cu-form-group margin-top form-item">
+				<view class="cu-form-group form-item">
 					<picker @change="bindPickerChange" :value="index" :range="array">
 						<view class="uni-input">{{array[index]}}</view>
 					</picker>
@@ -74,7 +71,7 @@
 			</view>
 			
 		</form>
-	</scroll-view>
+	</view>
 </template>
 <script>
 	import graceChecker from "../../common/biz/graceChecker.js"
