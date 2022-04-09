@@ -1,6 +1,40 @@
 <template>
 	<view class="home-container">
-		<view id="map" class="home-container-map">
+		<view id="map" class="home-container-map" :prop="option" :change:prop="map.update">
+		</view>
+		<view class="home-container-left">
+			<view class="home-container-left-baojing">
+				<image src="/static/home/ic_alarmlocation@3x.png" mode="aspectFit"></image>
+			</view>
+			<view class="home-container-left-luxian">
+				路线
+			</view>
+		</view>
+		<view class="home-container-right">
+			<view class="home-container-right-top">
+				<view class="home-container-right-top-fankui">
+					<image src="/static/home/ic_feedback@3x.png" mode="aspectFit"></image>
+					<view class="border-bottom">反馈</view>
+				</view>
+				<view class="home-container-right-top-tuceng">
+					<image src="/static/home/ic_layer@3x.png" mode="aspectFit"></image>
+					<view class="border-bottom">图层</view>
+				</view>
+				<view class="home-container-right-top-lvyou">
+					<image src="/static/home/ic_alice@3x.png" mode="aspectFit"></image>
+					<view class="border-bottom">驴友</view>
+				</view>
+				<view class="home-container-right-top-quanlan">
+					<image src="/static/home/ic_overview@3x.png" mode="aspectFit"></image>
+					<view>全览</view>
+				</view>
+			</view>
+			<view class="home-container-right-tianqi">
+				<image src="/static/home/ic_weather@3x.png" mode="aspectFit"></image>
+			</view>
+			<view class="home-container-right-dingwei">
+				<image src="/static/home/ic_aim@3x.png" mode="aspectFit"></image>
+			</view>
 		</view>
 	</view>
 
@@ -13,7 +47,10 @@
 	export default {
 		data() {
 			return {
-				slowLoading: true
+				option: {
+					longitude: 0,
+					latitude: 0,
+				}
 			}
 		},
 		methods: {
@@ -31,14 +68,27 @@
 		},
 		onLoad() {
 			this.isLogin()
+			
 		},
 		onShow() {
 			console.log('home show')
+			setTimeout(()=>{
+				uni.getLocation({
+					type: 'wgs84',
+					success: (res) => {
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+						this.option.longitude = res.longitude
+						this.option.latitude = res.latitude
+					}
+				});
+			},1000)
 		}
 	}
 </script>
 
 <script module="map" lang="renderjs">
+	let map
 	export default {
 		mounted() {
 			if (typeof window.T === 'function') {
@@ -54,53 +104,18 @@
 			}
 		},
 		methods: {
+			update(newValue, oldValue, ownerInstance, instance) {
+				map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 18);
+			},
 			initEcharts() {
-				var map;
-				var zoom = 12;
 
-				// map = new T.Map('echarts', {
-				// 	projection: 'EPSG:4326'
-				// });
-				// map.centerAndZoom(new T.LngLat(116.40769, 39.89945), zoom);
+				var zoom = 18;
+
 				map = new T.Map('map', {
 					center: [37.550339, 104.114129],
 					maxZoom: 18,
-					zoom: 3,
+					zoom: 10,
 				});
-				// map.centerAndZoom(new T.LngLat(116.40769, 39.89945), zoom);
-
-				// var e = _.a.map("mapDiv", {
-				//                     center: [37.550339, 104.114129],
-				//                     maxZoom: 18,
-				//                     zoom: 3,
-				//                     attributionControl: !1
-				//                 });
-				//                 $.switchMap(e, {
-				//                     y: -135
-				//                 })
-
-				//   //创建对象
-				// var ctrl = new T.Control.MapType();
-				// //添加控件
-				// map.addControl(ctrl);
-
-				// T.TileLayer.TiandituLayer = T.TileLayer.extend({
-				// 	getTileUrl: function(tilePoint) {
-				// 		var h = parseInt(Math.random() * 7);
-				// 		var layerType = this.options.layerType;
-				// 		var url = "https://t" + h + ".tianditu.gov.cn/" + layerType +
-				// 			"_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=" + layerType +
-				// 			"&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&" + "TILECOL=" + tilePoint.x +
-				// 			"&TILEROW=" + tilePoint.y + "&TILEMATRIX=" + tilePoint.z +
-				// 			"&tk=0b79a07d2808103ab84aa56485c331a8";
-				// 		return url;
-				// 	}
-				// });
-				// console.log(T.TileLayer.TiandituLayer)
-				// T.tileLayer = {}
-				// T.tileLayer.tiandituLayer = function(options) {
-				// 	return new T.TileLayer.TiandituLayer('', options);
-				// };
 
 				var cacheLayers = [];
 				// 移除前图层
@@ -165,7 +180,7 @@
 						"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=db90eeb1243c57a713f5b12fd6662871";
 					//创建自定义图层对象
 					var mapLayer = new T.TileLayer(imageURL, {
-						minZoom: 1,
+						minZoom: 3,
 						maxZoom: layerZoom
 					});
 
@@ -182,25 +197,12 @@
 						// }
 					}
 
-					map.setMinZoom(1);
+					map.setMinZoom(3);
 					map.setMaxZoom(mapZoom);
 
 
 					return mapLayer;
 				}
-				// var imageURL1 = "http://t0.tianditu.gov.cn/img_c/wmts?" +
-				// 	"SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
-				// 	"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=db90eeb1243c57a713f5b12fd6662871";
-
-				// var lay1 = new T.TileLayer(imageURL1, {
-				// 	minZoom: 1,
-				// 	maxZoom: 18
-				// });
-
-
-				// //将图层增加到地图上
-				// map.addLayer(lay1);
-
 
 			}
 		}
@@ -209,10 +211,96 @@
 
 <style lang="scss">
 	.home-container {
+		position: relative;
+
 		.home-container-map {
-			background-color: pink;
 			height: 100vh;
 			width: 100vw;
+		}
+
+		.home-container-left {
+			position: absolute;
+			z-index: 1000;
+			top: 40%;
+			left: 32rpx;
+			width: 80rpx;
+
+			.home-container-left-baojing,
+			.home-container-left-luxian {
+				width: 80rpx;
+				height: 80rpx;
+				border-radius: 20rpx;
+				background: #FFFFFF;
+				margin-bottom: 12rpx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				image {
+					width: 48rpx;
+					height: 48rpx;
+				}
+			}
+		}
+
+		.home-container-right {
+			position: absolute;
+			z-index: 1000;
+			top: 10%;
+			right: 32rpx;
+			width: 80rpx;
+		}
+
+		.home-container-right-top {
+			padding: 16rpx;
+			width: 80rpx;
+			border-radius: 20rpx;
+			background: #FFFFFF;
+			margin-bottom: 12rpx;
+
+			.home-container-right-top-fankui,
+			.home-container-right-top-tuceng,
+			.home-container-right-top-lvyou,
+			.home-container-right-top-quanlan {
+				text-align: center;
+				
+				
+				image {
+					width: 48rpx;
+					height: 48rpx;
+					
+				}
+
+				view {
+					
+					font-size: 18rpx;
+					color: #333333;
+						margin-top: -10rpx;
+				}
+				.border-bottom{
+					padding-bottom: 12rpx;
+					border-bottom: 2rpx solid #D8D8D8;					
+					margin-bottom: 10rpx;
+				}
+				
+			}
+		}
+
+		.home-container-right-tianqi,
+		.home-container-right-dingwei {
+			width: 80rpx;
+			height: 80rpx;
+			border-radius: 20rpx;
+			background: #FFFFFF;
+			margin-bottom: 12rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			image {
+				width: 48rpx;
+				height: 48rpx;
+			}
 		}
 	}
 
