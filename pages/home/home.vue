@@ -259,9 +259,12 @@
 					_ownerInstance = ownerInstance
 				} else if (newValue.coordinateFlag != oldValue.coordinateFlag) {
 					console.log("定位用户位置")
-					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);
+					// map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);									
+					map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
 					console.log("设置用户位置")
 					currentPositionObj.setLnglat(new T.LngLat(newValue.longitude, newValue.latitude))
+					
+					
 				} else if (newValue.currentLayer != oldValue.currentLayer) {
 					console.log("设置图层")
 					this.changeLayer(newValue.currentLayer)

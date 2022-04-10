@@ -3037,9 +3037,7 @@ export default {
 		{
 			name: '上海外滩夜景',
 			trackjson: [
-				["1552994935", 31.238305012052056, 121.48347455844988, 18.69200325012207, 4.487259600000001,
-					0.0
-				],
+				["1552994935", 31.238305012, 121.4834745584, 18.6920032501, 4.4872596000, 0.0],
 				["1552994942", 31.238293, 121.48359, 17.242746, 5.5052172, 0.011075],
 				["1552994950", 31.238322, 121.483702, 9.498158, 7.0933212, 0.022193],
 				["1552994957", 31.238331, 121.48381, 6.286491, 7.1412444, 0.032487],
@@ -3425,62 +3423,6 @@ export default {
 				["1552997807", 31.259575, 121.500982, 22.844625, 6.282097200000001, 4.568978]
 			],
 			footprintsjson: [
-				["1552995074.0", 31.2389317302309, 121.485692331334, 17.0752105712891, "11",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201802_FA4FC.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201802_FA4FC.jpg-.gallery", "", "pic",
-					0, "/footprint/15983537/_edit/", "/footprint/15983537/"
-				],
-				["1552995116.0", 31.2391356785496, 121.485951916217, 24.0949764251709, "10",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201800_B9CF7.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201800_B9CF7.jpg-.gallery", "", "pic",
-					0, "/footprint/15983535/_edit/", "/footprint/15983535/"
-				],
-				["1552995262.0", 31.2408345255534, 121.485687901889, 22.1727099288255, "9",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201757_0FBED.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201757_0FBED.jpg-.gallery", "", "pic",
-					0, "/footprint/15983531/_edit/", "/footprint/15983531/"
-				],
-				["1552995280.0", 31.2410341773695, 121.485676518324, 20.4336590571329, "8",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201755_2D62D.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201755_2D62D.jpg-.gallery", "", "pic",
-					0, "/footprint/15983529/_edit/", "/footprint/15983529/"
-				],
-				["1552995487.0", 31.2432651575645, 121.485847960362, 30.0525745516643, "7",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201752_C137C.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201752_C137C.jpg-.gallery", "", "pic",
-					0, "/footprint/15983527/_edit/", "/footprint/15983527/"
-				],
-				["1552995532.0", 31.2436596531216, 121.485813929095, 29.4686585487798, "6",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201749_B4D1F.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201749_B4D1F.jpg-.gallery", "", "pic",
-					0, "/footprint/15983523/_edit/", "/footprint/15983523/"
-				],
-				["1552995624.0", 31.2448172487441, 121.485667147008, 17.6181112797931, "5",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201746_7AD36.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201746_7AD36.jpg-.gallery", "", "pic",
-					0, "/footprint/15983522/_edit/", "/footprint/15983522/"
-				],
-				["1552995675.0", 31.245179302059, 121.485809508722, 17.7349631702527, "4",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201743_6E25F.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201743_6E25F.jpg-.gallery", "", "pic",
-					0, "/footprint/15983519/_edit/", "/footprint/15983519/"
-				],
-				["1552996334.0", 31.2490443021271, 121.494890693644, 13.4558534622192, "3",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201740_BA7FF.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201740_BA7FF.jpg-.gallery", "", "pic",
-					0, "/footprint/15983516/_edit/", "/footprint/15983516/"
-				],
-				["1552996857.0", 31.2516540501142, 121.505294983687, 9.38222694396973, "2",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201739_D026B.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201739_D026B.jpg-.gallery", "", "pic",
-					0, "/footprint/15983514/_edit/", "/footprint/15983514/"
-				],
-				["1552997195.0", 31.2542917488409, 121.505795024799, 11.6154937744141, "1",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201736_CAACC.jpg-.thumbnail",
-					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201736_CAACC.jpg-.gallery", "", "pic",
-					0, "/footprint/15983511/_edit/", "/footprint/15983511/"
-				]
-			][
 				["1552995074.0", 31.2389317302309, 121.485692331334, 17.0752105712891, "11",
 					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201802_FA4FC.jpg-.thumbnail",
 					"http://image.six-foot.lvye.cn/footprint/2019/03/19/201802_FA4FC.jpg-.gallery", "", "pic",
