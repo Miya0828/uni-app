@@ -132,7 +132,7 @@ export default {
 	background-color:#f7f8fe;
 	color:#666666;
 	.UCenter-bg {
-		height: 360rpx;
+		height: 420rpx;
 		padding-top: 108rpx;
 		overflow: hidden;
 		color: #fff;

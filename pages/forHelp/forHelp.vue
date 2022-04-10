@@ -14,16 +14,12 @@
 				<view class="padding-sm animation-slide-left" :style="[{animationDelay: '0.3s'}]" v-for="(item,index) in usList" :key="index">
 					<navigator v-if="item.url" class="content" :url="item.url" hover-class="none">
 						<view class="padding-xs radius text-center shadow-blur solid-right ">
-							<view class="cu-avatar lg " 
-							 :style="{background: 'url(' + item.icon + ') no-repeat',backgroundSize:'100upx 100upx'}">
-							</view>
+							<image class="cu-avatar bg-white lg"  :src="item.icon" style="width: 100upx; height: 100upx;"></image>
 							<view class="text-xs margin-top">{{item.title}}</view>
 						</view>
 					</navigator>
 					<view v-else class="padding-xs radius text-center shadow-blur solid-right ">
-						<view class="cu-avatar lg " 
-						 :style="{background: 'url(' + item.icon + ') no-repeat',backgroundSize:'100upx 100upx'}">
-						</view>
+						<image class="cu-avatar bg-white lg"  :src="item.icon" style="width: 100upx; height: 100upx;"></image>
 						<view class="text-xs margin-top">{{item.title}}</view>
 					</view>
 				</view>

@@ -44,10 +44,9 @@
 			}
 		}, {
 			"path": "pages/forHelp/forHelp",
-			"style": {}
-		}, {
-			"path": "pages/forHelp/chat",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "求助"	
+			}
 		}, {
 			"path": "pages/mine/mine",
 			"style": {
@@ -76,8 +75,33 @@
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
 			}
-		}
-	],
+		},{
+            "path" : "pages/teamChat/teamChat",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "队聊",
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px",
+						"buttons": [{
+							"color": "#00C435",
+							"text": "\ue6e5",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "22px"
+						}]
+					}
+				}
+            }
+            
+        },{
+            "path" : "pages/teamChat/chat",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "聊天室"
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",
@@ -92,17 +116,25 @@
 		"fontSize":"12px",
 		"spacing": "8px",
 		"iconWidth": "20px",
-		"list": [{
-				"pagePath": "pages/home/home",
-				"iconPath": "static/tabBar/ic_home.png",
-				"selectedIconPath": "static/tabBar/ic_clickhome.png",
-				"text": "首页"
-			}, {
+		"list": [
+			{
 				"pagePath": "pages/forHelp/forHelp",
 				"iconPath": "static/tabBar/ic_help.png",
 				"selectedIconPath": "static/tabBar/ic_clickhelp.png",
 				"text": "求助"
 			},
+			{
+				"pagePath": "pages/teamChat/teamChat",
+				"iconPath": "static/tabBar/ic_chat.png",
+				"selectedIconPath": "static/tabBar/ic_clickedchat.png",
+				"text": "队聊"
+			},
+			{
+				"pagePath": "pages/home/home",
+				"iconPath": "static/tabBar/ic_navigation.png",
+				"selectedIconPath": "static/tabBar/ic_clickednavigation.png",
+				"text": "导航"
+			}, 
 			{
 				"pagePath": "pages/community/community",
 				"iconPath": "static/tabBar/ic_community.png",

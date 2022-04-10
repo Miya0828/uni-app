@@ -73,7 +73,7 @@
 			</view>
 		</view>
 
-		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]">
+		<!-- <view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]">
 			<view class="action">
 				<text class="cuIcon-sound text-grey"></text>
 			</view>
@@ -83,7 +83,7 @@
 				<text class="cuIcon-emojifill text-grey"></text>
 			</view>
 			<button class="cu-btn bg-green shadow">发送</button>
-		</view>
+		</view> -->
 
 	</view>
 </template>
@@ -110,4 +110,19 @@
 page{
   padding-bottom: 100upx;
 }
+</style>
+
+		data() {
+			return {
+				
+			}
+		},
+		methods: {
+			
+		}
+	}
+</script>
+
+<style>
+
 </style>
