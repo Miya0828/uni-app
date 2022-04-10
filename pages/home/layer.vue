@@ -6,34 +6,58 @@
 		<view class="layer-container-selection">
 			<view class="layer-container-item" @click="selectLayer(0)">
 				<view v-if="currentLayer==0" class="layer-container-item-box">
-					<uni-icons class="layer-container-item-icon" color="#0086FF" type="checkbox-filled" size="24">
-					</uni-icons>
+					<image class="layer-container-item-icon" src="/static/home/layer/ic_choose@3x.png" mode="aspectFit">
+					</image>
 				</view>
 				<image src="/static/home/layer/vec.png" mode="aspectFit"></image>
 				<view :class="currentLayer==0?'current':''">天地图</view>
 			</view>
 			<view class="layer-container-item" @click="selectLayer(1)">
 				<view v-if="currentLayer==1" class="layer-container-item-box">
-					<uni-icons class="layer-container-item-icon" color="#0086FF" type="checkbox-filled" size="24">
-					</uni-icons>
+					<image class="layer-container-item-icon" src="/static/home/layer/ic_choose@3x.png" mode="aspectFit">
+					</image>
 				</view>
 				<image src="/static/home/layer/img_c.png" mode="aspectFit"></image>
 				<view :class="currentLayer==1?'current':''">天地图卫星</view>
 			</view>
 			<view class="layer-container-item" @click="selectLayer(2)">
 				<view v-if="currentLayer==2" class="layer-container-item-box">
-					<uni-icons class="layer-container-item-icon" color="#0086FF" type="checkbox-filled" size="24">
-					</uni-icons>
+					<image class="layer-container-item-icon" src="/static/home/layer/ic_choose@3x.png" mode="aspectFit">
+					</image>
 				</view>
 				<image src="/static/home/layer/vec_c.png" mode="aspectFit"></image>
 				<view :class="currentLayer==2?'current':''">天地图地形</view>
 			</view>
 		</view>
 
+		<view class="route-container-item" v-if="currentRoue">
+			<view class="route-container-item-pic">
+				<image src="/static/logo.png" mode="aspectFit"></image>
+			</view>
+			<view class="route-container-item-des">
+				<view class="route-container-item-des-title">
+					<view class="route-container-item-des-title-1">{{currentRoue.name}}</view>
+					<text class="route-container-item-des-title-2">上海市</text>
+					<text class="route-container-item-des-title-2">5A景区</text>
+					<view class="route-container-item-des-title-3">
+						当前路线
+					</view>
+				</view>
+				<view class="route-container-item-rate">
+					<uni-rate allow-half :value="3.5" :size="18" :readonly="true" :is-fill="false" color="#bbb"
+						active-color="#E41000" />
+					<text>123人打卡</text>
+				</view>
+				<view class="route-container-item-distance">
+					总里程：123.4公里 徒步总需耗时2天2小时21分
+				</view>
+			</view>
+		</view>
+
 		<view class="layer-container-bottom">
-			<view class="layer-container-bottom-input">
+			<view class="layer-container-bottom-input" @click="selectRoute">
 				<view class="layer-container-bottom-input-left">
-					<image src="/static/home/layer/vec_c.png" mode="aspectFit"></image>
+					<image src="/static/home/layer/ic_routeselection@3x.png" mode="aspectFit"></image>
 					徒步路线选择
 				</view>
 				<uni-icons color="#3D3D3D" type="forward" size="19">
@@ -60,25 +84,30 @@
 </template>
 
 <script>
+	import store from '@/store/index.js';
 	export default {
 		data() {
 			return {
-				currentLayer: 0
+				currentLayer: 0,
+				currentRoue: null
 			}
 		},
-		onLoad(options) {
-			console.log(options)
-			this.currentLayer = options.currentLayer
+		onShow(options) {
+			this.currentLayer = store.state.map.layer
+			this.currentRoue = store.state.map.route
 		},
 		methods: {
+			selectRoute() {
+				uni.navigateTo({
+					url: '/pages/home/route'
+				});
+			},
 			selectLayer(num) {
 				this.currentLayer = num
-				uni.$emit('update', {
-					layer: num
-				})
+				store.state.map.layer = num
+				
 				uni.navigateBack({
 					delta: 1,
-
 				});
 			}
 		}
@@ -98,8 +127,90 @@
 			margin-bottom: 40rpx;
 		}
 
+		.route-container-item {
+			border-bottom: 2px solid #F8F8F8;
+			display: flex;
+			padding: 32rpx 0;
+
+			.route-container-item-pic {
+				width: 132rpx;
+				height: 132rpx;
+
+				image {
+					width: 132rpx;
+					height: 132rpx;
+				}
+			}
+
+			.route-container-item-des {
+				padding-left: 16rpx;
+				flex-grow: 1;
+				overflow: hidden;
+
+				.route-container-item-des-title {
+					color: #333333;
+					font-size: 32rpx;
+					font-weight: 500;
+					display: flex;
+					align-items: flex-end;
+
+					.route-container-item-des-title-1 {
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						flex-shrink: 1;
+						flex-grow: 1;
+					}
+
+					.route-container-item-des-title-2 {
+						color: #999999;
+						font-size: 22rpx;
+						font-weight: 400;
+						flex-shrink: 0;
+					}
+
+					.route-container-item-des-title-3 {
+						width: 108rpx;
+						height: 44rpx;
+						background: rgba(0, 137, 255, 0.1);
+						border-radius: 5rpx;
+						font-size: 22rpx;
+						font-weight: 400;
+						color: #0189FF;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						margin-left: 20rpx;
+						flex-shrink: 0;
+					}
+
+					margin-bottom: 10rpx;
+				}
+
+				.route-container-item-rate {
+					align-items: center;
+					display: flex;
+					margin-bottom: 10rpx;
+
+					text {
+						margin-left: 6rpx;
+						color: #999999;
+						font-size: 22rpx;
+						font-weight: 400;
+					}
+				}
+
+				.route-container-item-distance {
+					font-size: 22rpx;
+					font-weight: 400;
+					color: #0086FF;
+				}
+			}
+		}
+
 		.layer-container-selection {
 			display: flex;
+			margin-bottom: 160rpx;
 
 			.layer-container-item {
 				position: relative;
@@ -107,12 +218,16 @@
 				.layer-container-item-box {
 					position: absolute;
 					width: 170rpx;
-					height: 128rpx;					
+					height: 128rpx;
 					display: flex;
 					align-items: center;
 					justify-content: center;
 
 					.layer-container-item-icon {
+						background-color: white;
+						border-radius: 50%;
+						width: 32rpx;
+						height: 32rpx;
 						position: relative;
 						z-index: 1;
 					}

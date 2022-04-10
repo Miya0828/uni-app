@@ -29,6 +29,17 @@
 			}
 		},
 		{
+			"path": "pages/home/route",
+			"style": {
+				"navigationBarTitleText": "选择徒步路线",
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px"
+					}
+				}
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {}
 		},
@@ -106,7 +117,13 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",
 		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#FFFFFF"
+		"backgroundColor": "#FFFFFF",
+		"style": {
+			"app-plus": {
+				"animationType": "slide-in-left",
+				"animationDuration": 200
+			}
+		}
 	},
 	"tabBar": {
 		"color": "#333333",

@@ -12,7 +12,11 @@ export default new Vuex.Store({
     username: '',
     realname: '',
     welcome: '',
-    avatar: ''
+    avatar: '',
+	map:{
+		layer:0,
+		route:null
+	}
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -27,7 +31,7 @@ export default new Vuex.Store({
       state.avatar = avatar
     }
   },
-  actions: {
+  actions: { 
   },
   getters:{
     token: state => state.token,
