@@ -78,7 +78,7 @@
 	</view>
 </template>
 <script>
-	import { ACCESS_TOKEN,USER_NAME,USER_INFO } from "@/common/util/constants";
+	import { ACCESS_TOKEN,USER_NAME,USER_INFO,SMS_CODE } from "@/common/util/constants";
 	import graceChecker from "../../common/biz/graceChecker.js"
 	import { loginService } from "@/api/index.js";
 	export default {
@@ -143,7 +143,7 @@
 				    uni.showToast({ title: graceChecker.error, icon: "none" });
 					return;
 				}
-				loginService.login(params,true).then(res => {
+				loginService.login(params).then(res => {
 					if (res.data.success) {
 						uni.setStorageSync(ACCESS_TOKEN, '111');
 						this.$tip.success('登录成功!')
@@ -160,7 +160,7 @@
 			onSMSSend() {
 				let smsParams = {};
 				smsParams.mobile = this.phoneNo;
-				smsParams.smsmode = "2";
+				smsParams.smsmode = SMS_CODE.login;
 				//定义表单规则
 				var rule = [
 					{name:"mobile", checkType : "phone", checkRule:"",  errorMsg:"请输入正确的手机号"},
@@ -170,7 +170,7 @@
 				    uni.showToast({ title: graceChecker.error, icon: "none" });
 					return;
 				}
-				loginService.sendCaptcha(smsParams,true).then(res => {
+				loginService.sendCaptcha(smsParams).then(res => {
 					if (res.data.success) {
 						this.smsCountDown = 60;
 						this.startSMSTimer();

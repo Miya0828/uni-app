@@ -9,6 +9,13 @@ const STORAGE_OPTIONS = {
     storage: 'local', // storage name session, local, memory
 }
 
+export const SMS_MODE = {
+	register:1, //注册验证码
+	login:2, //登录验证码
+};
+
+export const SEX_LIST = [{label:'男',value:'0',checked:false},{label:'女',value:'1',checked:true}];
+
 export default STORAGE_OPTIONS;
 
 

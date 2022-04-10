@@ -55,9 +55,27 @@
 			}
 		},
 		{
-			"path": "pages/mine/certification",
+			"path": "pages/mine/certification/certification",
 			"style": {
 				"navigationBarTitleText": "实名认证"
+			}
+		},
+		{
+			"path": "pages/mine/certification/uploadIdCard",
+			"style": {
+				"navigationBarTitleText": "上传证件照片"
+			}
+		},
+		{
+			"path": "pages/mine/certification/picRequire",
+			"style": {
+				"navigationBarTitleText": "拍照要求"
+			}
+		},
+		{
+			"path": "pages/mine/certification/certificationApplication",
+			"style": {
+				"navigationBarTitleText": "认证申请"
 			}
 		},
 		{

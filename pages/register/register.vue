@@ -10,25 +10,25 @@
 					<input placeholder="请输入手机号" type="number" maxlength="11" name="phone" v-model="phoneNo"></input>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input class="uni-input" placeholder="请输入验证码" name="smsCode" v-model="smsCode" />
+					<input class="uni-input" placeholder="请输入验证码" type="number" maxlength="6" name="captcha" />
 					<button class="cu-btn line-blue sm" :disabled="!isSendSMSEnable" @click="onSMSSend">
 						{{ getSendBtnText }}</button>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input placeholder="请输入账号" name="account"></input>
+					<input placeholder="请输入账号" name="username"></input>
 				</view>
 				<view class="cu-form-group margin-top form-item">
 					<input placeholder="输入密码" password name="password"></input>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input ref="input1" placeholder="输入密码确认" password name="surePassword"></input>
+					<input placeholder="输入密码确认" password name="confirmPassword"></input>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input placeholder="请输入姓名" name="userName"></input>
+					<input placeholder="请输入姓名" name="realname"></input>
 				</view>
 				<view class="cu-form-group flex margin-top form-item">
 					<text class="item uni-input-placeholder">请选择出生日期</text>
-					<view class="flex birthday">
+					<view class="flex birthday align-center">
 						<picker mode="date" :value="birthday" @change="bindDateChange">
 							<view class="flex justify-end" >
 								<view class="uni-input">{{birthday==0?'':birthday}}</view>
@@ -38,34 +38,34 @@
 					</view>
 					
 				</view>
-				<view class="cu-form-group margin-top form-item" >
-					<input placeholder="请选择性别" name="sex"></input>
-					<radio-group name="gender">
-						<label>
-							<radio value="先生" class="form-radio" /><text>先生</text>
-						</label>
-						<label>
-							<radio value="女士" checked="true" class="form-radio"/><text>女士</text>
+				<view class="cu-form-group flex margin-top form-item" >
+					<text class="item" style="color: grey;">请选择性别</text>
+					<radio-group name="sex" >
+						<label  v-for="item in sexList" :key="item.label">
+							<radio :value="item.value" :checked="item.checked" class="form-radio" />
+							<text>{{item.label}}</text>
 						</label>
 					</radio-group>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input placeholder="紧急联系人"  type="number" maxlength="11"  name="iosName"></input>
+					<input placeholder="请输入职业" name="profession"></input>
 				</view>
 				<view class="cu-form-group margin-top form-item">
-					<input placeholder="紧急联系人号码"  type="number" maxlength="11"  name="iosPhone"></input>
+					<input placeholder="紧急联系人" name="emergencyContact"></input>
+				</view>
+				<view class="cu-form-group margin-top form-item">
+					<input placeholder="紧急联系人号码"  type="number" maxlength="11"  name="emergencyContactPhone"></input>
 				</view>
 				<view class="margin-top-xl">
 					<button class="bg-blue line-blue text-white register-btn"  form-type="submit">注册</button>
 				</view>
-				<view class="margin-top-sm">
-					<radio-group name="agreement">
+				<view class="margin-top-sm flex align-center">
+					<radio-group name="agree">
 						<label>
-							<radio value="1" class="form-radio" />
+							<radio value="1" class="form-radio"/>我已阅读并同意遵守
+							<text selectable="true" class="text-blue" @tap="showModal" data-target="Modal">用户协议 隐私政策</text>
 						</label>
 					</radio-group>
-					我已阅读并同意遵守
-					<text selectable="true" class="text-blue" @tap="showModal" data-target="Modal">用户协议 隐私政策</text>
 				</view>
 				<view class="text-center text-blue margin-top">
 					<navigator url="/pages/login/login" hover-class="none">已有账号？返回登录</navigator>
@@ -84,22 +84,24 @@
 					</view>
 				</view>
 			</view>
-			
 		</form>
 	</view>
 </template>
 <script>
-	import graceChecker from "../../common/biz/graceChecker.js"
+	import graceChecker from "../../common/biz/graceChecker.js";
+	import { loginService } from "@/api/index.js";
+	import { SMS_MODE,SEX_LIST } from "@/common/util/constants.js";
 	export default {
 		data() {
 			return {
 				phoneNo: '',
-				smsCode: '',
 				array: ['+86'],
 				index: 0,
 				smsCountDown: 0,
 				modalName:'',
 				birthday: 0,
+				isAgree:1,
+				sexList:SEX_LIST
 			}
 		},
 		computed: {
@@ -118,7 +120,7 @@
 			onSMSSend() {
 				let smsParams = {};
 				smsParams.mobile = this.phoneNo;
-				smsParams.smsmode = "1";
+				smsParams.smsmode = SMS_MODE.register;
 				let checkPhone = new RegExp(/^[1]([3-9])[0-9]{9}$/);
 				if (!smsParams.mobile || smsParams.mobile.length == 0) {
 					this.$tip.toast('请输入手机号');
@@ -128,7 +130,7 @@
 					this.$tip.toast('请输入正确的手机号');
 					return false;
 				}
-				this.$http.post("/sys/sms", smsParams).then(res => {
+				loginService.sendCaptcha(smsParams).then(res => {
 					if (res.data.success) {
 						this.smsCountDown = 60;
 						this.startSMSTimer();
@@ -146,8 +148,11 @@
 					}
 				}, 1000);
 			},
+			bindPickerChange(e){
+				this.index = e.detail.value;
+			},
 			bindDateChange(e) {
-				this.birthday = e.detail.value
+				this.birthday = e.detail.value;
 			},
 			getDate(type) {
 				const date = new Date();
@@ -164,29 +169,42 @@
 				return `${year}-${month}-${day}`;
 			},
 			onSMRegister(e){
-				console.log(this.$refs.input1)
-				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
+				//进行表单检查
+				var formData = e.detail.value;
 				//定义表单规则
 				var rule = [
 					{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
-					{name:'smsCode',checkType:'zipcode',errorMsg:'请输入6位数的验证码'},
-					{name:"account", checkType : "notnull", checkRule:"",  errorMsg:"请输入账号"},
+					{name:'captcha',checkType:'zipcode',errorMsg:'请输入6位数的验证码'},
+					{name:"username", checkType : "notnull", checkRule:"",  errorMsg:"请输入账号"},
 				    {name:"password", checkType : "password", checkRule:"",errorMsg:"密码格式不正确"},
-					{name:"surePassword", checkType : "notsame", checkRule:"password",errorMsg:"两次密码不一致"},
-					{name:"userName", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
+					{name:"confirmPassword", checkType : "same", checkRule:formData.password,errorMsg:"两次密码不一致"},
+					{name:"realname", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
 					{name:"birthday", checkType : "notnull", checkRule:"",  errorMsg:"请输入出生日期"},
-				    {name:"gender", checkType : "in", checkRule:"男,女",  errorMsg:"请选择性别"},
-					{name:"iosName", checkType : "notnull", checkRule:"",  errorMsg:"请输入紧急联系人"},
-				    {name:"iosPhone", checkType : "phoneno", checkRule:"",  errorMsg:"请输入正确的紧急联系人号码"}
+				    {name:"sex", checkType : "in", checkRule:"1,0",  errorMsg:"请选择性别"},
+					{name:"profession", checkType : "notnull", checkRule:"",  errorMsg:"请输入职业"},
+					{name:"emergencyContact", checkType : "notnull", checkRule:"",  errorMsg:"请输入紧急联系人"},
+				    {name:"emergencyContactPhone", checkType : "phoneno", checkRule:"",  errorMsg:"请输入正确的紧急联系人号码"},
+					{name:"agree",checkType:'notnull',checkRule:'',errorMsh:'请阅读并选择遵守协议'},
 				];
-				//进行表单检查
-				var formData = e.detail.value;
+				formData.birthday = this.birthday;
 				var checkRes = graceChecker.check(formData, rule);
-				if(checkRes){
-				    uni.showToast({title:"验证通过!", icon:"none"});
-				}else{
+				if(!checkRes){
 				    uni.showToast({ title: graceChecker.error, icon: "none" });
+					return;
 				}
+				delete formData.agree;
+				loginService.register(formData).then((res)=>{
+					if(res.data.success){
+						this.$tip.success('注册成功!')
+						uni.reLaunch({
+							url: '/pages/login/login',
+							animationType: 'slide-in-left',
+							animationDuration: 200
+						});
+					}else {
+						this.$tip.toast(res.data.message);
+					}
+				})
 			},
 			showModal(e) {
 				this.modalName = e.currentTarget.dataset.target;

@@ -20,7 +20,7 @@
 				</view>
 				<view class="cu-list menu card-menu margin-tb-sm">
 					<view class="cu-item arrow">
-						<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+						<navigator class="content" url="/pages/mine/certification/uploadIdCard" hover-class="none">
 							<text class="item title">证件照片</text>
 							<text class="bg-white tips">未上传</text>
 						</navigator>

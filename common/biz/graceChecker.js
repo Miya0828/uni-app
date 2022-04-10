@@ -1,8 +1,3 @@
-/**
-数据验证（表单验证）
-来自 grace.hcoder.net 
-作者 hcoder 深海
-*/
 export default {
 	error:'',
 	check : function (data, rule){

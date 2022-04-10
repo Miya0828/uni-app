@@ -48,7 +48,7 @@
 		<!-- 列表list-->
 		<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg">
 			<view class="cu-item arrow margin-bottom-sm radius">
-				<navigator class="content" url="/pages/mine/certification" hover-class="none">
+				<navigator class="content" url="/pages/mine/certification/certification" hover-class="none">
 					<text class="cuIcon-redpacket_fill text-red"></text>
 					<text class="text-grey">实名认证</text>
 				</navigator>
