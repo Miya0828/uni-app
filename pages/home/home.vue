@@ -67,7 +67,7 @@
 						<text>2天1小时</text>
 					</view>
 				</view>
-				<view class="home-route-scenery-spot" v-for="item in [1,2,3,4,5]">
+				<view class="home-route-scenery-spot" v-for="item in [1,2,3,4,5]" :key='item'>
 					<view class="home-route-scenery-spot-title">
 						<text>{{item}}</text>
 						雁荡山风景名胜沿湖景区（入口）
@@ -101,7 +101,7 @@
 	import store from '@/store/index.js';
 	export default {
 		data() {
-			return {				
+			return {
 				option: {
 					// 初始化
 					init: false,
@@ -133,15 +133,21 @@
 			}
 		},
 		methods: {
-			openRoute() {				
+			mergeOptions(obj) {
+				this.option = Object.assign({}, this.option, obj)
+			},
+			openRoute() {
 				this.$refs.popup.open()
 			},
 			showTourlist() {
-				this.option.touristFlag = !this.option.touristFlag
-				this.option.tourist = [{
-					longitude: 121.316381,
-					latitude: 31.223812
-				}]
+				this.mergeOptions({
+					touristFlag: !this.option.touristFlag,
+					tourist: [{
+						longitude: 121.316381,
+						latitude: 31.223812
+					}]
+				})
+
 			},
 			location() {
 				uni.getLocation({
@@ -149,16 +155,19 @@
 					success: (res) => {
 						console.log('当前位置的经度：' + res.longitude);
 						console.log('当前位置的纬度：' + res.latitude);
-						this.option.longitude = res.longitude
-						this.option.latitude = res.latitude
+						this.mergeOptions({
+							longitude: res.longitude,
+							latitude: res.latitude,
+							coordinateFlag: !this.option.coordinateFlag,
+						})
 
-						this.option.coordinateFlag = !this.option.coordinateFlag
 					}
 				});
 			},
 			overview() {
-				this.option.overviewFlag = !this.option.overviewFlag
-
+				this.mergeOptions({
+					overviewFlag: !this.option.overviewFlag
+				})
 			},
 			chooseLayer() {
 				uni.navigateTo({
@@ -176,7 +185,9 @@
 			},
 			initMap() {
 				setTimeout(() => {
-					this.option.init = true
+					this.mergeOptions({
+						init: true
+					})
 				})
 			},
 			listeningDirection() {
@@ -192,16 +203,25 @@
 			this.listeningDirection()
 
 			setTimeout(() => {
-				this.option.currentUser.userImage = "static/logo.png"
+				this.mergeOptions({
+					currentUser: {
+						...this.option.currentUser,
+						userImage: "static/logo.png"
+					}
+				})
 			}, 1000)
 		},
 		onShow() {
-			this.option.currentLayer = store.state.map.layer
+			this.mergeOptions({
+				currentLayer: store.state.map.layer
+			})
 
 			if (store.state.map.route) {
-				this.option.routeFlag = !this.option.routeFlag
-				this.option.footprintsjson = store.state.map.route.footprintsjson
-				this.option.trackjson = store.state.map.route.trackjson
+				this.mergeOptions({
+					routeFlag: !this.option.routeFlag,
+					footprintsjson: store.state.map.route.footprintsjson,
+					trackjson: store.state.map.route.trackjson
+				})
 			}
 
 		}
@@ -244,18 +264,19 @@
 				this.initMap()
 			} else {
 				// 动态引入较大类库避免影响页面展示
-				let script = document.createElement('script')
+				const script = document.createElement('script')
 				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
 				script.src = 'http://api.tianditu.gov.cn/api?v=4.0&tk=db90eeb1243c57a713f5b12fd6662871'
-				script.onload = this.initMap.bind(this)
+				script.onload = this.createMap.bind(this)
 
 				document.head.appendChild(script)
 			}
 		},
 		methods: {
 			update(newValue, oldValue, ownerInstance, instance) {
+				
 				if (oldValue.init == false) {
-					console.log("初始化地图")
+					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
 				} else if (newValue.coordinateFlag != oldValue.coordinateFlag) {
 					console.log("定位用户位置")
@@ -263,8 +284,6 @@
 					map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
 					console.log("设置用户位置")
 					currentPositionObj.setLnglat(new T.LngLat(newValue.longitude, newValue.latitude))
-					
-					
 				} else if (newValue.currentLayer != oldValue.currentLayer) {
 					console.log("设置图层")
 					this.changeLayer(newValue.currentLayer)
@@ -287,15 +306,14 @@
 					this.addTouristPosition(newValue.tourist)
 				}
 			},
-			initMap() {
+			createMap() {
 				map = new T.Map('map', {
 					maxZoom: 18,
 					minZoom: 9,
 					zoom: 5,
 				});
-
+				console.log('初始化地图')
 				map.centerAndZoom(new T.LngLat(longitude, latitude), 14);
-
 
 				// this.addUserPosition(121.306381, 31.213812, 0)
 
@@ -687,6 +705,7 @@
 					justify-content: space-between;
 					align-items: center;
 					margin-bottom: 20rpx;
+
 					.home-route-start {
 						display: flex;
 						align-items: center;
@@ -697,10 +716,11 @@
 							margin-right: 16rpx;
 						}
 					}
+
 					.home-route-end {
 						display: flex;
 						align-items: center;
-					
+
 						text {
 							color: #E41000;
 							font-size: 16rpx;
@@ -708,31 +728,34 @@
 						}
 					}
 				}
-			
-				.home-route-distance{
-					font-size: 24rpx;					
+
+				.home-route-distance {
+					font-size: 24rpx;
 					font-weight: 400;
 					color: #B8B8B8;
 					display: flex;
 					justify-content: space-between;
 					margin-bottom: 32rpx;
-					text{
+
+					text {
 						color: #333333;
 					}
 				}
-			
-				.home-route-scenery-spot{
+
+				.home-route-scenery-spot {
 					margin-bottom: 32rpx;
-					.home-route-scenery-spot-title{
-						font-size: 32rpx;						
+
+					.home-route-scenery-spot-title {
+						font-size: 32rpx;
 						font-weight: 400;
 						color: #333333;
 						display: flex;
 						align-items: center;
-						text{
+
+						text {
 							font-size: 22rpx;
 							width: 26rpx;
-							height: 26rpx;							
+							height: 26rpx;
 							border-radius: 50%;
 							background: rgba(38, 132, 255, 0.1);
 							display: flex;
@@ -741,17 +764,19 @@
 							margin-right: 10rpx;
 							color: #2684FF;
 						}
+
 						margin-bottom: 20rpx;
 					}
-					.home-route-scenery-spot-des{
+
+					.home-route-scenery-spot-des {
 						display: flex;
 						justify-content: space-between;
 						background: #F8F8F8;
 						border-radius: 8rpx;
 						padding: 8rpx 14rpx;
-						font-size: 24rpx;						
+						font-size: 24rpx;
 						font-weight: 400;
-						color: #B8B8B8;						
+						color: #B8B8B8;
 					}
 				}
 			}
