@@ -274,7 +274,7 @@
 		},
 		methods: {
 			update(newValue, oldValue, ownerInstance, instance) {
-				
+
 				if (oldValue.init == false) {
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
@@ -309,12 +309,12 @@
 			createMap() {
 				map = new T.Map('map', {
 					maxZoom: 18,
-					minZoom: 9,
+					minZoom: 1,
 					zoom: 5,
 				});
 				console.log('初始化地图')
 				map.centerAndZoom(new T.LngLat(longitude, latitude), 14);
-
+				map.setMaxBounds(new T.LngLatBounds(new T.LngLat(0, 90), new T.LngLat(180, -90)));
 				// this.addUserPosition(121.306381, 31.213812, 0)
 
 				// 创建用户图标
