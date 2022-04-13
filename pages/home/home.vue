@@ -3,7 +3,7 @@
 		<view id="map" class="home-container-map" :prop="option" :change:prop="map.update">
 		</view>
 		<view class="home-container-left">
-			<view class="home-container-left-baojing">
+			<view class="home-container-left-baojing" @click="openWarn">
 				<image src="/static/home/ic_alarmlocation@3x.png" mode="aspectFit"></image>
 			</view>
 			<view class="home-container-left-luxian" @click="openRoute">
@@ -29,15 +29,104 @@
 					<view>全览</view>
 				</view>
 			</view>
-			<view class="home-container-right-tianqi">
+			<view class="home-container-right-tianqi" @click="openWeather">
 				<image src="/static/home/ic_weather@3x.png" mode="aspectFit"></image>
 			</view>
 			<view class="home-container-right-dingwei" @click="location">
 				<image src="/static/home/ic_aim@3x.png" mode="aspectFit"></image>
 			</view>
 		</view>
-		<uni-popup ref="popup" type="bottom" class="home-route-box">
+		<view class="home-container-chat">
+			<scroll-view :scroll-with-animation="true" class="home-container-chat-scroll" @scroll="scroll"
+				show-scrollbar="false" scroll-y :scroll-top="scrollTop">
+				<view class="chat-area-line-box" v-for="(item,index) in msgList">
+					<view class="chat-area-line">
+						<text class="chat-area-line-name">
+							{{item.name}}
+						</text>
+						<template v-if="item.des.mediaType==1">
+							{{item.des.content}}
+						</template>
+						<template v-if="item.des.mediaType==2">
+							发来一张图片
+						</template>
+						<template v-if="item.des.mediaType==3">
+							发来一条语音
+						</template>
+						<template v-if="item.des.mediaType==4">
+							发来一条视频
+						</template>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+		<uni-popup ref="popupWeather" type="bottom" class="home-weather-box">
+			<view class="home-weather-box-container">
+				<view class="home-weather-box-container-1">
+					<view class="home-weather-box-container-1-left">
+						<image src="/static/home/ic_position@3x.png" mode="aspectFit"></image>
+						<text>永州市道县</text>
+					</view>
+					<view class="home-weather-box-container-1-right">
+						<image src="/static/home/ic_partlycloudy@3x.png" mode="aspectFit"></image>
+						<text>多云</text>
+					</view>
+				</view>
+				<view class="home-weather-box-container-2">
+					18°
+				</view>
+				<view class="home-weather-box-container-3">
+					<view class="home-weather-box-container-3-left">
+						<image src="/static/home/ic_air@3x.png" mode="aspectFit"></image>
+						空气
+						<text>56</text>
+					</view>
+					<view class="home-weather-box-container-3-right">
+						<image src="/static/home/ic_wind@3x.png" mode="aspectFit"></image>
+						风力
+						<text>3级</text>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
+		<uni-popup ref="popupWarn" type="bottom" class="home-warn-box">
+			<view class="home-warn-box-container">
+				<view class="home-warn-box-container-title">
+					偏离路线
+				</view>
+				<view class="home-warn-box-container-des">
+					<view class="home-warn-box-container-des-left">
+						<image src="/static/home/ic_oneclickhelp@3x.png" mode="aspectFit"></image>
+						<view class="home-warn-box-container-des-left-t">
+							一键求助
+						</view>
+					</view>
+					<view class="home-warn-box-container-des-right">
+						<image src="/static/home/ic_backtoroute@3x.png" mode="aspectFit"></image>
+						<view class="home-warn-box-container-des-right-t">
+							回到路线
+						</view>
+					</view>
+				</view>
+				<view class="home-warn-box-container-tip">
+					<text>4:58</text>
+					后将自动求助，请选择回到路线并及时返回
+				</view>
+			</view>
+		</uni-popup>
+		<uni-popup ref="popupRoute" type="bottom" class="home-route-box">
 			<view class="home-route-box-container">
+				<view class="home-route-box-container-finish">
+					<image src="/static/home/ic_medal@3x.png" mode="aspectFit"></image>
+					<view>
+						<view>
+							完成路线
+						</view>
+						<view>
+							打卡成就
+						</view>
+					</view>
+				</view>
 				<view class="home-route-title">
 					雁荡山路线
 				</view>
@@ -102,6 +191,43 @@
 	export default {
 		data() {
 			return {
+				scrollTop: 0,
+				msgList: [{
+						name: '用户123:',
+						des: {
+							mediaType: 1, // 文本
+							content: '王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！'
+						}
+					},
+					{
+						name: '李白:',
+						des: {
+							mediaType: 2, // 图片
+							content: 'https://prd-bs-oss.oss-cn-shanghai.aliyuncs.com/mkl/logo3.png'
+						}
+					},
+					{
+						name: '妲己:',
+						des: {
+							mediaType: 3, // 语言
+							content: 'https://prd-bs-oss.oss-cn-shanghai.aliyuncs.com/mkl/475517.mp3'
+						}
+					},
+					{
+						name: '公孙离:',
+						des: {
+							mediaType: 4, // 视频
+							content: 'https://prd-bs-oss.oss-cn-shanghai.aliyuncs.com/mkl/25.mp4'
+						}
+					},
+					{
+						name: '公孙离:',
+						des: {
+							mediaType: 1, // 文本
+							content: '😂'
+						}
+					},
+				],
 				option: {
 					// 初始化
 					init: false,
@@ -133,11 +259,27 @@
 			}
 		},
 		methods: {
+			scroll(e) {
+				console.log(e)
+			},
+			warnTip() {
+				uni.vibrateLong({
+					success: function() {
+						console.log('success');
+					}
+				});
+			},
 			mergeOptions(obj) {
 				this.option = Object.assign({}, this.option, obj)
 			},
+			openWeather() {
+				this.$refs.popupWeather.open()
+			},
+			openWarn() {
+				this.$refs.popupWarn.open()
+			},
 			openRoute() {
-				this.$refs.popup.open()
+				this.$refs.popupRoute.open()
 			},
 			showTourlist() {
 				this.mergeOptions({
@@ -209,6 +351,20 @@
 						userImage: "static/logo.png"
 					}
 				})
+				this.scrollTop = 10000
+				setTimeout(() => {
+					this.msgList.push({
+						name: '用户123:',
+						des: {
+							mediaType: 1, // 文本
+							content: '王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！'
+						}
+					})
+					setTimeout(()=>{
+						this.scrollTop = 10001
+					},1000)
+				}, 1000)
+				// this.warnTip()
 			}, 1000)
 		},
 		onShow() {
@@ -315,10 +471,12 @@
 				console.log('初始化地图')
 				map.centerAndZoom(new T.LngLat(longitude, latitude), 14);
 				map.setMaxBounds(new T.LngLatBounds(new T.LngLat(0, 90), new T.LngLat(180, -90)));
+
 				// this.addUserPosition(121.306381, 31.213812, 0)
 
 				// 创建用户图标
 				currentPositionObj = this.addUserPosition(longitude, latitude, 0)
+
 				// currentPositionObj.updatedStatus('red')
 
 				_ownerInstance.callMethod('location')
@@ -669,6 +827,166 @@
 	.home-container {
 		position: relative;
 
+		.home-container-chat {
+			position: absolute;
+			z-index: 10000;
+			left: 0;
+			bottom: 0;
+
+			.home-container-chat-scroll {
+				height: 400rpx;
+			}
+
+			.chat-area-line-box {
+				padding-bottom: 8rpx;
+			}
+
+			.chat-area-line {
+				background: rgba(0, 0, 0, 0.6);
+				border-radius: 0rpx 34rpx 34rpx 0rpx;
+				padding: 12rpx 34rpx;
+				max-width: 524rpx;
+				width: fit-content;
+				font-size: 24rpx;
+				font-weight: 500;
+				color: #FFFFFF;
+				line-height: 40rpx;
+
+
+				text {
+					color: #0086FF;
+					margin-right: 8rpx;
+				}
+			}
+		}
+
+		.home-weather-box {
+			z-index: 1000;
+
+			.home-weather-box-container {
+				padding: 32rpx 60rpx 72rpx;
+				background-color: white;
+				border-radius: 32rpx 32rpx 0px 0px;
+				text-align: center;
+
+				.home-weather-box-container-1 {
+					display: flex;
+					font-size: 32rpx;
+					font-weight: 400;
+					color: #333333;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 50rpx;
+
+					image {
+						width: 40rpx;
+						height: 40rpx;
+						margin-right: 20rpx;
+					}
+
+					.home-weather-box-container-1-left,
+					.home-weather-box-container-1-right {
+						display: flex;
+						align-items: center;
+					}
+				}
+
+				.home-weather-box-container-2 {
+					font-size: 120rpx;
+					font-weight: 500;
+					color: #333333;
+					line-height: 168rpx;
+					margin-bottom: 20rpx;
+				}
+
+				.home-weather-box-container-3 {
+					display: flex;
+					justify-content: space-evenly;
+					align-items: center;
+					font-size: 32rpx;
+					font-weight: 400;
+					color: #666666;
+
+					.home-weather-box-container-3-left,
+					.home-weather-box-container-3-right {
+						display: flex;
+						justify-content: space-evenly;
+						align-items: center;
+					}
+
+					image {
+						width: 32rpx;
+						height: 32rpx;
+						margin-right: 6rpx;
+					}
+
+					text {
+						font-size: 40rpx;
+						font-weight: 500;
+						color: #05B018;
+						margin-left: 6rpx;
+					}
+
+					.home-weather-box-container-3-right text {
+						color: #D8CB00;
+					}
+				}
+			}
+		}
+
+		.home-warn-box {
+			z-index: 1000;
+
+			.home-warn-box-container {
+				padding: 32rpx 60rpx 44rpx;
+				background-color: white;
+				border-radius: 32rpx 32rpx 0px 0px;
+				text-align: center;
+
+				.home-warn-box-container-title {
+					font-size: 32rpx;
+					font-weight: 500;
+					color: #333333;
+					margin-bottom: 52rpx;
+				}
+
+				.home-warn-box-container-des {
+					display: flex;
+					padding: 0 60rpx;
+					justify-content: space-between;
+					margin-bottom: 52rpx;
+
+					image {
+						width: 172rpx;
+						height: 172rpx;
+						margin-bottom: 20rpx;
+					}
+
+					.home-warn-box-container-des-left-t,
+					.home-warn-box-container-des-right-t {
+						font-size: 28rpx;
+						font-weight: 500;
+						color: #666666;
+					}
+				}
+
+				.home-warn-box-container-tip {
+					background: #F8F8F8;
+					border-radius: 16px;
+					font-size: 24rpx;
+					padding: 16rpx;
+					font-weight: 400;
+					color: #666666;
+					text-align: center;
+
+					text {
+						color: #E41000;
+					}
+				}
+			}
+		}
+
 		.home-route-box {
 			z-index: 1000;
 
@@ -676,6 +994,25 @@
 				padding: 32rpx 60rpx 1rpx;
 				background-color: white;
 				border-radius: 32rpx 32rpx 0px 0px;
+				position: relative;
+
+				.home-route-box-container-finish {
+					position: absolute;
+					bottom: 62rpx;
+					right: 0;
+					background: rgba(38, 132, 255, 0.1);
+					border-radius: 20rpx 0rpx 0rpx 20rpx;
+					padding: 16rpx 16rpx 16rpx 8rpx;
+					font-size: 20rpx;
+					font-weight: 500;
+					color: #2684FF;
+					display: flex;
+
+					image {
+						width: 48rpx;
+						height: 48rpx;
+					}
+				}
 
 				image {
 					width: 32rpx;
