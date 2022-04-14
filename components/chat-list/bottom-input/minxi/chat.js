@@ -198,16 +198,17 @@ export default {
 			switch (item.type) {
 				case 0:
 					console.log('相册')
-					this.getChooseImage(['album'])
+					this.getChooseImage()
 					break;
 				case 1:
 					console.log('拍摄')
-					this.getChooseImage(['camera'])
-					break;
-				case 2:
-					console.log('视频')
+					// this.getChooseImage(['camera'])
 					this.getChooseVideo()
 					break;
+				// case 2:
+				// 	console.log('视频')
+				// 	this.getChooseVideo()
+				// 	break;
 				default:
 			}
 		},
@@ -231,11 +232,10 @@ export default {
 			});
 		},
 		//调起相册或拍摄
-		getChooseImage(type) {
+		getChooseImage() {
 			let _this = this;
 
-			uni.chooseImage({
-				sourceType: type,
+			uni.chooseImage({				
 				count: 9,
 				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 				success: (res) => {

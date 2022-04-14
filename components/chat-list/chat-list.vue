@@ -198,7 +198,7 @@
 </script>
 <style lang="scss">
 	.list-wrap {
-		background-color: white;
+		background-color: #EDEDED;
 
 		.list {
 			transform: rotate(180deg);

@@ -4,12 +4,15 @@
 			<Time :time="time"></Time>
 		</view>
 		<view class="chat-item" v-if="type === 'chat'">
-			<image @click="avatarClick" style="align-self: flex-start;" class="avart" :src="avatar" mode=""></image>
+			<image @click="avatarClick" :style="'align-self: flex-start;'+(!right?' margin-top:10px':'')" class="avart" :src="avatar" mode=""></image>
 			<view class="chat-content">
+				<text v-if="!right" class="chat-content-name">{{name}}</text>
 				<slot></slot>
 			</view>
-			<uni-load-more iconType="snow" v-if="loading" color="#999" :iconSize="16" class="loading" :contentText="{ contentrefresh: '' }" status="loading"></uni-load-more>
-			<image v-if="isError && right && !loading" class="error-icon" @click="errorClick" src="/static/img/chat/wring.png" mode=""></image>
+			<uni-load-more iconType="snow" v-if="loading" color="#999" :iconSize="16" class="loading"
+				:contentText="{ contentrefresh: '' }" status="loading"></uni-load-more>
+			<image v-if="isError && right && !loading" class="error-icon" @click="errorClick"
+				src="/static/img/chat/wring.png" mode=""></image>
 			<view class="read" v-if="!isError && !loading && showIsRead && right">
 				<text class="text" :class="{ 'not-read': !isRead}">{{ isRead ? '已读' : '未读' }}</text>
 			</view>
@@ -19,10 +22,16 @@
 
 <script>
 	import Time from './msg-template/time.vue'
-	
+
 	export default {
-		components: { Time },
+		components: {
+			Time
+		},
 		props: {
+			name: {
+				type: String,
+				default: 'yangCJ'
+			},
 			avatar: String,
 			right: Boolean,
 			loading: Boolean,
@@ -37,38 +46,38 @@
 			isError: Boolean
 		},
 		data() {
-			return {
-			}
+			return {}
 		},
 		methods: {
 			avatarClick() {
-				if(this.right) {
+				if (this.right) {
 					this.$emit('rightAvatarClick')
-				}else {
+				} else {
 					this.$emit('leftAvatarClick')
 				}
 			},
 			errorClick() {
 				uni.showModal({
-				    title: '',
-				    content: '重发该消息?',
-				    success: (res) => {
-				        if (res.confirm) {
-				            this.$emit('retry')
-				        } else if (res.cancel) {
-				            
-				        }
-				    }
+					title: '',
+					content: '重发该消息?',
+					success: (res) => {
+						if (res.confirm) {
+							this.$emit('retry')
+						} else if (res.cancel) {
+
+						}
+					}
 				});
 			}
 		},
 		computed: {
 			classes() {
-				return ['list-item', { 'list-item-right': this.right }]
+				return ['list-item', {
+					'list-item-right': this.right
+				}]
 			}
 		},
-		created() {
-		}
+		created() {}
 	}
 </script>
 <style lang="scss">
@@ -76,32 +85,51 @@
 		transform: rotate(180deg);
 		direction: ltr;
 		padding: 0 10px;
+
 		.time {
 			justify-content: center;
 			flex-direction: row;
 		}
+
 		.chat-item {
 			flex-direction: row;
 			padding-bottom: 14px;
-			align-items: center;
+			align-items: center;			
+
 			.avart {
-				width: 38px;
-				height: 38px;
-				border-radius: 19px;
+				width: 44px;
+				height: 44px;
+				border-radius: 22px;
 				margin-right: 8px;
 			}
+
 			.chat-content {
+				position: relative;
+
+				.chat-content-name {
+					direction: ltr;
+					text-align: left;
+					padding-left: 3px;
+					padding-bottom: 3px;
+					font-size: 12px;
+					font-weight: 400;
+					color: #999999;
+				}
 			}
+
 			.loading {
 				margin-left: 4px;
 			}
+
 			.error-icon {
 				width: 28px;
 				height: 28px;
 			}
+
 			.read {
 				width: 96upx;
 				height: 48upx;
+
 				.text {
 					background: #2AA515;
 					font-size: 36upx;
@@ -110,18 +138,20 @@
 					text-align: center;
 					color: #FFFFFF;
 				}
-				
+
 				.not-read {
 					background: #ff5252;
 					color: #fff;
 				}
 			}
 		}
+
 		&.list-item-right {
 			direction: rtl;
-			.avart {
+
+			.avart {				
 				margin-left: 8px;
-				margin-right: 0px;
+				margin-right: 0px;				
 			}
 		}
 	}

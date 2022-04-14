@@ -44,11 +44,11 @@
 							img: '/static/img/chat/camera.png',
 							type: 1
 						},
-						{
-							name: '录制视频',
-							img: '/static/img/chat/video_recording.png',
-							type: 2
-						},
+						// {
+						// 	name: '录制视频',
+						// 	img: '/static/img/chat/video_recording.png',
+						// 	type: 2
+						// },
 						...val
 					]
 				},

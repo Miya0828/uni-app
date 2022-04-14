@@ -63,7 +63,7 @@
 		}
 
 		&.chat-sound-right-wrap {
-			background-color: #1E89FF;
+			background-color: #AAEA7A;
 
 			.icon {
 				width: 18px;
