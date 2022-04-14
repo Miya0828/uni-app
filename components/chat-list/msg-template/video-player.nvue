@@ -1,0 +1,81 @@
+<template>
+	<view class="video-player">
+		<video :auto-play="true" v-if="src" :controls="true" class="video" :src="src" :poster="cover"></video>
+		<!-- <div class="close" @click="close">
+			<text class="close-text">×</text>
+		</div> -->
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				src: '',
+				cover: '',
+				win: null
+			}
+		},
+		onLoad() {
+			this.win = uni.getCurrentSubNVue()
+
+			this.win.addEventListener("show", this.subNVueShow);
+
+			this.win.addEventListener("hide", this.subNVueHide);
+
+			uni.$on('chat-video-player', (data) => {
+				console.log("chat-video-player")
+				this.src = data.content
+				this.cover = data.cover
+			})
+		},
+		methods: {
+			subNVueShow() {
+				console.log("subNVue show！")
+			},
+			subNVueHide() {
+				console.log("subNVue close！")
+				this.src = ''				
+			},
+			
+			// close() {
+			// 	this.src = ''
+			// 	let win = uni.getCurrentSubNVue()
+			// 	win.hide('slide-out-bottom')
+			// }
+		}
+	}
+</script>
+<style>
+	.video-player {
+		background-color: #000000;
+		color: #fff;
+		flex: 1;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.video {
+		width: 750rpx;
+		height: auto;
+	}
+
+	.close {
+		border-radius: 25px;
+		height: 40px;
+		width: 40px;
+		background-color: rgba(255, 255, 255, .6);
+		position: fixed;
+		bottom: 15px;
+		left: 30px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.close-text {
+		font-size: 30px;
+		margin-top: -5px;
+		color: #fff;
+	}
+</style>

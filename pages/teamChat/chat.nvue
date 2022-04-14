@@ -1,0 +1,161 @@
+<template>
+	<div class="chat-page">
+		<!-- 聊天列表 -->
+		<ChatList @redPacketClick="getPay" :isSafeArea="false" @retryClick="retryClick" :showIsRead="true"
+			@leftAvatarClick="goDetail" :bottomMenu="chatBottomMenu" :inputValue="inputValue" @menuClick="chatMenuClick"
+			ref="chatList" :finish="isCompleted" @loadmore="loadmore" @sendMessage="sendMessage" :list="listData">
+		</ChatList>
+	</div>
+</template>
+
+<script>
+	import ChatList from '@/components/chat-list/chat-list.vue'
+
+	export default {
+		components: {
+			ChatList,
+		},
+		data() {
+			return {
+				listData: [],
+				finish: false,
+				pageIdx: 1
+			}
+		},
+		created() {
+			this.getData()
+		},
+		methods: {
+			getPay() {
+
+			},
+			// 滚动到底部
+			loadmore() {
+				setTimeout(() => {
+					this.getData()
+					console.log("loadmore", this.pageIdx)
+					if (this.pageIdx >= 2) {
+						this.finish = true
+					}
+					this.pageIdx++
+				}, 100)
+			},
+			// 消息重发
+			retryClick() {
+				console.log('消息重发')
+				console.log(item)
+			},
+			// 左测消息，头像点击
+			leftAvatarClick(item) {
+				console.log('左测消息，头像点击')
+				console.log(item)
+			},
+			// 菜单点击
+			menuClick(item) {
+				console.log('左测消息，头像点击')
+				console.log(item)
+			},
+			// 发送消息
+			sendMessage({
+				type,
+				content,
+				length
+			}) {
+				let id = this.listData.length
+				this.listData.unshift({
+					time: new Date().valueOf() / 1000,
+					id,
+					type,
+					right: true,
+					content,
+					duration: length,
+					loading: true,
+					avatar: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg'
+				})
+
+				setTimeout(() => {
+					let item = this.listData.find((item) => item.id === id)
+
+					if (item) {
+						item.loading = false
+					}
+
+				}, 200)
+			},
+			getData() {
+				let data = [{
+						time: new Date().valueOf() / 1000,
+						id: 1,
+						content: '你好',
+						type: 'text',
+						avatar: 'https://img2.woyaogexing.com/2021/07/03/125b546a3cc2468e8a9fc4a8b9e6336a!400x400.jpeg'
+					},
+					{
+						time: new Date().valueOf() / 1000,
+						id: 2,
+						content: '你好',
+						type: 'text',
+						right: true,
+						avatar: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg'
+					},
+					{
+						time: new Date().valueOf() / 1000,
+						id: 3,
+						right: true,
+						content: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg',
+						type: 'image',
+						avatar: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg'
+					},
+					{
+						time: new Date().valueOf() / 1000,
+						id: 1,
+						content: '我照片靓不靓',
+						type: 'text',
+						right: true,
+						avatar: 'https://img2.woyaogexing.com/2021/07/03/125b546a3cc2468e8a9fc4a8b9e6336a!400x400.jpeg'
+					},
+					{
+						time: new Date().valueOf() / 1000,
+						id: 1,
+						content: 'http://www.w3school.com.cn/example/html5/mov_bbb.mp4',
+						type: 'video',
+						duration: 55.6,
+						right: true,
+						cover: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg',
+						avatar: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg'
+					},
+					{
+						time: new Date().valueOf() / 1000,
+						id: 1,
+						content: '张三',
+						type: 'red-packet',
+						right: true,
+						amount: 55.6,
+						avatar: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg'
+					},
+					{
+						time: new Date().valueOf() / 1000,
+						id: 1,
+						content: 'https://prd-bs-oss.oss-cn-shanghai.aliyuncs.com/mkl/475517.mp3',
+						type: 'sound',
+						right: true,
+						duration: 55.6,
+						avatar: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg'
+					},
+
+				]
+
+				data.forEach(item => {
+					this.listData.unshift(item)
+				})
+
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	.chat-page {
+		flex: 1;
+	}
+</style>

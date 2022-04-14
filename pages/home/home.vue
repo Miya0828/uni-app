@@ -30,7 +30,7 @@
 				</view>
 			</view>
 			<view class="home-container-right-tianqi" @click="openWeather">
-				<image src="/static/home/ic_weather@3x.png" mode="aspectFit"></image>
+				<image src="/static/home/weather_icons/100.svg" mode="aspectFit"></image>
 			</view>
 			<view class="home-container-right-dingwei" @click="location">
 				<image src="/static/home/ic_aim@3x.png" mode="aspectFit"></image>
@@ -68,7 +68,7 @@
 						<text>永州市道县</text>
 					</view>
 					<view class="home-weather-box-container-1-right">
-						<image src="/static/home/ic_partlycloudy@3x.png" mode="aspectFit"></image>
+						<image src="/static/home/weather_icons/100-fill.svg" mode="aspectFit"></image>
 						<text>多云</text>
 					</view>
 				</view>
@@ -430,7 +430,7 @@
 		},
 		methods: {
 			update(newValue, oldValue, ownerInstance, instance) {
-
+				if(!oldValue)return
 				if (oldValue.init == false) {
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
@@ -829,7 +829,7 @@
 
 		.home-container-chat {
 			position: absolute;
-			z-index: 10000;
+			z-index: 1000;
 			left: 0;
 			bottom: 0;
 
@@ -888,7 +888,7 @@
 					.home-weather-box-container-1-left,
 					.home-weather-box-container-1-right {
 						display: flex;
-						align-items: center;
+						align-items: center;						
 					}
 				}
 

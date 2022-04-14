@@ -6,18 +6,39 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "515370",
-      "name": "添加_add154",
-      "font_class": "tianjiaadd154",
-      "unicode": "e6e5",
-      "unicode_decimal": 59109
+      "icon_id": "2076249",
+      "name": "更多2",
+      "font_class": "gengduo",
+      "unicode": "e88b",
+      "unicode_decimal": 59531
     },
     {
-      "icon_id": "23810369",
-      "name": "telephone_one",
-      "font_class": "telephone_one",
-      "unicode": "e656",
-      "unicode_decimal": 58966
+      "icon_id": "28959704",
+      "name": "ic_team",
+      "font_class": "ic_team",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "28959709",
+      "name": "ic_addto",
+      "font_class": "ic_addto",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "28959710",
+      "name": "ic_qrcode",
+      "font_class": "ic_qrcode",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "28959711",
+      "name": "ic_chat",
+      "font_class": "ic_chat",
+      "unicode": "e616",
+      "unicode_decimal": 58902
     }
   ]
 }

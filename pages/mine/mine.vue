@@ -127,7 +127,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="scss">	
 .minePage {
 	background-color:#f7f8fe;
 	color:#666666;
