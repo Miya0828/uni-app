@@ -18,10 +18,25 @@
 			}
 		},
 		{
+			"path": "pages/teamChat/teamList",
+			"style": {
+				"navigationBarTitleText": "团队成员"
+			}
+		},
+		{
 			"path": "pages/teamChat/chat",
 			"style": {
 				"navigationBarTitleText": "聊天室",
 				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px",
+						"buttons": [{
+							"color": "#000000",
+							"text": "\ue613",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "20px"
+						}]
+					},
 					"softinputNavBar": "none",
 					"bounce": "none",
 					"subNVues": [{
@@ -98,13 +113,13 @@
 			"style": {
 
 			}
-		}, 
+		},
 		{
 			"path": "pages/community/community",
 			"style": {
 				"navigationBarTitleText": "社区"
 			}
-		}, 
+		},
 		{
 			"path": "pages/forHelp/forHelp",
 			"style": {

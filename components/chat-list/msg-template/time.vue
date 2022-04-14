@@ -2,8 +2,8 @@
 	<text class="chat-timestamp">{{ getTimeDesc(time) }}</text>
 </template>
 
-<script>
-	import moment from 'moment'
+<script>	
+	import moment from '@/static/js/moment/moment.js'	
 	
 	export default {
 		props: {

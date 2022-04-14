@@ -44,8 +44,7 @@
 	import ChatVideo from './msg-template/video.vue'
 	import ChatTime from './msg-template/time.vue'
 	import BottomInput from './bottom-input/bottom-input.vue'
-	import moment from 'moment'
-
+	import moment from '@/static/js/moment/moment.js'		
 	const dom = weex.requireModule('dom')
 
 	export default {
