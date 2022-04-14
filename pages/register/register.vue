@@ -57,9 +57,9 @@
 					<input placeholder="紧急联系人号码"  type="number" maxlength="11"  name="emergencyContactPhone"></input>
 				</view>
 				<view class="margin-top-xl">
-					<button class="bg-blue line-blue text-white register-btn"  form-type="submit">注册</button>
+					<button class="bg-blue line-blue text-white register-btn" form-type="submit">注册</button>
 				</view>
-				<view class="margin-top-sm flex align-center">
+				<view class="margin-top-sm flex justify-center align-center">
 					<radio-group name="agree">
 						<label>
 							<radio value="1" class="form-radio"/>我已阅读并同意遵守
@@ -98,6 +98,7 @@
 				array: ['+86'],
 				index: 0,
 				smsCountDown: 0,
+				smsCountInterval: null,
 				modalName:'',
 				birthday: 0,
 				isAgree:1,
@@ -115,6 +116,11 @@
 					return '发送验证码';
 				}
 			},
+		},
+		beforeDestroy() {
+			if (this.smsCountInterval) {
+				clearInterval(this.smsCountInterval);
+			}
 		},
 		methods: {
 			onSMSSend() {
@@ -184,7 +190,7 @@
 					{name:"profession", checkType : "notnull", checkRule:"",  errorMsg:"请输入职业"},
 					{name:"emergencyContact", checkType : "notnull", checkRule:"",  errorMsg:"请输入紧急联系人"},
 				    {name:"emergencyContactPhone", checkType : "phoneno", checkRule:"",  errorMsg:"请输入正确的紧急联系人号码"},
-					{name:"agree",checkType:'notnull',checkRule:'',errorMsh:'请阅读并选择遵守协议'},
+					{name:"agree",checkType:'notnull',checkRule:'',errorMsg:'请阅读并选择遵守协议'},
 				];
 				formData.birthday = this.birthday;
 				var checkRes = graceChecker.check(formData, rule);

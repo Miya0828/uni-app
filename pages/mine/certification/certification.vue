@@ -4,7 +4,7 @@
 			<view>
 				<view class="cu-form-group margin-tb-sm">
 					<view class="title">姓名</view>
-					<input placeholder="请输入真实姓名" name="username"></input>
+					<input placeholder="请输入真实姓名"  name="username"></input>
 				</view>
 				<view class="cu-form-group margin-top-sm">
 					<view class="title">区号</view>
@@ -12,40 +12,58 @@
 				</view>
 				<view class="cu-form-group margin-bottom-sm">
 					<view class="title">手机号码</view>
-					<input placeholder="请输入手机号码" name="phone"></input>
+					<input placeholder="请输入手机号码" type="number" maxlength="11" name="phone"></input>
 				</view>
 				<view class="cu-form-group margin-tb-sm">
 					<view class="title">身份证号</view>
-					<input placeholder="请输入证件号码" name="idCardNo"></input>
+					<input placeholder="请输入证件号码" name="identityCard"></input>
 				</view>
-				<view class="cu-list menu card-menu margin-tb-sm">
+				<!-- <view class="cu-list menu card-menu margin-tb-sm">
 					<view class="cu-item arrow">
 						<navigator class="content" url="/pages/mine/certification/uploadIdCard" hover-class="none">
 							<text class="item title">证件照片</text>
-							<text class="bg-white tips">未上传</text>
+							<text class="bg-white tips">请上传证件照片</text>
 						</navigator>
 					</view>
-				</view>
+				</view> -->
 			</view>
 			<view class="btn">
-				<button class="text-blue margin-lr-xl">提交</button>
+				<button class="text-blue margin-lr-xl" form-type="submit">下一步</button>
 			</view>
 		</form>
 	</view>
 </template>
 
 <script>
+	import graceChecker from '@/common/biz/graceChecker.js';
 	export default {
 		data() {
 			return {
-				
+				username:'123'
 			}
 		},
 		mounted(){
 			
 		},
 		methods: {
-			onAuth(){}
+			onAuth(e){
+				//进行表单检查
+				var formData = e.detail.value;
+				//定义表单规则
+				var rule = [
+					{name:"username", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
+					{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
+					{name:'identityCard',checkType:'identityCard',errorMsg:'请输入正确格式的身份证号'},
+				];
+				var checkRes = graceChecker.check(formData, rule);
+				if(!checkRes){
+				    uni.showToast({ title: graceChecker.error, icon: "none" });
+					return;
+				}
+				uni.navigateTo({
+					url:"/pages/mine/certification/uploadIdCard?userInfo="+JSON.stringify(formData)
+				})
+			}
 		}
 	}
 </script>
