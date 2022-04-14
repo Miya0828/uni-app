@@ -85,6 +85,10 @@ export default {
 				case 'notnull':
 					if(data[rule[i].name] == null || data[rule[i].name].length < 1){this.error = rule[i].errorMsg; return false;}
 				break;
+				case 'identityCard':
+					var reg = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/;
+					if (!reg.test(data[rule[i].name])) { this.error = rule[i].errorMsg; return false; }
+				break;
 			}
 		}
 		return true;

@@ -79,7 +79,6 @@
 			"path": "pages/home/home",
 			"style": {
 				"navigationBarTitleText": "当前路线"
-
 			}
 		},
 		{
@@ -162,20 +161,85 @@
 			"style": {
 				"navigationBarTitleText": "活动信息上传"
 			}
+		}, {
+			"path": "pages/mine/captainApplication/captainApplication"
 		},
-		{
-			"path": "pages/mine/teamAuth",
-			"style": {
-				"navigationBarTitleText": "组团与团队认证申请"
-			}
-		},
-		{
-			"path": "pages/mine/captainGuide",
+		 {
+			"path": "pages/mine/captainApplication/captainGuide",
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
 			}
-		}
-	],
+		}, {
+			"path": "pages/mine/captainApplication/personInfo",
+			"style": {
+				"navigationBarTitleText": "个人介绍"
+			}
+		}, {
+			"path": "pages/mine/captainApplication/experience",
+			"style": {
+				"navigationBarTitleText": "领队经验"
+			}
+		}, {
+			"path": "pages/mine/captainApplication/ability",
+			"style": {
+				"navigationBarTitleText": "领队认证申请"
+			}
+		},{
+			"path": "pages/mine/captainApplication/baseInfo",
+			"style": {
+				"navigationBarTitleText": "领队认证申请"
+			}
+		},{
+            "path" : "pages/teamChat/teamChat",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "队聊",
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px",
+						"buttons": [{
+							"color": "#00C435",
+							"text": "\ue6e5",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "22px"
+						}]
+					}
+				}
+            }
+            
+        },{
+            "path" : "pages/teamChat/chat",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "聊天室"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mine/captainApplication/tourGuide",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "上传证件"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mine/captainApplication/teamLeader",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "上传证件"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mine/captainApplication/goodType",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "擅长类型"
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

@@ -1,7 +1,7 @@
 <template>
 	<view class="login-view">
 		<view class="logo margin-left-xl">
-			<image style="width: 100upx; height: 100upx; background-color: #eeeeee;" src="../../static/logo.png">
+			<image style="width: 100upx; height: 100upx;" src="../../static/logo.png">
 			</image>
 		</view>
 		<view class="margin-left-lg text-lg  text-bold text-xxl login-tip">欢迎来到驴友通</view>
@@ -91,10 +91,11 @@
 				password:'',
 				array: ['+86'],
 				index: 0,
-				smsCountDown: 0,
 				modalName:'',
 				passwordType:'password',
 				isShowPassword:false,
+				smsCountDown: 0,
+				smsCountInterval: null,
 			};
 		},
 		onBackPress() {  
@@ -111,6 +112,11 @@
 		     }  
 		   });  
 		   return true  
+		},
+		beforeDestroy() {
+			if (this.smsCountInterval) {
+				clearInterval(this.smsCountInterval);
+			}
 		},
 		computed: {
 			isSendSMSEnable() {
@@ -241,11 +247,6 @@
 			},
 			hideModal(e) {
 				this.modalName = null;
-			},
-			beforeDestroy() {
-				if (this.smsCountInterval) {
-					clearInterval(this.smsCountInterval);
-				}
 			},
 		}
 	};

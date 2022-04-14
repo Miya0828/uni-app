@@ -22,14 +22,15 @@
 					<view class="margin-bottom-xl">我们将在1-3个工作日完成审核，并告知您结果。</view>
 				</view>
 				<view class="margin-bottom-sm margin-lr-lg">
-					<button class="bg-blue">知道了，开始申请</button>
+					<navigator url="/pages/mine/captainApplication/captainApplication">
+						<button class="bg-blue">知道了，开始申请</button>
+					</navigator>
 				</view>
 				<view class="margin-bottom-xl margin-lr-lg">
-					<button class="text-blue" style="background:rgba(38, 132, 255, 0.1);">退出申请</button>
+					<button class="text-blue" style="background:rgba(38, 132, 255, 0.1);" @click="onGoBack">退出申请</button>
 				</view>
 			</view>
 		</view>
-		
 	</view>
 </template>
 
@@ -41,7 +42,11 @@
 			}
 		},
 		methods: {
-			
+			onGoBack(){
+				uni.navigateBack({
+					delta:1
+				})
+			}
 		}
 	}
 </script>

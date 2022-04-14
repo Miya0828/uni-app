@@ -54,34 +54,34 @@
 				</navigator>
 			</view>
 			<view class="cu-item arrow top-radius">
-				<navigator class="content" url="/pages/user/userdetail" hover-class="none">
-					<text class="cuIcon-settingsfill text-cyan"></text>
-					<text class="text-grey">安全培训进度</text>
-				</navigator>
+				<view class="content">
+				<text class="cuIcon-settingsfill text-cyan"></text>
+				<text class="text-grey">安全培训进度</text>
+				</view>
 			</view>
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/mine/captainGuide" hover-class="none">
+				<navigator class="content" url="/pages/mine/captainApplication/captainGuide" hover-class="none">
 					<text class="cuIcon-settingsfill text-cyan"></text>
 					<text class="text-grey">成为队长</text>
 				</navigator>
 			</view>
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+				<view class="content">
 					<text class="cuIcon-settingsfill text-cyan"></text>
 					<text class="text-grey">行前登记</text>
-				</navigator>
+				</view>
 			</view>
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/mine/teamAuth" hover-class="none">
+				<view class="content">
 					<text class="cuIcon-settingsfill text-cyan"></text>
-					<text class="text-grey">组团与团队认证</text>
-				</navigator>
+					<text class="text-grey">团队历史群管理</text>
+				</view>
 			</view>
 			<view class="cu-item arrow margin-bottom-sm bottom-radius">
-				<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+				<view class="content">
 					<text class="cuIcon-settingsfill text-cyan"></text>
 					<text class="text-grey">下载离线地图</text>
-				</navigator>
+				</view>
 			</view>
 			<view class="cu-item arrow top-radius">
 				<view class="content">
