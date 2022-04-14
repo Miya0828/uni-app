@@ -1,20 +1,69 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/teamChat/teamChat",
+			"style": {
+				"navigationBarTitleText": "队聊",
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px",
+						"buttons": [{
+							"color": "#000000",
+							"text": "\ue614",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "20px"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/teamChat/chat",
+			"style": {
+				"navigationBarTitleText": "聊天室",
+				"app-plus": {
+					"softinputNavBar": "none",
+					"bounce": "none",
+					"subNVues": [{
+						"id": "video-player", // 视频播放
+						"path": "/components/chat-list/msg-template/video-player",
+						"type": "popup",
+						"style": {
+							"width": "100%",
+							"popGesture": "none"
+						}
+					}]
+				}
+			}
+		},
+		{
+			"path": "pages/teamChat/teamCreate",
+			"style": {
+				"navigationBarTitleText": "创建团队"
+			}
+		},
+		{
+			"path": "pages/teamChat/teamJoin",
+			"style": {
+				"navigationBarTitleText": "团队添加",
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px",
+						"buttons": [{
+							"color": "#000000",
+							"text": "\ue615",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "20px"
+						}]
+					}
+				}
+
+			}
+		},
+		{
 			"path": "pages/home/home",
 			"style": {
 				"navigationBarTitleText": "当前路线"
-				// "app-plus": {
-				// 	"titleNView": {
-				// 		"titleSize": "20px",
-				// 		"buttons": [{
-				// 			"color": "#00C435",
-				// 			"text": "\ue656",
-				// 			"fontSrc": "/static/font/iconfont.ttf",
-				// 			"fontSize": "22px"
-				// 		}]
-				// 	}
-				// }
 			}
 		},
 		{
@@ -45,24 +94,25 @@
 		},
 		{
 			"path": "pages/register/register",
-			"style": {
-				
-			}
-		}, {
+			"style": {}
+		}, 
+		{
 			"path": "pages/community/community",
 			"style": {
-				"navigationBarTitleText": "社区"	
+				"navigationBarTitleText": "社区"
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/forHelp/forHelp",
 			"style": {
-				"navigationBarTitleText": "求助"	
+				"navigationBarTitleText": "求助"
 			}
-		}, {
+		},
+		{
 			"path": "pages/mine/mine",
 			"style": {
-				"navigationBarBackgroundColor":"#f7f8fe",
-				"navigationStyle":"custom"
+				"navigationBarBackgroundColor": "#f7f8fe",
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -95,7 +145,10 @@
 				"navigationBarTitleText": "活动信息上传"
 			}
 		}, {
-			"path": "pages/mine/captainApplication/captainApplication",
+			"path": "pages/mine/captainApplication/captainApplication"
+		},
+		{
+			"path": "pages/mine/teamAuth",
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
 			}
@@ -192,11 +245,10 @@
 		"selectedColor": "#2684FF",
 		"borderStyle": "#FFFFFF",
 		"backgroundColor": "#FFFFFF",
-		"fontSize":"12px",
+		"fontSize": "12px",
 		"spacing": "8px",
 		"iconWidth": "20px",
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/forHelp/forHelp",
 				"iconPath": "static/tabBar/ic_help.png",
 				"selectedIconPath": "static/tabBar/ic_clickhelp.png",
@@ -213,7 +265,7 @@
 				"iconPath": "static/tabBar/ic_navigation.png",
 				"selectedIconPath": "static/tabBar/ic_clickednavigation.png",
 				"text": "导航"
-			}, 
+			},
 			{
 				"pagePath": "pages/community/community",
 				"iconPath": "static/tabBar/ic_community.png",

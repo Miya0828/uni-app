@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1649479576555') format('truetype');
+  src: url('iconfont.ttf?t=1649857011362') format('truetype');
 }
 
 .iconfont {
@@ -11,11 +11,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-tianjiaadd154:before {
-  content: "\e6e5";
+.icon-gengduo:before {
+  content: "\e88b";
 }
 
-.icon-telephone_one:before {
-  content: "\e656";
+.icon-ic_team:before {
+  content: "\e613";
+}
+
+.icon-ic_addto:before {
+  content: "\e614";
+}
+
+.icon-ic_qrcode:before {
+  content: "\e615";
+}
+
+.icon-ic_chat:before {
+  content: "\e616";
 }
 

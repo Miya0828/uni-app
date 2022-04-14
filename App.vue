@@ -52,7 +52,9 @@
 </script>
 <style>
 	/*每个页面公共css */
+	/* #ifndef APP-PLUS-NVUE */
 	@import 'plugin/colorui/main.css';
 	@import 'plugin/colorui/icon.css';
 	@import 'plugin/colorui/animation.css';
+	/* #endif*/
 </style>
