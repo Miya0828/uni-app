@@ -18,10 +18,25 @@
 			}
 		},
 		{
+			"path": "pages/teamChat/teamList",
+			"style": {
+				"navigationBarTitleText": "团队成员"
+			}
+		},
+		{
 			"path": "pages/teamChat/chat",
 			"style": {
 				"navigationBarTitleText": "聊天室",
 				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px",
+						"buttons": [{
+							"color": "#000000",
+							"text": "\ue613",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "20px"
+						}]
+					},
 					"softinputNavBar": "none",
 					"bounce": "none",
 					"subNVues": [{
@@ -39,7 +54,10 @@
 		{
 			"path": "pages/teamChat/teamCreate",
 			"style": {
-				"navigationBarTitleText": "创建团队"
+				"navigationBarTitleText": "创建团队",
+				"app-plus": {
+					"softinputMode": "adjustResize"
+				}
 			}
 		},
 		{
@@ -94,14 +112,16 @@
 		},
 		{
 			"path": "pages/register/register",
-			"style": {}
-		}, 
+			"style": {
+
+			}
+		},
 		{
 			"path": "pages/community/community",
 			"style": {
 				"navigationBarTitleText": "社区"
 			}
-		}, 
+		},
 		{
 			"path": "pages/forHelp/forHelp",
 			"style": {
@@ -150,27 +170,31 @@
 				"navigationBarTitleText": "领队认证申请"
 			}
 		},
-		 {
+		{
 			"path": "pages/mine/captainApplication/captainGuide",
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
 			}
-		}, {
+		},
+		{
 			"path": "pages/mine/captainApplication/personInfo",
 			"style": {
 				"navigationBarTitleText": "个人介绍"
 			}
-		}, {
+		},
+		{
 			"path": "pages/mine/captainApplication/experience",
 			"style": {
 				"navigationBarTitleText": "领队经验"
 			}
-		}, {
+		},
+		{
 			"path": "pages/mine/captainApplication/ability",
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
 			}
-		},{
+		},
+		{
 			"path": "pages/mine/captainApplication/baseInfo",
 			"style": {
 				"navigationBarTitleText": "领队认证申请"

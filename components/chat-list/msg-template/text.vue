@@ -50,10 +50,10 @@
 			font-size: 32rpx;
 		}
 		&.chat-text-right-wrap {
-			background-color: #1E89FF;
+			background-color: #AAEA7A;
 			direction: ltr;
 			.chat-text {
-				color: white;
+				color: #000000;
 				text-align: left;
 				background-color: rgba($color: #000000, $alpha: 0);
 			}

@@ -14,7 +14,7 @@
 			</view>
 		</view>
 		<view class="team-chat-container-list">
-			<view class="team-chat-container-list-item" @click="toteam">
+			<view class="team-chat-container-list-item" @click="toteam('团队一')">
 				<view class="team-chat-container-item-logo">
 					<image src="/static/chat/ic_createateam@3x.png" mode=""></image>
 				</view>
@@ -57,9 +57,9 @@
 					url: '/pages/teamChat/teamCreate'
 				})
 			},
-			toteam(){
+			toteam(title){
 				uni.navigateTo({
-					url: '/pages/teamChat/chat'
+					url: '/pages/teamChat/chat?title='+title
 				})
 			}
 		},
