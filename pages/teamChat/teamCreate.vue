@@ -1,6 +1,6 @@
 <template>
 	<view class="team-create-container">
-		<view class="team-create-container-item">
+		<view class="team-create-container-item" @click="changeAvatar">
 			<view class="team-create-container-item-title">
 				头像
 			</view>
@@ -79,10 +79,14 @@
 			</view>
 		</view>
 
-		<uni-popup ref="popup" type="dialog">
-			<uni-popup-dialog :title="title" :value='value' mode="input" message="成功消息" :duration="2000"
-				:before-close="true" @close="close" @confirm="confirm"></uni-popup-dialog>
-		</uni-popup>
+		<view class="team-create-container-uni-popup">
+			<uni-popup ref="popup" type="center">
+				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="close"
+					@confirm="confirm">
+					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value" />
+				</uni-popup-dialog>
+			</uni-popup>
+		</view>
 	</view>
 </template>
 
@@ -90,7 +94,7 @@
 	export default {
 		data() {
 			return {
-				title: '请修改',
+				title: '请输入',
 				value: '',
 				type: '',
 				form: {
@@ -104,6 +108,16 @@
 			}
 		},
 		methods: {
+			changeAvatar() {
+				uni.chooseImage({
+					count: 1, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择
+					success: function(res) {
+						console.log(JSON.stringify(res.tempFilePaths));
+					}
+				});
+			},
 			changeValue(type) {
 				console.log(type)
 				this.type = type
@@ -115,18 +129,18 @@
 				// ...
 				this.$refs.popup.close()
 			},
-			confirm(value) {
+			confirm() {
 				// 输入框的值
-				console.log(value)
-				this.form[this.type] = value
+				console.log(this.value)
+				this.form[this.type] = this.value
 				// TODO 做一些其他的事情，手动执行 close 才会关闭对话框
 				// ...
 				this.$refs.popup.close()
 			},
-			copy(data){
+			copy(data) {
 				uni.setClipboardData({
 					data,
-					success: function () {
+					success: function() {
 						console.log('success');
 					}
 				});
@@ -140,6 +154,10 @@
 		height: 100vh;
 		background: #F8F8F8;
 		padding-top: 18rpx;
+
+		.team-create-container-uni-popup {
+			background-color: pink;
+		}
 
 		.team-create-container-save {
 			position: absolute;
