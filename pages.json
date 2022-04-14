@@ -145,7 +145,10 @@
 				"navigationBarTitleText": "活动信息上传"
 			}
 		}, {
-			"path": "pages/mine/captainApplication/captainApplication"
+			"path": "pages/mine/captainApplication/captainApplication",
+			"style": {
+				"navigationBarTitleText": "领队认证申请"
+			}
 		},
 		 {
 			"path": "pages/mine/captainApplication/captainGuide",
@@ -219,6 +222,14 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "擅长类型"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mine/personalCenter/personalCenter",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人中心"
             }
             
         }

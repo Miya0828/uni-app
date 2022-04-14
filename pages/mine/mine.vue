@@ -8,7 +8,7 @@
 				<view class="margin-left">
 					<view class="username">
 						<text class="text-bold padding-right-sm">袁露露</text>
-						<text class="cuIcon-edit tex"></text>
+						<text class="cuIcon-edit tex" @click="modifyUser"></text>
 					</view>
 					<view class="description">是爱徒步的女侠呀</view>
 					<view class="margin-top-xs">
@@ -115,6 +115,11 @@ export default {
 		};
 	},
 	methods: {
+		modifyUser(){
+			uni.navigateTo({
+				url:"/pages/mine/personalCenter/personalCenter"
+			})
+		},
 		logout() {
 			uni.setStorageSync(ACCESS_TOKEN, '');
 			uni.navigateTo({

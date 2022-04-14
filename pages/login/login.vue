@@ -150,8 +150,11 @@
 					return;
 				}
 				loginService.login(params).then(res => {
-					if (res.data.success) {
-						uni.setStorageSync(ACCESS_TOKEN, '111');
+					let {data}  = res;
+					if (data.success) {
+						let {token,userInfo} = data.result;
+						uni.setStorageSync(ACCESS_TOKEN,token);
+						uni.setStorageSync(USER_INFO,userInfo);
 						this.$tip.success('登录成功!')
 						uni.reLaunch({
 							url: '/pages/home/home',

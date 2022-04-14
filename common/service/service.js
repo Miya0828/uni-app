@@ -9,7 +9,7 @@ let apiUrl = configService.apiUrl;
 const getTokenStorage = () => {
 	let token = ''
 	try{
-		token = uni.getStorageSync(ACCESS_TOKEN)
+		token = uni.getStorageSync(ACCESS_TOKEN);
 	}catch(e){
 		//TODO handle the exception
 		console.log("getTokenStorage",token)
@@ -61,14 +61,17 @@ http.interceptor.response(
 async (response) => { 
 	if (response.config.custom.loading) {
 	    uni.hideLoading()
-	  }
+	}
   return response;
 }, (response) => {
 	// 请求错误做点什么
   if (response) {
+	  if (response.config.custom.loading) {
+	      uni.hideLoading()
+	  }
       let data = response.data;
       const token = uni.getStorageSync(ACCESS_TOKEN);
-      switch (data.status) {
+      switch (data.code) {
         case 403:
           tip.error('拒绝访问');
           break;
@@ -96,7 +99,7 @@ async (response) => {
           break;
       }
     }
-  return response;
+  return data.result || {};
 })
 
 export {
