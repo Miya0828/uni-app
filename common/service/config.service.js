@@ -1,12 +1,11 @@
-let BASE_URL = ''
-
+let BASE_URL = '';
 
 if (process.env.NODE_ENV == 'development') {
-    BASE_URL = 'http://119.23.214.166:8080/tour-pal' // 开发环境
+    BASE_URL = 'http://119.23.214.166:8080' // 开发环境
 } else {
-	BASE_URL = 'http://:8080' // 生产环境
+	BASE_URL = 'http://119.23.214.166:8080' // 生产环境
 }
-let staticDomainURL = BASE_URL+ '/sys/common/static';
+let staticDomainURL = BASE_URL+ '/tour-pal/sys/common/static';
 
 const configService = {
 	apiUrl: BASE_URL,

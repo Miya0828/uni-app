@@ -46,7 +46,8 @@
 
 <script>
 import { pathToBase64, base64ToPath } from '@/js_sdk/mmmm-image-tools/index.js';
-import { ACCESS_TOKEN } from "@/common/util/constants";
+import { uploadFile } from "@/common/biz/common.js";
+
 export default {
 	data() {
 		return {
@@ -93,30 +94,14 @@ export default {
 			}
 		},
 		chooseImage(callback) {
-			let token = uni.getStorageSync(ACCESS_TOKEN);
-			if (!token) {
-				uni.navigateTo({
-					url: '/pages/login/login'
-				});
-			}
 			uni.chooseImage({
 				count: 1,
 				sizeType: ['original', 'compressed'],
 				sourceType: ['album'],
 				success: function(chooseImageRes){
 					let {tempFilePaths} = chooseImageRes;
-					// callback && callback(tempFilePaths[0]);
-					uni.uploadFile({
-						url: 'http://119.23.214.166:8080/tour-palsys/common/upload', //仅为示例，非真实的接口地址
-						header:{
-							// "Content-Type": "multipart/form-data", // formdata提交格式
-							'X-Access-Token':token
-						},
-						filePath: tempFilePaths[0],
-						name: 'file',
-						success: (uploadFileRes) => {
-							callback && callback(tempFilePaths);
-						}
+					uploadFile(tempFilePaths[0],(path)=>{
+						callback&&callback(path);
 					});
 					
 				}

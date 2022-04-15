@@ -13,9 +13,8 @@ const userService = {
 	  * 用户编辑
 	  */
 	editUser(params,loading = true) {
-		return http.post('/sys/user/editUser',params,{custom: {loading: loading}})	
+		return http.post('/tour-pal/sys/user/editUser',params,{custom: {loading: loading}})	
 	},
-	
 };
 
 export  default userService;
