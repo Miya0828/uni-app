@@ -1,6 +1,12 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/mine/captainApplication/skilledIn",
+			"style": {
+				"navigationBarTitleText": "擅长领域"
+			}
+		},
+		{
 			"path": "pages/teamChat/teamChat",
 			"style": {
 				"navigationBarTitleText": "队聊",
@@ -119,7 +125,7 @@
 		{
 			"path": "pages/community/community",
 			"style": {
-				"navigationBarTitleText": "社区"
+				"navigationBarTitleText": "社区与消息"
 			}
 		},
 		{
@@ -141,6 +147,7 @@
 				"navigationBarTitleText": "实名认证"
 			}
 		},
+
 		{
 			"path": "pages/mine/certification/uploadIdCard",
 			"style": {
@@ -199,11 +206,10 @@
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
 			}
-		},{
-            "path" : "pages/teamChat/teamChat",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "队聊",
+		}, {
+			"path": "pages/teamChat/teamChat",
+			"style": {
+				"navigationBarTitleText": "队聊",
 				"app-plus": {
 					"titleNView": {
 						"titleSize": "20px",
@@ -215,49 +221,40 @@
 						}]
 					}
 				}
-            }
-            
-        },{
-            "path" : "pages/teamChat/chat",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "聊天室"
-            }
-            
-        }
-        ,{
-            "path" : "pages/mine/captainApplication/tourGuide",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "上传证件"
-            }
-            
-        }
-        ,{
-            "path" : "pages/mine/captainApplication/teamLeader",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "上传证件"
-            }
-            
-        }
-        ,{
-            "path" : "pages/mine/captainApplication/goodType",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "擅长类型"
-            }
-            
-        }
-        ,{
-            "path" : "pages/mine/personalCenter/personalCenter",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "个人中心"
-            }
-            
-        }
-    ],
+			}
+
+		}, {
+			"path": "pages/teamChat/chat",
+			"style": {
+				"navigationBarTitleText": "聊天室"
+			}
+
+		}, {
+			"path": "pages/mine/captainApplication/tourGuide",
+			"style": {
+				"navigationBarTitleText": "上传证件"
+			}
+
+		}, {
+			"path": "pages/mine/captainApplication/teamLeader",
+			"style": {
+				"navigationBarTitleText": "上传证件"
+			}
+
+		}, {
+			"path": "pages/mine/captainApplication/goodType",
+			"style": {
+				"navigationBarTitleText": "擅长类型"
+			}
+
+		}, {
+			"path": "pages/mine/personalCenter/personalCenter",
+			"style": {
+				"navigationBarTitleText": "个人中心"
+			}
+
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",
