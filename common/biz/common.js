@@ -10,6 +10,9 @@ function uploadFile(filePath,callback){
 			url: '/pages/login/login'
 		});
 	}
+	uni.showLoading({
+	    title:"加载中..."
+	});
 	uni.uploadFile({
 		url: apiUrl+'/tour-pal/sys/common/upload', //仅为示例，非真实的接口地址
 		header:{
@@ -18,13 +21,14 @@ function uploadFile(filePath,callback){
 		filePath,
 		name: 'file',
 		success: (res) => {
+			uni.hideLoading();
 			let data = res&&JSON.parse(res.data);
 			if(data.success){
 				callback && callback(staticUrl+'/'+data.message);
 			}
 		},
 		fail:(err) => {
-			
+			uni.hideLoading();
 		}
 	});
 }

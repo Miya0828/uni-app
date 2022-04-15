@@ -51,8 +51,8 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
  if (config.custom.loading) {
     uni.showLoading({
          title:"加载中..."
-     })
-   }
+     });
+	}
   return config;
 })
 
@@ -60,7 +60,7 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
 http.interceptor.response(
 async (response) => { 
 	if (response.config.custom.loading) {
-	    uni.hideLoading()
+	    uni.hideLoading();
 	}
   return response;
 }, (response) => {

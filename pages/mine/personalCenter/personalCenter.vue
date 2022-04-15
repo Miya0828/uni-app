@@ -1,12 +1,12 @@
 <template>
 	<view class="personalCenter">
-		<view class="cu-list menu card-menu">
+		<view class="cu-list menu card-menu" @click="onShowBottomModal">
 			<view class="cu-item arrow">
 				<text class="item title">头像</text>
-				<view class="cu-avatar round" @click="onPreview(userInfo.avatar)" :style="getStyle"></view>
+				<view class="cu-avatar round" @click.stop="onPreview(userInfo.avatar)" :style="getStyle"></view>
 			</view>
 		</view>
-		<view class="cu-list menu card-menu">
+		<view class="cu-list menu card-menu" @click="onChange('realname')">
 			<view class="cu-item arrow">
 				<text class="item title">昵称</text>
 				<view>{{userInfo.realname}}</view>
@@ -23,36 +23,44 @@
 				</picker>
 			</view>
 		</view>
-		<view class="cu-list menu card-menu">
+		<view class="cu-list menu card-menu" @click="onChange('signature')">
 			<view class="cu-item arrow">
 				<text class="item title">个性签名</text>
 				<view>{{userInfo.signature}}</view>
 			</view>
 		</view>
-		<view class="cu-list menu card-menu">
+		<view class="cu-list menu card-menu" @click="onChange('post')">
 			<view class="cu-item arrow">
 				<text class="item title">职业</text>
 				<view>{{userInfo.post}}</view>
 			</view>
 		</view>
-		<view class="cu-list menu card-menu">
+		<view class="cu-list menu card-menu" @click="onChange('emergencyContact')">
 			<view class="cu-item arrow">
 				<text class="item title">紧急联系人</text>
 				<view>{{userInfo.emergencyContact}}</view>
 			</view>
 		</view>
-		<view class="cu-list menu card-menu">
+		<view class="cu-list menu card-menu" @click="onChange('emergencyContactPhone')">
 			<view class="cu-item arrow">
 				<text class="item title">紧急联系人电话</text>
-				<view>{{userInfo.telephone}}</view>
+				<view>{{userInfo.emergencyContactPhone}}</view>
 			</view>
 		</view>
 		<view class="btn">
-			<button class="text-blue margin-lr-xl" form-type="submit">保存</button>
+			<button class="text-blue margin-lr-xl"  @click="onSubmit">保存</button>
 		</view>
-		<view class="pull-down-modal  bottom-modal" >
+		<view class="team-create-container-uni-popup">
+			<uni-popup ref="popup" type="center">
+				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="onlose"
+					@confirm="confirm">
+					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value" />
+				</uni-popup-dialog>
+			</uni-popup>
+		</view>
+		<view class="pull-down-modal  bottom-modal" :class="isShowBottomModal?'show':''" >
 			<view class="pull-down-dialog">
-				<button class="margin-sm">更换图像</button>
+				<button class="margin-sm" @click="onUploadImg">更换图像</button>
 				<button  class="margin-lr-sm margin-bottom-sm" @tap="hideModal">取消</button>
 			</view>
 		</view>
@@ -61,6 +69,7 @@
 <script>
 	import { userService } from "@/api/index.js";
 	import { USER_INFO } from "@/common/util/constants";
+	import { uploadFile } from "@/common/biz/common.js";
 	export default {
 		data() {
 			return {
@@ -72,15 +81,18 @@
 					signature:'',
 					post:'',
 					emergencyContact:'',
-					telephone:''
-					
-				}
+					emergencyContactPhone:''
+				},
+				title: '请输入',
+				value: '',
+				type: '',
+				isShowBottomModal:false
 			}
 		},
 		computed:{
 			getStyle(){
 				return {                
-					  background:`url(${this.userInfo.avatar})`,                 
+					  'background-image':`url(${this.userInfo.avatar})`,                 
 				}   
 			}
 		},
@@ -97,20 +109,42 @@
 				}
 				userService.queryByUserId({userId:userInfo.id}).then((res)=>{
 					if(res.data.success){
-						let {id,avatar,birthday,signature,post,realname,telephone} = res.data.result;
+						let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact} = res.data.result;
 						$this.userInfo.id = id;
 						$this.userInfo.avatar = avatar || 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg';
+						$this.userInfo.realname = realname;
 						$this.userInfo.birthday = birthday;
 						$this.userInfo.signature = signature;
 						$this.userInfo.post = post;
-						$this.userInfo.realname = realname;
-						$this.userInfo.telephone = telephone;
+						$this.userInfo.emergencyContact = emergencyContact;
+						$this.userInfo.emergencyContactPhone = telephone;
 					}
 					
 				});
 			},
 			bindDateChange(e) {
 				this.birthday = e.detail.value;
+			},
+			onShowBottomModal(){
+				this.isShowBottomModal = true;
+			},
+			hideModal(){
+				this.isShowBottomModal = false;
+			},
+			onUploadImg(){
+				let $this = this;
+				this.isShowBottomModal = false;
+				uni.chooseImage({
+					count: 1,
+					sizeType: ['original', 'compressed'],
+					sourceType: ['album'],
+					success: function(chooseImageRes){
+						let {tempFilePaths} = chooseImageRes;
+						uploadFile(tempFilePaths[0],(path)=>{
+							$this.userInfo.avatar = path;
+						});
+					}
+				});
 			},
 			onPreview(url){
 				// 预览图片
@@ -127,8 +161,23 @@
 					}
 				});
 			},
+			onChange(type){
+				this.type = type;
+				this.value = this.userInfo[type];
+				this.$refs.popup.open();
+			},
+			onclose(){
+				this.$refs.popup.close();
+			},
+			confirm(){
+				this.userInfo[this.type]=this.value;
+				this.$refs.popup.close();
+			},
 			onSubmit(){
-				
+				userService.editUser({...this.userInfo}).then((res)=>{
+					if(res.data.success){}
+					console.log("修改",res);
+				})
 			}
 		}
 	}

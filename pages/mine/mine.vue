@@ -1,6 +1,6 @@
 <template>
 	<view class="minePage">
-		<view class="UCenter-bg" @click="remove">
+		<view class="center-bg" @click="remove">
 			<view class="flex response margin-lr-lg  text-black">
 				<view>
 					<image src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng6fd5df338f38edc75426378e11626e80f5216e314f9b0e184565d1f4c602cf2d" class="png round margin-bottom-sm" mode="scaleToFill"></image>
@@ -46,64 +46,67 @@
 			</view>
 		</view>
 		<!-- 列表list-->
-		<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg">
-			<view class="cu-item arrow margin-bottom-sm radius">
-				<navigator class="content" url="/pages/mine/certification/certification" hover-class="none">
-					<text class="cuIcon-redpacket_fill text-red"></text>
-					<text class="text-grey">实名认证</text>
-				</navigator>
-			</view>
-			<view class="cu-item arrow top-radius">
-				<view class="content">
-				<text class="cuIcon-settingsfill text-cyan"></text>
-				<text class="text-grey">安全培训进度</text>
+		<view class="list-content">
+			<scroll-view scroll-y="true" style="height: 100%;" class="scrool-more">
+				<view class="cu-list menu card-menu shadow-lg">
+					<view class="cu-item arrow margin-bottom-sm radius">
+						<navigator class="content" url="/pages/mine/certification/certification" hover-class="none">
+							<text class="cuIcon-redpacket_fill text-red"></text>
+							<text class="text-grey">实名认证</text>
+						</navigator>
+					</view>
+					<view class="cu-item arrow top-radius">
+						<view class="content">
+						<text class="cuIcon-settingsfill text-cyan"></text>
+						<text class="text-grey">安全培训进度</text>
+						</view>
+					</view>
+					<view class="cu-item arrow">
+						<navigator class="content" url="/pages/mine/captainApplication/captainGuide" hover-class="none">
+							<text class="cuIcon-settingsfill text-cyan"></text>
+							<text class="text-grey">成为队长</text>
+						</navigator>
+					</view>
+					<view class="cu-item arrow">
+						<view class="content">
+							<text class="cuIcon-settingsfill text-cyan"></text>
+							<text class="text-grey">行前登记</text>
+						</view>
+					</view>
+					<view class="cu-item arrow">
+						<view class="content">
+							<text class="cuIcon-settingsfill text-cyan"></text>
+							<text class="text-grey">团队历史群管理</text>
+						</view>
+					</view>
+					<view class="cu-item arrow margin-bottom-sm bottom-radius">
+						<view class="content">
+							<text class="cuIcon-settingsfill text-cyan"></text>
+							<text class="text-grey">下载离线地图</text>
+						</view>
+					</view>
+					<view class="cu-item arrow top-radius">
+						<view class="content">
+							<text class="cuIcon-favorfill text-yellow"></text>
+							<text class="text-grey">收藏夹</text>
+						</view>
+					</view>
+					<view class="cu-item arrow">
+						<view class="content">
+							<text class="cuIcon-redpacket_fill text-red"></text>
+							<text class="text-grey">发布驴记、评价</text>
+						</view>
+					</view>
+					<view class="cu-item arrow bottom-radius">
+						<navigator class="content" url="/pages/mine/uploadActivityInfo" hover-class="none">
+							<text class="cuIcon-settingsfill text-cyan"></text>
+							<text class="text-grey">活动信息上传</text>
+						</navigator>
+					</view>
+					<button class="bg-white margin-top-lg margin-bottom-lg text-bold logout" @tap="logout">退出</button>
 				</view>
-			</view>
-			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/mine/captainApplication/captainGuide" hover-class="none">
-					<text class="cuIcon-settingsfill text-cyan"></text>
-					<text class="text-grey">成为队长</text>
-				</navigator>
-			</view>
-			<view class="cu-item arrow">
-				<view class="content">
-					<text class="cuIcon-settingsfill text-cyan"></text>
-					<text class="text-grey">行前登记</text>
-				</view>
-			</view>
-			<view class="cu-item arrow">
-				<view class="content">
-					<text class="cuIcon-settingsfill text-cyan"></text>
-					<text class="text-grey">团队历史群管理</text>
-				</view>
-			</view>
-			<view class="cu-item arrow margin-bottom-sm bottom-radius">
-				<view class="content">
-					<text class="cuIcon-settingsfill text-cyan"></text>
-					<text class="text-grey">下载离线地图</text>
-				</view>
-			</view>
-			<view class="cu-item arrow top-radius">
-				<view class="content">
-					<text class="cuIcon-favorfill text-yellow"></text>
-					<text class="text-grey">收藏夹</text>
-				</view>
-			</view>
-			<view class="cu-item arrow">
-				<view class="content">
-					<text class="cuIcon-redpacket_fill text-red"></text>
-					<text class="text-grey">发布驴记、评价</text>
-				</view>
-			</view>
-			<view class="cu-item arrow bottom-radius">
-				<navigator class="content" url="/pages/mine/uploadActivityInfo" hover-class="none">
-					<text class="cuIcon-settingsfill text-cyan"></text>
-					<text class="text-grey">活动信息上传</text>
-				</navigator>
-			</view>
-			<button class="bg-white  margin-top-lg text-bold logout" @tap="logout">退出</button>
+			</scroll-view>
 		</view>
-		<view class="cu-tabbar-height"></view>
 	</view>
 </template>
 
@@ -133,11 +136,19 @@ export default {
 </script>
 
 <style lang="scss">	
+page{
+		width: 100%;
+		height: 100%;
+	}
 .minePage {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
 	background-color:#f7f8fe;
 	color:#666666;
-	.UCenter-bg {
-		height: 420rpx;
+	.center-bg {
+		height: 460rpx;
 		padding-top: 108rpx;
 		overflow: hidden;
 		color: #fff;
@@ -157,25 +168,37 @@ export default {
 		}
 	}
 
-	.UCenter-bg text {
+	.center-bg text {
 		opacity: 0.8;
 	}
 
-	.UCenter-bg image {
+	.center-bg image {
 		width: 150rpx;
 		height: 150rpx;
 	}
-	.top-radius{
-		border-radius:16upx 16upx 0 0;
-	}
-	.bottom-radius{
-		border-radius: 0 0 16upx 16upx;
-	}
+	
 	.logout{
 		border-radius: 50upx;
 	}
 	uni-button:after{
 		border: 0;
+	}
+	.list-content{
+		flex: 1;
+		position: relative;
+		.scrool-more{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			.top-radius{
+				border-radius:16upx 16upx 0 0;
+			}
+			.bottom-radius{
+				border-radius: 0 0 16upx 16upx;
+			}
+		}
 	}
 }
 </style>

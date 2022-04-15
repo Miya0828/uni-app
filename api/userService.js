@@ -6,7 +6,7 @@ const userService = {
 	 * 用户查询
 	 */
 	queryByUserId(param,loading = true){
-		return http.get('/sys/user/queryByUserId',{params:param,custom: {loading: loading}});
+		return http.get('/tour-pal/sys/user/queryByUserId',{params:param,custom: {loading: loading}});
 	},
 	 
 	 /**

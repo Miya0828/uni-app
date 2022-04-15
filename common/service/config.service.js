@@ -12,4 +12,4 @@ const configService = {
 	staticDomainURL: staticDomainURL
 };
 
-export default configService
+export default configService;
