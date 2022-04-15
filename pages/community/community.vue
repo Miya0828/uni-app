@@ -26,7 +26,7 @@
 						最好的风景就是在路上…加油！
 					</view>
 					<view class="community-container-list-item-content-pic">
-						<image src="/static/logo.png" mode="aspectFit"></image>
+						<image src="/static/1.png" mode="aspectFit"></image>
 					</view>
 				</view>
 
@@ -133,7 +133,11 @@
 						margin-bottom: 20rpx;
 					}
 
-					.community-container-list-item-content-pic {}
+					.community-container-list-item-content-pic {
+						image{
+							width: 100%;
+						}
+					}
 				}
 
 				.community-container-list-item-feature {
