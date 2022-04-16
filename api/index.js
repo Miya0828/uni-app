@@ -8,6 +8,6 @@ export {
 	loginService,
 	userService,
 	commonService,
-	forHelpService
+	forHelpService,
 	homeService
 }
