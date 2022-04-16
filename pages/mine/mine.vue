@@ -137,9 +137,9 @@ export default {
 
 <style lang="scss">	
 page{
-		width: 100%;
-		height: 100%;
-	}
+	width: 100%;
+	height: 100%;
+}
 .minePage {
 	display: flex;
 	flex-direction: column;

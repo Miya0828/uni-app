@@ -15,7 +15,7 @@
 				</view>
 				<view class="cu-list menu card-menu margin-top-sm">
 					<view class="cu-item arrow">
-						<navigator class="content" url="/pages/mine/captainApplication/goodType" hover-class="none">
+						<navigator class="content" url="/pages/mine/captainApplication/skilledIn" hover-class="none">
 							<text class="item title">擅长区域</text>
 						</navigator>
 					</view>
