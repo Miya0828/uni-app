@@ -2,33 +2,25 @@
 	<view class="certificationPage">
 		<form @submit="onAuth" @reset="formReset">
 			<view>
-				<view class="cu-form-group margin-tb-sm">
+				<view class="certificate-group">
 					<view class="title">姓名</view>
-					<input placeholder="请输入真实姓名"  name="username"></input>
+					<input placeholder="请输入真实姓名"  name="name"></input>
 				</view>
-				<view class="cu-form-group margin-top-sm">
+				<view class="certificate-group">
 					<view class="title">区号</view>
-					<input placeholder="86" disabled="true"></input>
+					<input placeholder="86" value="86" disabled="true" name="areaCode"></input>
 				</view>
-				<view class="cu-form-group margin-bottom-sm">
+				<view class="certificate-group certificate-group-item">
 					<view class="title">手机号码</view>
 					<input placeholder="请输入手机号码" type="number" maxlength="11" name="phone"></input>
 				</view>
-				<view class="cu-form-group margin-tb-sm">
+				<view class="certificate-group">
 					<view class="title">身份证号</view>
 					<input placeholder="请输入证件号码" name="identityCard"></input>
 				</view>
-				<!-- <view class="cu-list menu card-menu margin-tb-sm">
-					<view class="cu-item arrow">
-						<navigator class="content" url="/pages/mine/certification/uploadIdCard" hover-class="none">
-							<text class="item title">证件照片</text>
-							<text class="bg-white tips">请上传证件照片</text>
-						</navigator>
-					</view>
-				</view> -->
 			</view>
 			<view class="btn">
-				<button class="text-blue margin-lr-xl" form-type="submit">下一步</button>
+				<button form-type="submit">下一步</button>
 			</view>
 		</form>
 	</view>
@@ -39,7 +31,6 @@
 	export default {
 		data() {
 			return {
-				username:'123'
 			}
 		},
 		mounted(){
@@ -51,7 +42,7 @@
 				var formData = e.detail.value;
 				//定义表单规则
 				var rule = [
-					{name:"username", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
+					{name:"name", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
 					{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
 					{name:'identityCard',checkType:'identityCard',errorMsg:'请输入正确格式的身份证号'},
 				];
@@ -73,34 +64,51 @@
 	background-color:rgba(248, 248, 248, 1);
 	height: 100vh;
 	position: relative;
-	uni-scroll-view {
-	    height: calc(100% - 45px);
-	}
-	.cu-list.card-menu{
-		margin-left: 0;
-		margin-right: 0;
-		border-radius: 0;
-	}
-	.cu-form-group{
-		.title{
-			width: 180upx;
+	.certificate-group {
+		background-color: #ffffff;
+		padding: 1upx 30upx;
+		display: flex;
+		align-items: center;
+		min-height: 120upx;
+		margin-top: 20upx;
+		margin-bottom: 20upx;
+		justify-content: space-between;
+		.certificate-group-item{
+			margin-bottom: 20upx;
 		}
 	}
-	.item.title{
-		display: inline-block;
+	
+	.certificate-group+.certificate-group {
+		border-top: 1upx solid #eee;
+	}
+	
+	.certificate-group .title {
+		text-align: justify;
 		width: 180upx;
+		padding-right: 30upx;
+		font-size: 30upx;
+		position: relative;
+		height: 60upx;
+		line-height: 60upx;
 	}
-	.tips,.uni-input-placeholder{
+	
+	.certificate-group input {
+		flex: 1;
+		font-size: 30upx;
+		color: #555;
+		padding-right: 20upx;
+	}
+	.uni-input-placeholder{
 		color: rgba(184, 184, 184, 1);
-	}
-	.cu-form-group{
-		min-height: 57px;;
 	}
 	.btn{
 		width: 100%;
 		position: absolute;  
 		bottom: 100upx;
 		button{
+			color:#0089FF;
+			margin-left: 50upx;
+			margin-right: 50upx;
 			border-radius: 38upx;
 			background: rgba(0, 134, 255, 0.1);
 		}

@@ -9,14 +9,12 @@
 			text: 'text'
 		},
 		onLaunch: function() {
-
 			let token = uni.getStorageSync(ACCESS_TOKEN);
 			if (!token) {
 				uni.reLaunch({
 					url: '/pages/login/login',
 				});
 			}
-
 			uni.getSystemInfo({
 				success: function(e) {
 					// #ifndef MP
@@ -57,4 +55,7 @@
 	@import 'plugin/colorui/icon.css';
 	@import 'plugin/colorui/animation.css';
 	/* #endif*/
+	.uni-input-placeholder{
+		color: rgba(184, 184, 184, 1);
+	}
 </style>

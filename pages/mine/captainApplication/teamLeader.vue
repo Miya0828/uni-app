@@ -1,16 +1,17 @@
 <template>
-	<view class="tourLeader">
-		<view class="picture">
-			<view class="bg">
+	<view class="tour-leader">
+		<view class="tour-leader-picture">
+			<view class="tour-leader-picture-bg">
 				<image v-if="tourLeaderUrl" :src="tourLeaderUrl"></image>
 			</view>
 		</view>
-		<view class="upload-btn flex justify-center" @click="uploadPicture">
-			<text class="cuIcon-roundadd margin-right-sm"></text>
+		<view class="tour-guide-upload-btn"  @click="uploadPicture">
+			<uni-icons class="tour-guide--upload-btn-add" color="#0095FF" type="plus" size="24">
+			</uni-icons>
 			上传领队证
 		</view>
 		<view class="btn">
-			<button class="text-blue margin-lr-xl" form-type="submit">确认</button>
+			<button>确认</button>
 		</view>
 	</view>
 </template>
@@ -49,14 +50,11 @@
 </script>
 
 <style lang="less">
-.tourLeader{
+.tour-leader{
 	background-color: #FFFFFF;
-	.cu-form-group{
-		border-bottom: 2upx solid #F8F8F8;
-	}
-	.picture{
+	.tour-leader-picture{
 		text-align: center;
-		.bg{
+		.tour-leader-picture-bg{
 			width: 450upx;
 			height: 500upx;
 			margin: auto;
@@ -74,16 +72,25 @@
 			}
 		}
 	}
-	.upload-btn{
+	.tour-guide-upload-btn{
 		color:#0095FF;
 		margin-top:60upx;
-		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 28upx;
+		.tour-guide--upload-btn-add{
+			padding-right: 16upx;
+		}
 	}
 	.btn{
 		width: 100%;
 		position: absolute;  
 		bottom: 100upx;
 		button{
+			color:#0089FF;
+			margin-left: 50upx;
+			margin-right: 50upx;
 			border-radius: 38upx;
 			background: rgba(0, 134, 255, 0.1);
 		}

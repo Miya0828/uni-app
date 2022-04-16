@@ -2,7 +2,7 @@
 	<scroll-view scroll-y class="forHelpPage">
 		<cu-custom bgColor="bg-white"><block slot="content">求助</block></cu-custom>
 			<view class="flex justify-center align-center">
-				<view class="padding-sm animation-slide-left" :style="[{animationDelay: '0.3s'}]"  @tap="goPage()">
+				<view class="padding-sm">
 					<view class="padding-xs radius text-center shadow-blur solid-right ">
 						<view class="cu-avatar lg sos">
 						</view>
@@ -11,7 +11,7 @@
 				</view> 
 			</view>
 			<view class="bg-white grid col-3 padding-sm radius margin-left margin-right">
-				<view class="padding-sm animation-slide-left" :style="[{animationDelay: '0.3s'}]" v-for="(item,index) in usList" :key="index">
+				<view class="padding-sm"  v-for="(item,index) in usList" :key="index">
 					<navigator v-if="item.url" class="content" :url="item.url" hover-class="none">
 						<view class="padding-xs radius text-center shadow-blur solid-right ">
 							<image class="cu-avatar bg-white lg"  :src="item.icon" style="width: 100upx; height: 100upx;"></image>
@@ -34,62 +34,62 @@
 				</scroll-view>
 				<!-- 列表list-->
 				<view v-if="tabCurent=== 0" class="cu-list menu card-menu margin-top-xs margin-bottom-xl shadow-lg radius">
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.3s' }]">
+					<view class="cu-item arrow">
 						<view class="content">
 							<text class="cuIcon-redpacket_fill text-red"></text>
 							<text class="text-grey">蜇伤/咬伤</text>
 						</view>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.5s' }]">
-						<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+					<view class="cu-item arrow">
+						<navigator class="content" hover-class="none">
 							<text class="cuIcon-settingsfill text-cyan"></text>
 							<text class="text-grey">拉伤和扭伤</text>
 						</navigator>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.5s' }]">
-						<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+					<view class="cu-item arrow">
+						<navigator class="content" hover-class="none">
 							<text class="cuIcon-settingsfill text-cyan"></text>
 							<text class="text-grey">中风</text>
 						</navigator>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.5s' }]">
-						<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+					<view class="cu-item arrow">
+						<navigator class="content" hover-class="none">
 							<text class="cuIcon-settingsfill text-cyan"></text>
 							<text class="text-grey">过敏</text>
 						</navigator>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.5s' }]">
-						<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+					<view class="cu-item arrow">
+						<navigator class="content" hover-class="none">
 							<text class="cuIcon-settingsfill text-cyan"></text>
 							<text class="text-grey">人事不省</text>
 						</navigator>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.3s' }]">
+					<view class="cu-item arrow">
 						<view class="content">
 							<text class="cuIcon-redpacket_fill text-red"></text>
 							<text class="text-grey">哮喘发作</text>
 						</view>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.1s' }]">
+					<view class="cu-item arrow">
 						<view class="content">
 							<text class="cuIcon-favorfill text-yellow"></text>
 							<text class="text-grey">出血</text>
 						</view>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.5s' }]">
-						<navigator class="content" url="/pages/user/userdetail" hover-class="none">
+					<view class="cu-item arrow">
+						<navigator class="content" hover-class="none">
 							<text class="cuIcon-settingsfill text-cyan"></text>
 							<text class="text-grey">骨折</text>
 						</navigator>
 					</view>
-					<view class="cu-item arrow animation-slide-left" :style="[{ animationDelay: '0.7s' }]">
-						<navigator class="content" url="/pages/user/userexit" hover-class="none">
+					<view class="cu-item arrow">
+						<navigator class="content" hover-class="none">
 							<text class="cuIcon-exit text-cyan"></text>
 							<text class="text-grey">烧伤</text>
 						</navigator>
 					</view>
-					<view class="cu-item arrow animation-slide-bottom" :style="[{ animationDelay: '0.7s' }]">
-						<navigator class="content" url="/pages/user/userexit" hover-class="none">
+					<view class="cu-item arrow">
+						<navigator class="content" hover-class="none">
 							<text class="cuIcon-exit text-cyan"></text>
 							<text class="text-grey">哽塞</text>
 						</navigator>
