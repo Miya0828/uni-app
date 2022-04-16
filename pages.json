@@ -18,6 +18,12 @@
 			}
 		},
 		{
+			"path": "pages/mine/captainApplication/skilledIn",
+			"style": {
+				"navigationBarTitleText": "擅长领域"
+			}
+		},
+		{
 			"path": "pages/teamChat/teamList",
 			"style": {
 				"navigationBarTitleText": "团队成员"
