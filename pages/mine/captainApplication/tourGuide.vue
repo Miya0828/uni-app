@@ -1,20 +1,21 @@
 <template>
-	<view class="tourGuide">
-		<view class="cu-form-group margin-tb-sm">
+	<view class="tour-guide">
+		<view class="tour-guide-group">
 			<view class="title">导游证号</view>
 			<input placeholder="请输入导游证号" v-model="tourGuide" name="tourGuide"></input>
 		</view>
-		<view class="picture">
-			<view class="bg">
+		<view class="tour-guide-picture">
+			<view class="tour-guide-picture-bg">
 				<image v-if="tourGuideUrl" :src="tourGuideUrl"></image>
 			</view>
 		</view>
-		<view class="upload-btn"  @click="uploadPicture">
-			<text class="cuIcon-roundadd margin-right-sm"></text>
+		<view class="tour-guide-upload-btn"  @click="uploadPicture">
+			<uni-icons class="tour-guide--upload-btn-add" color="#0095FF" type="plus" size="24">
+			</uni-icons>
 			上传导游证
 		</view>
 		<view class="btn">
-			<button class="text-blue margin-lr-xl" form-type="submit">确认</button>
+			<button>确认</button>
 		</view>
 	</view>
 </template>
@@ -54,14 +55,36 @@
 </script>
 
 <style lang="less">
-.tourGuide{
+.tour-guide{
 	background-color: #FFFFFF;
-	.cu-form-group{
-		border-bottom: 2upx solid #F8F8F8;
+	.tour-guide-group {
+		background-color: #ffffff;
+		padding: 1upx 30upx;
+		display: flex;
+		align-items: center;
+		min-height: 120upx;
+		margin-top: 20upx;
+		margin-bottom: 20upx;
+		justify-content: space-between;
+		.title {
+			text-align: justify;
+			width: 180upx;
+			padding-right: 30upx;
+			font-size: 30upx;
+			position: relative;
+			height: 60upx;
+			line-height: 60upx;
+		}
+		input {
+			flex: 1;
+			font-size: 30upx;
+			color: #555;
+			padding-right: 20upx;
+		}
 	}
-	.picture{
+	.tour-guide-picture{
 		text-align: center;
-		.bg{
+		.tour-guide-picture-bg{
 			width: 450upx;
 			height: 500upx;
 			margin: auto;
@@ -79,16 +102,25 @@
 			}
 		}
 	}
-	.upload-btn{
+	.tour-guide-upload-btn{
 		color:#0095FF;
 		margin-top:60upx;
-		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 28upx;
+		.tour-guide--upload-btn-add{
+			padding-right: 16upx;
+		}
 	}
 	.btn{
 		width: 100%;
 		position: absolute;  
 		bottom: 100upx;
 		button{
+			color:#0089FF;
+			margin-left: 50upx;
+			margin-right: 50upx;
 			border-radius: 38upx;
 			background: rgba(0, 134, 255, 0.1);
 		}

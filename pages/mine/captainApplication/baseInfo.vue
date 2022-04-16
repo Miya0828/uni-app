@@ -2,38 +2,32 @@
 	<view class="baseInfo">
 		<form @submit="onAuth" @reset="formReset">
 			<view>
-				<view class="cu-form-group margin-tb-sm">
+				<view class="baseInfo-group">
 					<view class="title">工作单位</view>
 					<input placeholder="请输入工作单位" v-model="userInfo.username" name="username"></input>
 				</view>
-				<view class="cu-list menu card-menu margin-tb-sm">
-					<view class="cu-item arrow">
-						<navigator class="content" url="/pages/mine/captainApplication/personInfo" hover-class="none">
-							<text class="item title">个人介绍</text>
-						</navigator>
-					</view>
+				<view class="baseInfo-group" @click="onFinishPersonIntroduce">
+						<text class="item title">个人介绍</text>
+						<uni-icons color="#3D3D3D" type="forward" size="18">
+						</uni-icons>
 				</view>
-				<view class="cu-list menu card-menu margin-top-sm">
-					<view class="cu-item arrow">
-						<navigator class="content" url="/pages/mine/captainApplication/skilledIn" hover-class="none">
-							<text class="item title">擅长区域</text>
-						</navigator>
-					</view>
+				<view class="baseInfo-group baseInfo-group-skill" @click="onFinishSkilledIn">
+						<text class="item title">擅长区域</text>
+						<uni-icons color="#3D3D3D" type="forward" size="18">
+						</uni-icons>
 				</view>
-				<view class="cu-list menu card-menu area">
-					<view class="cu-item arrow">
-						<navigator class="content" url="/pages/mine/captainApplication/goodType" hover-class="none">
-							<text class="item title">擅长类型</text>
-						</navigator>
-					</view>
+				<view class="baseInfo-group baseInfo-group-area" @click="onFinishGoodType()">
+						<text class="item title">擅长类型</text>
+						<uni-icons color="#3D3D3D" type="forward" size="18">
+						</uni-icons>
 				</view>
-				<view class="text-gray padding">
-					<tex class="text-red">*</tex>
+				<view class="baseInfo-tips">
+					<tex class="baseInfo-tips-flag">*</tex>
 					 擅长区域和擅长类型决定可领活动的范围
 				</view>
 			</view>
 			<view class="btn">
-				<button class="text-blue margin-lr-xl" form-type="submit">下一步</button>
+				<button form-type="submit">下一步</button>
 			</view>
 		</form>
 	</view>
@@ -70,6 +64,21 @@
 		},
 		methods: {
 			onChange(){},
+			onFinishPersonIntroduce(){
+				uni.navigateTo({
+					url:"/pages/mine/captainApplication/personInfo"
+				});
+			},
+			onFinishSkilledIn(){
+				uni.navigateTo({
+					url:"/pages/mine/captainApplication/skilledIn"
+				});
+			},
+			onFinishGoodType(){
+				uni.navigateTo({
+					url:"/pages/mine/captainApplication/goodType"
+				});
+			},
 			onSMSSend() {
 				let smsParams = {};
 				smsParams.mobile = this.phoneNo;
@@ -133,37 +142,60 @@
 	background-color:rgba(248, 248, 248, 1);
 	height: 100vh;
 	position: relative;
-	uni-scroll-view {
-	    height: calc(100% - 45px);
-	}
-	.cu-list.card-menu{
-		margin-left: 0;
-		margin-right: 0;
-		border-radius: 0;
-	}
-	.area{
-		margin-top:0;
-	}
-	.cu-form-group{
-		.title{
+	.baseInfo-group {
+		background-color: #ffffff;
+		padding: 1upx 30upx;
+		display: flex;
+		align-items: center;
+		min-height: 120upx;
+		margin-top: 20upx;
+		margin-bottom: 20upx;
+		justify-content: space-between;
+		.baseInfo-group-item{
+			margin-bottom: 20upx;
+		}
+		.title {
+			text-align: justify;
 			width: 180upx;
+			padding-right: 30upx;
+			font-size: 30upx;
+			position: relative;
+			height: 60upx;
+			line-height: 60upx;
+		}
+		input {
+			flex: 1;
+			font-size: 30upx;
+			color: #555;
+			padding-right: 20upx;
+		}
+		&.baseInfo-group-skill{
+			margin-bottom: 0;
+		}
+		&.baseInfo-group-area{
+			margin-top: 0;
 		}
 	}
-	.item.title{
-		display: inline-block;
-		width: 180upx;
+	
+	.baseInfo-group+.baseInfo-group {
+		border-top: 1upx solid #eee;
 	}
-	.tips,.uni-input-placeholder{
-		color: rgba(184, 184, 184, 1);
-	}
-	.cu-form-group{
-		min-height: 57px;;
+	.baseInfo-tips{
+		color:#999999;
+		padding: 30upx;
+		.baseInfo-tips-flag{
+			color:#F90000;
+			padding-right:10upx;
+		}
 	}
 	.btn{
 		width: 100%;
 		position: absolute;  
 		bottom: 100upx;
 		button{
+			color:#0089FF;
+			margin-left: 50upx;
+			margin-right: 50upx;
 			border-radius: 38upx;
 			background: rgba(0, 134, 255, 0.1);
 		}

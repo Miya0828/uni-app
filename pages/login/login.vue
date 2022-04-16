@@ -78,7 +78,7 @@
 	</view>
 </template>
 <script>
-	import { ACCESS_TOKEN,USER_NAME,USER_INFO,SMS_CODE } from "@/common/util/constants";
+	import { ACCESS_TOKEN,USER_NAME,USER_INFO,SMS_MODE } from "@/common/util/constants";
 	import graceChecker from "../../common/biz/graceChecker.js"
 	import { loginService } from "@/api/index.js";
 	export default {
@@ -169,7 +169,7 @@
 			onSMSSend() {
 				let smsParams = {};
 				smsParams.mobile = this.phoneNo;
-				smsParams.smsmode = SMS_CODE.login;
+				smsParams.smsmode = SMS_MODE.login;
 				//定义表单规则
 				var rule = [
 					{name:"mobile", checkType : "phone", checkRule:"",  errorMsg:"请输入正确的手机号"},
@@ -230,6 +230,22 @@
 				    uni.showToast({ title: graceChecker.error, icon: "none" });
 					return;
 				}
+				loginService.phoneLogin(loginParams).then((res)=>{
+					let {data}  = res;
+					if (data.success) {
+						let {token,userInfo} = data.result;
+						uni.setStorageSync(ACCESS_TOKEN,token);
+						uni.setStorageSync(USER_INFO,userInfo);
+						this.$tip.success('登录成功!')
+						uni.reLaunch({
+							url: '/pages/home/home',
+							animationType: 'slide-in-left',
+							animationDuration: 200
+						});
+					} else {
+						this.$tip.toast(res.data.message);
+					}
+				})
 				uni.setStorageSync(ACCESS_TOKEN, '111');
 				this.$tip.success('登录成功!')
 				uni.reLaunch({
