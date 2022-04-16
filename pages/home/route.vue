@@ -1,49 +1,80 @@
 <template>
 	<view class="route-container">
-		<template v-for="item in routeList">
-			<view class="route-container-item" @click="chooseRoute(item)">
-				<view class="route-container-item-pic">
-					<image src="/static/logo.png" mode="aspectFit"></image>
-				</view>
-				<view class="route-container-item-des">
-					<view class="route-container-item-des-title">
-						<view class="route-container-item-des-title-1">{{item.name}}</view>
-						<text class="route-container-item-des-title-2">上海市</text>
-						<text class="route-container-item-des-title-2">5A景区</text>
-						<view class="route-container-item-des-title-3">
-							当前路线
+		<scroll-view scroll-y="true" class="scroll-Y" lower-threshold="150" @scrolltolower="loadmore">
+
+			<template v-for="item in routeList">
+
+				<view class="route-container-item" @click="chooseRoute(item)">
+					<view class="route-container-item-pic">
+						<image :src="configService.staticDomainURL+'/'+item.scenicSpotImg" mode="aspectFit"></image>
+					</view>
+					<view class="route-container-item-des">
+						<view class="route-container-item-des-title">
+							<view class="route-container-item-des-title-1">{{item.routeName}}</view>
+							<text class="route-container-item-des-title-2">{{item.address}}</text>
+							<text class="route-container-item-des-title-2">{{item.scenicSpotLevel}}A景区</text>
+							<!-- <view class="route-container-item-des-title-3">
+								当前路线
+							</view> -->
+						</view>
+						<view class="route-container-item-rate">
+							<uni-rate allow-half :value="item.ratingScale" :size="18" :readonly="true" :is-fill="false"
+								color="#bbb" active-color="#E41000" />
+							<text>{{item.punchNumber}}人打卡</text>
+						</view>
+						<view class="route-container-item-distance">
+							总里程：{{item.totalMileage}} 徒步总需耗时{{item.totalTime}}
 						</view>
 					</view>
-					<view class="route-container-item-rate">
-						<uni-rate allow-half :value="3.5" :size="18" :readonly="true" :is-fill="false" color="#bbb"
-							active-color="#E41000" />
-						<text>123人打卡</text>
-					</view>
-					<view class="route-container-item-distance">
-						总里程：123.4公里 徒步总需耗时2天2小时21分
-					</view>
 				</view>
-			</view>
-		</template>
+			</template>
+		</scroll-view>
 	</view>
 </template>
 
 <script>
-	import data from './data/demo.js'
 	import store from '@/store/index.js';
+	import {
+		homeService
+	} from "@/api/index.js";
+	import configService from '@/common/service/config.service.js'
 	export default {
 		data() {
 			return {
-				routeList: data.trackList.concat(data.trackList, data.trackList)
+				pageNo: 1,
+				routeList: [],
+				configService
 			}
 		},
+		mounted() {
+			this.getRouteList();
+		},
 		methods: {
+			getRouteList() {
+				homeService.routeList({
+					pageNo: this.pageNo++,
+					pageSize: 10
+				}).then(res => {
+					if (res.data.code == 200) {
+						// console.log(res.data.result)
+						this.routeList.push(...res.data.result.records)
+					}
+				})
+			},
+			loadmore() {
+				this.getRouteList();
+			},
 			chooseRoute(route) {
-				store.state.map.route = route
-				console.log(route)
-				uni.navigateBack({
-					url: '/pages/home/route'
-				});
+
+				homeService.queryRouteSiteByRouteId({
+					id: parseInt(route.id)
+				}).then(res => {
+					console.log(res.data.result)
+					store.state.map.route = res.data.result
+					uni.navigateBack({
+						url: '/pages/home/route'
+					});
+				})
 			}
 		}
 	}
@@ -52,8 +83,11 @@
 <style lang="scss">
 	.route-container {
 		padding: 0 54rpx;
-		overflow-x: hidden;
-		overflow-y: auto;
+		height: 100vh;
+
+		.scroll-Y {
+			height: 100vh;
+		}
 
 		.route-container-item {
 			border-bottom: 2px solid #F8F8F8;
@@ -74,6 +108,7 @@
 				padding-left: 16rpx;
 				flex-grow: 1;
 				overflow: hidden;
+
 				.route-container-item-des-title {
 					color: #333333;
 					font-size: 32rpx;

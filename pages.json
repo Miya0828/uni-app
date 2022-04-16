@@ -1,6 +1,23 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/home/home",
+			"style": {
+				"navigationBarTitleText": "当前路线",
+				"app-plus": {
+					"subNVues": [{
+						"id": "video-player", // 视频播放
+						"path": "/components/chat-list/msg-template/video-player",
+						"type": "popup",
+						"style": {
+							"width": "100%",
+							"popGesture": "none"
+						}
+					}]
+				}
+			}
+		},
+		{
 			"path": "pages/teamChat/teamChat",
 			"style": {
 				"navigationBarTitleText": "队聊",
@@ -44,16 +61,7 @@
 						}]
 					},
 					"softinputNavBar": "none",
-					"bounce": "none",
-					"subNVues": [{
-						"id": "video-player", // 视频播放
-						"path": "/components/chat-list/msg-template/video-player",
-						"type": "popup",
-						"style": {
-							"width": "100%",
-							"popGesture": "none"
-						}
-					}]
+					"bounce": "none"
 				}
 			}
 		},
@@ -82,12 +90,6 @@
 					}
 				}
 
-			}
-		},
-		{
-			"path": "pages/home/home",
-			"style": {
-				"navigationBarTitleText": "当前路线"
 			}
 		},
 		{
@@ -252,7 +254,7 @@
 			"style": {
 				"navigationBarTitleText": "擅长领域"
 			}
-		},{
+		}, {
 			"path": "pages/mine/personalCenter/personalCenter",
 			"style": {
 				"navigationBarTitleText": "个人中心"
