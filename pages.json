@@ -259,7 +259,16 @@
 			}
 
 		}
-	],
+	    ,{
+            "path" : "pages/forHelp/11",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "求助",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

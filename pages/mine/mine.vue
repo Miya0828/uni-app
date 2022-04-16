@@ -1,6 +1,6 @@
 <template>
 	<view class="minePage">
-		<view class="center-bg" @click="remove">
+		<view class="center-bg">
 			<view class="flex response margin-lr-lg  text-black">
 				<view>
 					<image src="https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng6fd5df338f38edc75426378e11626e80f5216e314f9b0e184565d1f4c602cf2d" class="png round margin-bottom-sm" mode="scaleToFill"></image>
