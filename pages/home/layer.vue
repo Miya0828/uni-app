@@ -30,26 +30,27 @@
 			</view>
 		</view>
 
+
 		<view class="route-container-item" v-if="currentRoue">
 			<view class="route-container-item-pic">
-				<image src="/static/logo.png" mode="aspectFit"></image>
+				<image :src="configService.staticDomainURL+'/'+currentRoue.scenicSpotImg" mode="aspectFit"></image>
 			</view>
 			<view class="route-container-item-des">
 				<view class="route-container-item-des-title">
-					<view class="route-container-item-des-title-1">{{currentRoue.name}}</view>
-					<text class="route-container-item-des-title-2">上海市</text>
-					<text class="route-container-item-des-title-2">5A景区</text>
+					<view class="route-container-item-des-title-1">{{currentRoue.routeName}}</view>
+					<text class="route-container-item-des-title-2">{{currentRoue.address}}</text>
+					<text class="route-container-item-des-title-2">{{currentRoue.scenicSpotLevel}}A景区</text>
 					<view class="route-container-item-des-title-3">
 						当前路线
 					</view>
 				</view>
 				<view class="route-container-item-rate">
-					<uni-rate allow-half :value="3.5" :size="18" :readonly="true" :is-fill="false" color="#bbb"
-						active-color="#E41000" />
-					<text>123人打卡</text>
+					<uni-rate allow-half :value="currentRoue.ratingScale" :size="18" :readonly="true" :is-fill="false"
+						color="#bbb" active-color="#E41000" />
+					<text>{{currentRoue.punchNumber}}人打卡</text>
 				</view>
 				<view class="route-container-item-distance">
-					总里程：123.4公里 徒步总需耗时2天2小时21分
+					总里程：{{currentRoue.totalMileage}} 徒步总需耗时{{currentRoue.totalTime}}
 				</view>
 			</view>
 		</view>
@@ -85,16 +86,21 @@
 
 <script>
 	import store from '@/store/index.js';
+	import configService from '@/common/service/config.service.js'
 	export default {
 		data() {
 			return {
 				currentLayer: 0,
-				currentRoue: null
+				currentRoue: null,
+				configService
 			}
 		},
 		onShow(options) {
 			this.currentLayer = store.state.map.layer
-			this.currentRoue = store.state.map.route
+			if (store.state.map.route) {
+				this.currentRoue = store.state.map.route.onfootRouteInfo
+			}
+
 		},
 		methods: {
 			selectRoute() {
@@ -105,7 +111,7 @@
 			selectLayer(num) {
 				this.currentLayer = num
 				store.state.map.layer = num
-				
+
 				uni.navigateBack({
 					delta: 1,
 				});

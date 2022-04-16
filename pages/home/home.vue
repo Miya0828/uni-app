@@ -30,7 +30,7 @@
 				</view>
 			</view>
 			<view class="home-container-right-tianqi" @click="openWeather">
-				<image src="/static/home/weather_icons/100.svg" mode="aspectFit"></image>
+				<image :src="'/static/home/weather_icons/'+weather.icon+'.svg'" mode="aspectFit"></image>
 			</view>
 			<view class="home-container-right-dingwei" @click="location">
 				<image src="/static/home/ic_aim@3x.png" mode="aspectFit"></image>
@@ -65,26 +65,26 @@
 				<view class="home-weather-box-container-1">
 					<view class="home-weather-box-container-1-left">
 						<image src="/static/home/ic_position@3x.png" mode="aspectFit"></image>
-						<text>永州市道县</text>
+						<text>{{''+addressList[0]+addressList[1]}}</text>
 					</view>
 					<view class="home-weather-box-container-1-right">
-						<image src="/static/home/weather_icons/100-fill.svg" mode="aspectFit"></image>
-						<text>多云</text>
+						<image :src="'/static/home/weather_icons/'+weather.icon+'-fill.svg'" mode="aspectFit"></image>
+						<text>{{weather.text}}</text>
 					</view>
 				</view>
 				<view class="home-weather-box-container-2">
-					18°
+					{{weather.temp}}°
 				</view>
 				<view class="home-weather-box-container-3">
 					<view class="home-weather-box-container-3-left">
 						<image src="/static/home/ic_air@3x.png" mode="aspectFit"></image>
 						空气
-						<text>56</text>
+						<text>{{weather.humidity}}</text>
 					</view>
 					<view class="home-weather-box-container-3-right">
 						<image src="/static/home/ic_wind@3x.png" mode="aspectFit"></image>
-						风力
-						<text>3级</text>
+						风
+						<text>{{weather.windScale}}级</text>
 					</view>
 				</view>
 			</view>
@@ -184,13 +184,38 @@
 </template>
 <script>
 	import {
-		ACCESS_TOKEN
-	} from '@/common/util/constants.js'
+		ACCESS_TOKEN,
+		USER_NAME,
+		USER_INFO,
+		SMS_CODE
+	} from "@/common/util/constants";
 	import data from './data/demo.js'
 	import store from '@/store/index.js';
+	import {
+		homeService
+	} from "@/api/index.js";
+	let timer = null
 	export default {
 		data() {
 			return {
+				addressList: [],
+				weather: {
+					"obsTime": "2022-04-16T15:06+08:00",
+					"temp": "17",
+					"feelsLike": "14",
+					"icon": "104",
+					"text": "阴",
+					"wind360": "45",
+					"windDir": "东北风",
+					"windScale": "3",
+					"windSpeed": "12",
+					"humidity": "29",
+					"precip": "0.0",
+					"pressure": "1020",
+					"vis": "18",
+					"cloud": "91",
+					"dew": "-3"
+				},
 				scrollTop: 0,
 				msgList: [{
 						name: '用户123:',
@@ -260,7 +285,7 @@
 		},
 		methods: {
 			scroll(e) {
-				console.log(e)
+				// console.log(e)
 			},
 			warnTip() {
 				uni.vibrateLong({
@@ -295,16 +320,34 @@
 				uni.getLocation({
 					type: 'wgs84',
 					success: (res) => {
-						console.log('当前位置的经度：' + res.longitude);
-						console.log('当前位置的纬度：' + res.latitude);
+
+						this.getAddress(res.longitude, res.latitude)
+
+						this.getWeather(res.longitude + ',' + res.latitude)
+
+						this.uploadPosition(res.longitude, res.latitude, res.altitude)
+
+						store.state.map.longitude = res.longitude
+						store.state.map.latitude = res.latitude
 						this.mergeOptions({
 							longitude: res.longitude,
 							latitude: res.latitude,
 							coordinateFlag: !this.option.coordinateFlag,
 						})
-
 					}
 				});
+			},
+			// 获取天气
+			getWeather(location) {
+				homeService.getRealTimeWeather({
+					"dataType": "now",
+					"location": location
+				}).then(res => {
+					// console.log(res)
+					if (res.data.result.data && JSON.parse(res.data.result.data).code == 200) {
+						this.weather = JSON.parse(res.data.result.data).now
+					}
+				})
 			},
 			overview() {
 				this.mergeOptions({
@@ -332,17 +375,59 @@
 					})
 				})
 			},
-			listeningDirection() {
+			getAddress(longitude, latitude) {
+				// 创建地图坐标对象
+				var point = new plus.maps.Point(longitude, latitude);
+				//静态方法，反向地理编码
+				plus.maps.Map.reverseGeocode(point, {}, (event) => {
+						var address = event.address; // 转换后的地理位置
+						var point = event.coord; // 转换后的坐标信息
+						var coordType = event.coordType; // 转换后的坐标系类型
+						var reg = /.+?(省|市|自治区|自治州|县|区)/g;
+						var addressList = address.match(reg).toString().split(",");
+						//注意 因为存在直辖市， 当所在地区为普通省市时，addressList.length == 3，city = addressList[1];当所在地区为直辖市时addressList.length == 2，city = addressList[0];
+						let city = addressList.length == 3 ? addressList[1] :
+							addressList[0];
+						// console.log("addressList", addressList);
+						this.addressList = addressList
+						store.state.map.address = addressList
+					},
+					function(e) {
+						console.log("失败回调", e);
+					}
+				);
+			},
+			uploadPosition(longitude, latitude, altitude) {
+				homeService.uploadPosition({
+					"high": altitude,
+					"latitude": latitude,
+					"longitude": longitude,
+					"userId": uni.getStorageSync(USER_INFO).id
+				}).then(res => {
+					console.log(res.data && res.data.message)
+				})
+
+			},
+			listeningGPS() {
+				clearInterval(timer)
+
+				// 方向
 				uni.onCompassChange((res) => {
-					// console.log(res.direction);
-					// this.option.currentUser.orientation = res.direction
+					// console.log("方向" + res.direction);
+					store.state.map.orientation = res.direction
+
+					this.option.currentUser.orientation = res.direction
 				});
+				timer = setInterval(() => {
+					// 坐标
+					this.location()
+				}, 10000)
 			}
 		},
 		onLoad() {
 			this.isLogin()
 			this.initMap()
-			this.listeningDirection()
+			// this.listeningGPS()
 
 			setTimeout(() => {
 				this.mergeOptions({
@@ -360,9 +445,9 @@
 							content: '王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！'
 						}
 					})
-					setTimeout(()=>{
+					setTimeout(() => {
 						this.scrollTop = 10001
-					},1000)
+					}, 1000)
 				}, 1000)
 				// this.warnTip()
 			}, 1000)
@@ -373,10 +458,11 @@
 			})
 
 			if (store.state.map.route) {
+				let trackjson = store.state.map.route.onfootRouteInfo.routeLnglatMap
 				this.mergeOptions({
 					routeFlag: !this.option.routeFlag,
-					footprintsjson: store.state.map.route.footprintsjson,
-					trackjson: store.state.map.route.trackjson
+					footprintsjson: store.state.map.route.siteList,
+					trackjson: trackjson.split('|').map(item=>item.split(','))
 				})
 			}
 
@@ -430,15 +516,15 @@
 		},
 		methods: {
 			update(newValue, oldValue, ownerInstance, instance) {
-				if(!oldValue)return
+				if (!oldValue) return
 				if (oldValue.init == false) {
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
 				} else if (newValue.coordinateFlag != oldValue.coordinateFlag) {
-					console.log("定位用户位置")
+					// console.log("定位用户位置")
 					// map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);									
 					map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
-					console.log("设置用户位置")
+					// console.log("设置用户位置")
 					currentPositionObj.setLnglat(new T.LngLat(newValue.longitude, newValue.latitude))
 				} else if (newValue.currentLayer != oldValue.currentLayer) {
 					console.log("设置图层")
@@ -449,7 +535,7 @@
 						this.drawPath(newValue.trackjson, newValue.footprintsjson)
 					}
 				} else if (newValue.currentUser.orientation != oldValue.currentUser.orientation) {
-					console.log("设置用户方向")
+					// console.log("设置用户方向")
 					currentPositionObj && currentPositionObj.updateOrientation(newValue.currentUser.orientation)
 				} else if (newValue.currentUser.userImage != oldValue.currentUser.userImage) {
 					console.log("设置用户头像")
@@ -495,7 +581,8 @@
 				})
 			},
 			drawPath(trackjson, footprintsjson) {
-
+				console.log(trackjson)
+				console.log(footprintsjson)
 				// 清空上次脚印
 				footPrintSet.forEach(foot => {
 					map.removeOverLay(foot)
@@ -503,13 +590,13 @@
 				footPrintSet = []
 				// 绘制脚印
 				footprintsjson.forEach((foot, index) => {
-					this.addFoot(foot[2], foot[1], index + 1)
+					this.addFoot(foot.positionLongitude, foot.positionLatitude, index + 1)
 				})
 				// 清空上次线段集合
 				pointsline = []
 				// 绘制线段				
 				trackjson.forEach(track => {
-					pointsline.push(new T.LngLat(track[2], track[1]));
+					pointsline.push(new T.LngLat(track[0], track[1]));
 				})
 				// 清除上次路线
 				lineObj && map.removeOverLay(lineObj);
@@ -888,7 +975,7 @@
 					.home-weather-box-container-1-left,
 					.home-weather-box-container-1-right {
 						display: flex;
-						align-items: center;						
+						align-items: center;
 					}
 				}
 

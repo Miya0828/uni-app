@@ -83,12 +83,12 @@
 	import { loginService } from "@/api/index.js";
 	export default {
 		data() {
-			return {
+			return {				
 				loginWay: 1,
 				phoneNo: '',
-				username:'',
+				username:'Miya',
 				smsCode: '',
-				password:'',
+				password:'Passw0rd',
 				array: ['+86'],
 				index: 0,
 				modalName:'',
