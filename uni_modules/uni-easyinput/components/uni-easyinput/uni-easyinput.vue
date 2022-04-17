@@ -373,9 +373,9 @@
 		font-size: 14px;
 		padding-top: 6px;
 		padding-bottom: 10px;
-		height: 300px;
+		height: 80px;
 		/* #ifndef APP-NVUE */
-		min-height: 300px;
+		min-height: 80px;
 		width: auto;
 		/* #endif */
 	}

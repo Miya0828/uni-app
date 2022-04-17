@@ -1,6 +1,6 @@
 <template>
 	<view class="certificationPage">
-		<form @submit="onAuth" @reset="formReset">
+		<form @submit="onAuth">
 			<view>
 				<view class="certificate-group">
 					<view class="title">姓名</view>

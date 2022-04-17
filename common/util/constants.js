@@ -14,7 +14,7 @@ export const SMS_MODE = {
 	login:2, //登录验证码
 };
 
-export const SEX_LIST = [{label:'男',value:'0',checked:false},{label:'女',value:'1',checked:true}];
+export const SEX_LIST = [{label:'男',value:'0',checked:true},{label:'女',value:'1',checked:false}];
 
 export default STORAGE_OPTIONS;
 

@@ -1,7 +1,8 @@
 <template>
 	<view class="captain-application">
+		<uni-step :list="stepList" :step="0"></uni-step>
 		<view class="captain-application-tips">本页内容仅用于平台审核，不对其他用户公开</view>
-		<form @submit="onAuth" @reset="formReset">
+		<form @submit="onAuth">
 			<view>
 				<view class="captain-application-group">
 					<view class="title">姓名</view>
@@ -31,9 +32,12 @@
 		</form>
 	</view>
 </template>
-
 <script>
+	import uniStep from "@/components/uni-step/uni-step.vue";
 	export default {
+		components(){
+			uniStep
+		},
 		data() {
 			return {
 				smsCountDown: 0,
@@ -43,7 +47,8 @@
 					phone:'',
 					identityCard:'',
 					smsCode:''
-				}
+				},
+				stepList:['身份信息','基本资料','能力说明']
 			}
 		},
 		mounted(){

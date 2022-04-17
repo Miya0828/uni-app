@@ -1,6 +1,7 @@
 <template>
 	<view class="baseInfo">
-		<form @submit="onAuth" @reset="formReset">
+		<form @submit="onAuth">
+			<uni-step :list="stepList" :step="2"></uni-step>
 			<view>
 				<view class="baseInfo-group">
 					<view class="title">工作单位</view>
@@ -34,7 +35,11 @@
 </template>
 
 <script>
+	import uniStep from "@/components/uni-step/uni-step.vue";
 	export default {
+		components(){
+			uniStep
+		},
 		data() {
 			return {
 				smsCountDown: 0,
@@ -44,7 +49,8 @@
 					phone:'',
 					identityCard:'',
 					smsCode:''
-				}
+				},
+				stepList:['身份信息','基本资料','能力说明']
 			}
 		},
 		computed: {
@@ -63,7 +69,6 @@
 			
 		},
 		methods: {
-			onChange(){},
 			onFinishPersonIntroduce(){
 				uni.navigateTo({
 					url:"/pages/mine/captainApplication/personInfo"

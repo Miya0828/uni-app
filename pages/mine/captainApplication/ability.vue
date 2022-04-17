@@ -1,6 +1,7 @@
 <template>
 	<view class="ability">
 		<view>
+			<uni-step :list="stepList" :step="3"></uni-step>
 			<view class="ability-tips">本页内容仅用于平台审核，不对其他用户公开</view>
 			<view class="ability-group" @click="onUploadTourGuide">
 					<text class="item title">导游证</text>
@@ -49,10 +50,15 @@
 </template>
 
 <script>
+	import uniStep from "@/components/uni-step/uni-step.vue";
 	export default {
+		components(){
+			uniStep
+		},
 		data() {
 			return {
 				modalName:'',
+				stepList:['身份信息','基本资料','能力说明']
 			}
 		},
 		mounted(){
@@ -100,7 +106,6 @@
 			display: flex;
 			align-items: center;
 			min-height: 120upx;
-			margin-top: 20upx;
 			margin-bottom: 20upx;
 			justify-content: space-between;
 			.ability-group-item{
@@ -220,14 +225,6 @@
 				flex: 1;
 				font-size: 32upx;
 				font-weight: 500;
-			}
-			.action {
-				display: flex;
-				position: relative;
-				align-items: center;
-				height: 100%;
-				justify-content: center;
-				max-width: 100%;
 			}
 		}
 	}

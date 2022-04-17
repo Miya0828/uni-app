@@ -8,7 +8,13 @@ const forHelpService = {
 	  * 获取求救列表
 	  */
 	onfootFirstaid(params,loading = true) {
-		return http.post('/tour-pal/sys/onfootFirstaid/onfootHeaderList',params,{custom: {loading: loading}})	
+		return http.get('/tour-pal/sys/onfootFirstaid/onfootHeaderList',{params,custom: {loading: loading}})	
+	},
+	/**
+	  * 获取急求内容
+	  */
+	onfootContent(params,loading = true) {
+		return http.get('/tour-pal/sys/onfootFirstaid/onfootContent',{params,custom: {loading: loading}})	
 	},
 	
 };

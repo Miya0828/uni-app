@@ -29,7 +29,7 @@
 		<view class="list-content">
 			<scroll-view scroll-y="true" style="height: 100%;" class="scrool-more">
 				<view class="for-help-box">
-					<view class="for-help-group" v-for="(item,index) of faidList" :key="index">
+					<view class="for-help-group" v-for="(item,index) of faidList" @click="onGoAidDetail(item.id)" :key="index">
 						<text class="item title">{{item.dataHeader}}</text>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { forHelpService } from "@/api/index.js";
+import uniStep from "@/components/uni-step/uni-step.vue";
 export default {
 	data() {
 		return {
@@ -72,6 +72,18 @@ export default {
 					this.faidList = res.data;
 				}
 			})
+		},
+		onGoAidDetail(id){
+			if(this.dataType == 0){
+				uni.navigateTo({
+					url:"/pages/forHelp/learnAid/learnAid?id="+JSON.stringify({id:id})
+				})
+			}else if(this.dataType == 1){
+				uni.navigateTo({
+					url:"/pages/forHelp/hikeReady/hikeReady?id="+JSON.stringify({id:id})
+				})
+			}
+			
 		},
 		tabSelect(e) {
 			this.dataType = e.currentTarget.dataset.id;
@@ -109,7 +121,7 @@ page{
 			font-size: 2em;
 		}
 		.for-help-page-title{
-			color: #666666;
+			color: #333333;
 			font-size: 20upx;
 			margin-top: 30upx;
 		}
@@ -172,6 +184,8 @@ page{
 	.list-content{
 		flex: 1;
 		position: relative;
+		color:#666666;
+		font-size: 28upx;
 		.scrool-more{
 			position: absolute;
 			left: 0;
