@@ -36,6 +36,29 @@
 			</view>
 		</view>
 
+		<view class="team-create-container-item" @click="copy(form.teamInvitationCode)">
+			<view class="team-create-container-item-title">
+				团队邀请码
+			</view>
+			<view class="team-create-container-item-box">
+				<view class="team-create-container-item-box-1">
+					{{form.teamInvitationCode}}
+				</view>
+				<uni-icons class="team-create-container-item-box-arrow" color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
+			</view>
+		</view>
+
+		<view class="team-create-container-item mb20">
+			<view class="team-create-container-item-title">
+				团队二维码
+			</view>
+			<view class="team-create-container-item-box">
+				<image src="/static/logo.png" mode="aspectFit"></image>
+				<uni-icons class="team-create-container-item-box-arrow" color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
+			</view>
+		</view>
 
 		<view class="team-create-container-item" @click="changeValue('teamIntroduce')">
 			<view class="team-create-container-item-title">
@@ -87,15 +110,11 @@
 				form: {
 					avatar: '',
 					teamName: '',
+					routeName: '',
+					teamInvitationCode: '',
+					teamQRcode: '',
 					teamIntroduce: ''
 				}
-			}
-		},
-		onLoad(options) {
-			if (options.isModify) {
-				uni.setNavigationBarTitle({
-					title: '编辑团队'
-				});
 			}
 		},
 		onShow() {
@@ -149,15 +168,16 @@
 					// 团队名称
 					teamName: this.form.teamName,
 					// 团队介绍
-					teamIntroduce: this.form.teamIntroduce
-				}).then(res => {
-					console.log(res)
-					if (res.data.success) {
-						uni.navigateBack({
-
-						})
-					}
+					teamIntroduce: this.from.teamIntroduce
 				})
+			},
+			copy(data) {
+				uni.setClipboardData({
+					data,
+					success: function() {
+						console.log('success');
+					}
+				});
 			}
 		}
 	}
@@ -175,7 +195,7 @@
 
 		.team-create-container-save {
 			position: absolute;
-			bottom: 16%;
+			bottom: 8%;
 			width: 100%;
 
 			.team-create-container-save-btn {

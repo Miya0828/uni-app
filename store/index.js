@@ -17,6 +17,7 @@ export default new Vuex.Store({
 		realname: '',
 		welcome: '',
 		avatar: '',
+		teamRoute:null,
 		map: {
 			layer: 0,
 			route: null,

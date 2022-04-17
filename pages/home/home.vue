@@ -128,52 +128,56 @@
 					</view>
 				</view>
 				<view class="home-route-title">
-					雁荡山路线
+					{{route.routeName}}
 				</view>
 				<view class="home-route-modify-time">
-					队长 编辑于 20:33
+					队长 编辑于 {{route.createTime}}
 				</view>
 				<view class="home-route-start-end">
 					<view class="home-route-start">
 						<text>●</text>
-						雁荡山风景名胜区…
+						{{route.originName}}
 					</view>
 					<view class="home-route-arrow">
 						→
 					</view>
 					<view class="home-route-end">
 						<text>●</text>
-						雁荡山风景名胜区…
+						{{route.destinationName}}
 					</view>
 				</view>
 				<view class="home-route-distance">
 					<view class="home-route-total-distance">
 						总里程：
-						<text>123.24公里</text>
+						<text>{{route.totalMileage}}</text>
 					</view>
 					<view class="home-route-total-time">
 						总需耗时：
-						<text>2天1小时</text>
+						<text>{{route.totalTime}}</text>
 					</view>
 				</view>
-				<view class="home-route-scenery-spot" v-for="item in [1,2,3,4,5]" :key='item'>
-					<view class="home-route-scenery-spot-title">
-						<text>{{item}}</text>
-						雁荡山风景名胜沿湖景区（入口）
-					</view>
-					<view class="home-route-scenery-spot-des">
-						<view>
-							<image src="/static/home/ic_walk@3x.png" mode="aspectFit"></image>
-							约1.3公里
+				<view class="home-route-scenery-box">
+
+
+					<view class="home-route-scenery-spot" v-for="(item,index) in option.footprintsjson" :key='index'>
+						<view class="home-route-scenery-spot-title">
+							<text>{{item.routeSort}}</text>
+							{{item.siteName}}
 						</view>
-						<view>
-							约55分钟
-						</view>
-						<view>
-							约12345人走过
-						</view>
-						<view>
-							难度：低
+						<view class="home-route-scenery-spot-des">
+							<view>
+								<image src="/static/home/ic_walk@3x.png" mode="aspectFit"></image>
+								约{{item.intervalKilometers}}
+							</view>
+							<view>
+								约{{item.intervalTime}}
+							</view>
+							<view>
+								约{{item.punchTimes}}人走过
+							</view>
+							<view>
+								难度：{{difficultyLevel[item.difficultyLevel]}}
+							</view>
 						</view>
 					</view>
 				</view>
@@ -198,6 +202,8 @@
 	export default {
 		data() {
 			return {
+				difficultyLevel: ['', '低', '中', '高'],
+				route: {},
 				addressList: [],
 				weather: {
 					"obsTime": "2022-04-16T15:06+08:00",
@@ -304,6 +310,13 @@
 				this.$refs.popupWarn.open()
 			},
 			openRoute() {
+				if (!store.state.map.route) {
+					uni.showToast({
+						icon: 'none',
+						title: '请先选择路线',
+					})
+					return
+				}
 				this.$refs.popupRoute.open()
 			},
 			showTourlist() {
@@ -457,12 +470,14 @@
 				currentLayer: store.state.map.layer
 			})
 
-			if (store.state.map.route) {
-				let trackjson = store.state.map.route.onfootRouteInfo.routeLnglatMap
+			if (store.state.map.route && store.state.map.route.onfootRouteInfo) {
+
+				this.route = store.state.map.route.onfootRouteInfo
+				let trackjson = store.state.map.route.routeLngLatMapList
 				this.mergeOptions({
 					routeFlag: !this.option.routeFlag,
-					footprintsjson: store.state.map.route.siteList,
-					trackjson: trackjson.split('|').map(item=>item.split(','))
+					footprintsjson: store.state.map.route.siteList.sort((a, b) => a.routeSort - b.routeSort),
+					trackjson: trackjson
 				})
 			}
 
@@ -487,6 +502,12 @@
 	let pointsline = [];
 	// 路线对象
 	let lineObj = null
+
+	// 已走过的路线点集合
+	let pointslineAlready = [];
+	// 已走过的路线对象
+	let lineObjAlready = null
+
 	// 路线上脚印集合
 	let footPrintSet = []
 
@@ -526,6 +547,14 @@
 					map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
 					// console.log("设置用户位置")
 					currentPositionObj.setLnglat(new T.LngLat(newValue.longitude, newValue.latitude))
+					// console.log('绘制已走过路线')
+					if (newValue.trackjson.length) {
+
+						this.drawAlreadyPath(newValue.trackjson, {
+							longitude: newValue.longitude,
+							latitude: newValue.latitude
+						})
+					}
 				} else if (newValue.currentLayer != oldValue.currentLayer) {
 					console.log("设置图层")
 					this.changeLayer(newValue.currentLayer)
@@ -580,6 +609,57 @@
 					)
 				})
 			},
+			// 绘制已走过路线
+			drawAlreadyPath(trackjson, currentPosition) {
+				trackjson = trackjson.map(res => [res.longitude, res.latitude])
+				// console.log(trackjson, currentPosition)
+				// return
+				var line = turf.lineString(trackjson);
+				var pt = turf.point(["120.91986447403987", "28.341998223837688"]);
+				// var pt = turf.point([currentPosition.longitude, currentPosition.latitude]);
+
+				var snapped = turf.nearestPointOnLine(line, pt, {
+					units: 'kilometers'
+				});
+				/*
+				"properties": {
+					"dist": 320.1844878459131,
+					"index": 0,
+					"location": 0
+				},
+				"geometry": {
+					"type": "Point",
+					"coordinates": ["120.94099606155498", "28.350833726164286"]
+				}*/
+				// 500米内算开始
+				if (snapped.properties.dist < 0.5) {
+					var coordinates = snapped.geometry.coordinates
+
+					// 清空上次线段集合
+					pointslineAlready = []
+					// 绘制线段
+					for (let i = 0, len = trackjson.length; i < len; i++) {
+						console.log(trackjson[i][0], trackjson[i][1])
+						pointslineAlready.push(new T.LngLat(trackjson[i][0], trackjson[i][1]));
+						if (trackjson[i][0] == coordinates[0] && trackjson[i][1] == coordinates[1]) {
+							break
+						}
+					}
+					// 清除上次路线
+					lineObjAlready && map.removeOverLay(lineObjAlready);
+					//创建线对象
+					lineObjAlready = new T.Polyline(pointslineAlready, {
+						color: '#00C435',
+						weight: 6,
+						opacity: 1
+					});
+					//向地图上添加路线
+					map.addOverLay(lineObjAlready);
+
+				}
+				console.log(snapped)
+
+			},
 			drawPath(trackjson, footprintsjson) {
 				console.log(trackjson)
 				console.log(footprintsjson)
@@ -590,20 +670,20 @@
 				footPrintSet = []
 				// 绘制脚印
 				footprintsjson.forEach((foot, index) => {
-					this.addFoot(foot.positionLongitude, foot.positionLatitude, index + 1)
+					this.addFoot(foot.positionLongitude, foot.positionLatitude, foot.routeSort)
 				})
 				// 清空上次线段集合
 				pointsline = []
-				// 绘制线段				
+				// 绘制线段
 				trackjson.forEach(track => {
-					pointsline.push(new T.LngLat(track[0], track[1]));
+					pointsline.push(new T.LngLat(track.longitude, track.latitude));
 				})
 				// 清除上次路线
 				lineObj && map.removeOverLay(lineObj);
 				//创建线对象
 				lineObj = new T.Polyline(pointsline, {
-					color: 'blue',
-					weight: 4,
+					color: '#2684FF',
+					weight: 6,
 					opacity: 1
 				});
 				//向地图上添加路线
@@ -1082,6 +1162,15 @@
 				background-color: white;
 				border-radius: 32rpx 32rpx 0px 0px;
 				position: relative;
+				height: 60vh;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+
+				.home-route-scenery-box {
+					flex-grow: 1;
+					overflow-y: auto;
+				}
 
 				.home-route-box-container-finish {
 					position: absolute;

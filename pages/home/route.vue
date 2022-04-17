@@ -49,6 +49,10 @@
 		mounted() {
 			this.getRouteList();
 		},
+		onLoad(options) {
+			// console.log(options)
+			this.teamCreate = options.teamCreate
+		},
 		methods: {
 			getRouteList() {
 				homeService.routeList({
@@ -65,15 +69,17 @@
 				this.getRouteList();
 			},
 			chooseRoute(route) {
-
+				if (this.teamCreate) {					
+					store.state.teamRoute = route
+					uni.navigateBack();
+					return
+				}
 				homeService.queryRouteSiteByRouteId({
 					id: parseInt(route.id)
 				}).then(res => {
-					console.log(res.data.result)
+					// console.log(res.data.result)
 					store.state.map.route = res.data.result
-					uni.navigateBack({
-						url: '/pages/home/route'
-					});
+					uni.navigateBack();
 				})
 			}
 		}

@@ -1,6 +1,23 @@
 <template>
 	<view class="team-chat-container">
-		<view class="team-chat-container-create" @click="createTeam">
+		<view v-if="teamList.length" class="team-chat-container-list">
+			<view class="team-chat-container-list-item" @click="toteam(item.teamName)" v-for="(item,index) in teamList"
+				:key="index">
+				<view class="team-chat-container-item-logo">
+					<image :src="item.teamIcon" mode="aspectFit"></image>
+				</view>
+				<view class="team-chat-container-item-box">
+					<view class="team-chat-container-item-title">
+						{{item.teamName}}
+					</view>
+					<view class="team-chat-container-item-des">
+						{{item.teamIntroduce}}
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<view  class="team-chat-container-create" @click="createTeam">
 			<view class="team-chat-container-item-logo">
 				<image src="/static/chat/ic_createateam@3x.png" mode=""></image>
 			</view>
@@ -13,43 +30,30 @@
 				</view>
 			</view>
 		</view>
-		<view class="team-chat-container-list">
-			<view class="team-chat-container-list-item" @click="toteam('团队一')">
-				<view class="team-chat-container-item-logo">
-					<image src="/static/chat/ic_createateam@3x.png" mode=""></image>
-				</view>
-				<view class="team-chat-container-item-box">
-					<view class="team-chat-container-item-title">
-						团队一
-					</view>
-					<view class="team-chat-container-item-des">
-						通过队长模式可以很方便的管理队伍
-					</view>
-				</view>
-			</view>
-			<view class="team-chat-container-list-item">
-				<view class="team-chat-container-item-logo">
-					<image src="/static/chat/ic_createateam@3x.png" mode=""></image>
-				</view>
-				<view class="team-chat-container-item-box">
-					<view class="team-chat-container-item-title">
-						团队二
-					</view>
-					<view class="team-chat-container-item-des">
-						通过队长模式可以很方便的管理队伍
-					</view>
-				</view>
-			</view>
-		</view>
+
 	</view>
 </template>
 
 <script>
+	import store from '@/store/index.js';
+	import {
+		teamService
+	} from "@/api/index.js";
+
 	export default {
 		data() {
 			return {
-
+				teamList: []
 			}
+		},
+		onShow() {
+			teamService.queryTeam().then(res => {
+				// console.log(res)
+				if (res.data.success) {
+					console.log(res.data.result)
+					this.teamList = res.data.result
+				}
+			})
 		},
 		methods: {
 			createTeam() {
@@ -57,9 +61,9 @@
 					url: '/pages/teamChat/teamCreate'
 				})
 			},
-			toteam(title){
+			toteam(title) {
 				uni.navigateTo({
-					url: '/pages/teamChat/chat?title='+title
+					url: '/pages/teamChat/chat?title=' + title
 				})
 			}
 		},

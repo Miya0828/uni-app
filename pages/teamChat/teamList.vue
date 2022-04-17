@@ -38,7 +38,8 @@
 </template>
 
 <script>
-	export default {
+	
+	export default {		
 		methods: {
 			search() {
 
@@ -72,14 +73,15 @@
 				}
 			}
 
-			.team-list-container-list-item {				
+			.team-list-container-list-item {
 				display: flex;
-								
+
 				.team-list-container-list-item-left {
 					padding: 20rpx 32rpx;
 					padding-right: 0;
 					position: relative;
 					margin-right: 20rpx;
+
 					.team-list-container-list-item-left-avatar {
 						width: 88rpx;
 						height: 88rpx;
@@ -96,9 +98,10 @@
 				}
 
 				.team-list-container-list-item-right {
-					overflow: hidden;					
+					overflow: hidden;
 					padding: 20rpx 32rpx;
 					padding-left: 0;
+
 					.team-list-container-list-item-right-title {
 						display: flex;
 						align-items: center;
