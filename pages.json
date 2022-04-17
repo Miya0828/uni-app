@@ -169,7 +169,7 @@
 			}
 		},
 		{
-			"path": "pages/mine/uploadActivityInfo",
+			"path": "pages/mine/uploadActivityInfo/uploadActivityInfo",
 			"style": {
 				"navigationBarTitleText": "活动信息上传"
 			}
@@ -261,7 +261,23 @@
 			}
 
 		}
-	],
+        ,{
+            "path" : "pages/forHelp/learnAid/learnAid",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "学习急救"
+            }
+            
+        }
+        ,{
+            "path" : "pages/forHelp/hikeReady/hikeReady",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "徒步准备"
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

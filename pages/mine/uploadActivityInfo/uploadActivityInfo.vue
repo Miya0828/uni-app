@@ -1,6 +1,6 @@
 <template>
 	<view class="uploadActivityInfo">
-		<form @submit="onUploadActivityInfo" @reset="formReset">
+		<form @submit="onUploadActivityInfo">
 			<view class="cu-list menu card-menu shadow-lg margin-top-sm">
 				<view class="cu-item arrow">
 					<view class="content flex">

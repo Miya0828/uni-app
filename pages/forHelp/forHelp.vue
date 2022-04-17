@@ -1,106 +1,48 @@
 <template>
-	<scroll-view scroll-y class="forHelpPage">
-		<cu-custom bgColor="bg-white"><block slot="content">求助</block></cu-custom>
-			<view class="flex justify-center align-center">
-				<view class="padding-sm">
-					<view class="padding-xs radius text-center shadow-blur solid-right ">
-						<view class="cu-avatar lg sos">
-						</view>
-						<view class="text-xs margin-top">一键求助</view>
+	<view class="for-help-page">
+		<view class="for-help-page-sos">
+			<view class="for-help-page-item">
+				<view class="for-help-page-logo for-help-page-logo-sos"></view>
+				<view class="for-help-page-title">一键求助</view>
+			</view> 
+		</view>
+		<view class="for-help-page-grid for-help-page-item">
+			<uni-grid :column="3" :showBorder="false">
+				<uni-grid-item v-for="(item, index) in usList" :index="index" :key="index">
+					<view class="for-help-page-grid-item-box">
+						<image class="for-help-page-logo"  :src="item.icon"></image>
+						<view class="for-help-page-title">{{item.title}}</view>
 					</view>
-				</view> 
-			</view>
-			<view class="bg-white grid col-3 padding-sm radius margin-left margin-right">
-				<view class="padding-sm"  v-for="(item,index) in usList" :key="index">
-					<navigator v-if="item.url" class="content" :url="item.url" hover-class="none">
-						<view class="padding-xs radius text-center shadow-blur solid-right ">
-							<image class="cu-avatar bg-white lg"  :src="item.icon" style="width: 100upx; height: 100upx;"></image>
-							<view class="text-xs margin-top">{{item.title}}</view>
-						</view>
-					</navigator>
-					<view v-else class="padding-xs radius text-center shadow-blur solid-right ">
-						<image class="cu-avatar bg-white lg"  :src="item.icon" style="width: 100upx; height: 100upx;"></image>
-						<view class="text-xs margin-top">{{item.title}}</view>
-					</view>
-				</view>
-			</view>
-			<view class="bg-white padding-top-sm margin-top margin-left margin-right">
-				<scroll-view scroll-x class="bg-white nav">
-					<view class="flex text-center">
-						<view class="cu-item flex-sub" :class="index==tabCurent?'text-blue cur':''" v-for="(item,index) in tabList" :key="index" @tap="tabSelect" :data-id="index">
-							{{item}}
-						</view>
-					</view>
-				</scroll-view>
-				<!-- 列表list-->
-				<view v-if="tabCurent=== 0" class="cu-list menu card-menu margin-top-xs margin-bottom-xl shadow-lg radius">
-					<view class="cu-item arrow">
-						<view class="content">
-							<text class="cuIcon-redpacket_fill text-red"></text>
-							<text class="text-grey">蜇伤/咬伤</text>
-						</view>
-					</view>
-					<view class="cu-item arrow">
-						<navigator class="content" hover-class="none">
-							<text class="cuIcon-settingsfill text-cyan"></text>
-							<text class="text-grey">拉伤和扭伤</text>
-						</navigator>
-					</view>
-					<view class="cu-item arrow">
-						<navigator class="content" hover-class="none">
-							<text class="cuIcon-settingsfill text-cyan"></text>
-							<text class="text-grey">中风</text>
-						</navigator>
-					</view>
-					<view class="cu-item arrow">
-						<navigator class="content" hover-class="none">
-							<text class="cuIcon-settingsfill text-cyan"></text>
-							<text class="text-grey">过敏</text>
-						</navigator>
-					</view>
-					<view class="cu-item arrow">
-						<navigator class="content" hover-class="none">
-							<text class="cuIcon-settingsfill text-cyan"></text>
-							<text class="text-grey">人事不省</text>
-						</navigator>
-					</view>
-					<view class="cu-item arrow">
-						<view class="content">
-							<text class="cuIcon-redpacket_fill text-red"></text>
-							<text class="text-grey">哮喘发作</text>
-						</view>
-					</view>
-					<view class="cu-item arrow">
-						<view class="content">
-							<text class="cuIcon-favorfill text-yellow"></text>
-							<text class="text-grey">出血</text>
-						</view>
-					</view>
-					<view class="cu-item arrow">
-						<navigator class="content" hover-class="none">
-							<text class="cuIcon-settingsfill text-cyan"></text>
-							<text class="text-grey">骨折</text>
-						</navigator>
-					</view>
-					<view class="cu-item arrow">
-						<navigator class="content" hover-class="none">
-							<text class="cuIcon-exit text-cyan"></text>
-							<text class="text-grey">烧伤</text>
-						</navigator>
-					</view>
-					<view class="cu-item arrow">
-						<navigator class="content" hover-class="none">
-							<text class="cuIcon-exit text-cyan"></text>
-							<text class="text-grey">哽塞</text>
-						</navigator>
+				</uni-grid-item>
+			</uni-grid>
+		</view>
+		<view class="for-help-page-nav">
+			<view class="for-help-page-nav-item">
+				<view class="for-help-page-nav-item-box">
+					<view class="for-help-page-nav-item-box-area flex-sub" :class="index==dataType?'active':''" v-for="(item,index) in tabList" :key="index" @tap="tabSelect" :data-id="index">
+						{{item}}
 					</view>
 				</view>
-				<view v-else class="bg-white padding-top-sm margin-top margin-left margin-right">暂无数据</view>
 			</view>
-	</scroll-view>
+		</view>
+		<!-- 列表list-->
+		<view class="list-content">
+			<scroll-view scroll-y="true" style="height: 100%;" class="scrool-more">
+				<view class="for-help-box">
+					<view class="for-help-group" v-for="(item,index) of faidList" @click="onGoAidDetail(item.id)" :key="index">
+						<text class="item title">{{item.dataHeader}}</text>
+						<uni-icons color="#3D3D3D" type="forward" size="18">
+						</uni-icons>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+	</view>
 </template>
 
 <script>
+import { forHelpService } from "@/api/index.js";
+import uniStep from "@/components/uni-step/uni-step.vue";
 export default {
 	data() {
 		return {
@@ -114,53 +56,167 @@ export default {
 			],
 			tabList:[
 				'学习急救',
-				'准备',
-				'紧急',
-				'小测'
+				'徒步准备',
+				'能力小测'
 			],
-			tabCurent:0,
+			faidList:[],
+			dataType:0,
 		};
 	},
-	onLoad(option) {
-		console.log("forHelp");
+	mounted(){
+		this.onfootFirstaid();
 	},
-	methods:{
+	methods: {
+		onfootFirstaid(){
+			forHelpService.onfootFirstaid({dataType:this.dataType}).then((res)=>{
+				if(res.data){
+					this.faidList = res.data;
+				}
+			})
+		},
+		onGoAidDetail(id){
+			if(this.dataType == 0){
+				uni.navigateTo({
+					url:"/pages/forHelp/learnAid/learnAid?id="+JSON.stringify({id:id})
+				})
+			}else if(this.dataType == 1){
+				uni.navigateTo({
+					url:"/pages/forHelp/hikeReady/hikeReady?id="+JSON.stringify({id:id})
+				})
+			}
+			
+		},
 		tabSelect(e) {
-			this.tabCurent = e.currentTarget.dataset.id;
-			this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
+			this.dataType = e.currentTarget.dataset.id;
+			this.onfootFirstaid();
 		}
 	}
 };
 </script>
 
-<style lang="less">
-	page {
-		&::after {
-			content: ' ';
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-			height: 1rpx;
-			background-color: rgba(220, 220, 220, 0.5);
-			box-shadow: 0rpx -2rpx 2rpx 0rpx rgba(220, 220, 220, 0.5);
+<style lang="less">	
+page{
+	width: 100%;
+	height: 100%;
+}
+.for-help-page {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	background-color: #F8F8F8;
+	.for-help-page-sos{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.for-help-page-item{
+		padding: 30upx;
+		.for-help-page-logo-sos{
+			background:red url('/static/forHelp/SketchPngSoS.png') center center no-repeat;
+			border-radius: 20upx;
+		}
+		.for-help-page-logo{
+			width: 98upx;
+			height: 98upx;
+			font-size: 2em;
+		}
+		.for-help-page-title{
+			color: #333333;
+			font-size: 20upx;
+			margin-top: 30upx;
 		}
 	}
-.forHelpPage {
-	background-color: #F8F8F8;
-	.sos{
-		background: red url('/static/forHelp/SketchPngSoS.png') center center no-repeat;
-		backgroundSize:100upx 100upx;
-		border-radius: 20upx;
+	.for-help-page-grid{
+		padding:0 32upx 32upx 32upx;
+		.uni-grid-wrap{
+			background: #FFFFFF;
+			border-radius: 16upx;
+		}
+		.for-help-page-grid-item-box,{
+			display: flex;
+			flex: 1;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			border-radius: 12upx;
+		}
+		.uni-grid-item__box{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+		uni-image{
+			width: 100upx;
+			height:100upx;
+		}
 	}
-	.nav .cu-item.cur {
-	    border-bottom: 2px solid;
-	    background: #0081ff;
-	    color: #FFF;
-	    border-radius: 20px;
+	.for-help-page-nav{
+		padding: 0upx 30upx 0 30upx;
+		.for-help-page-nav-item{
+			padding-top: 24upx;
+			background: #FFFFFF;
+			border-radius: 12px 12px 0 0;
+			.for-help-page-nav-item-box{
+				display: flex;
+				background: #F8F8F8;
+				border-radius: 30upx;
+				margin: 0 26upx;
+				.for-help-page-nav-item-box-area{
+					flex: 1;
+					height: 70upx;
+					display: inline-block;
+					line-height: 70upx;
+					margin: 0 10upx;
+					padding: 0 20upx;
+					text-align: center;
+					&.active{
+						border-bottom: 2px solid;
+						background: #0081ff;
+						color: #FFF;
+						border-radius: 20px;
+					}
+				}
+			}
+		}
 	}
-	.nav .cu-item {
-	    height: 68upx;
-	    line-height: 68upx;
+	
+	.list-content{
+		flex: 1;
+		position: relative;
+		color:#666666;
+		font-size: 28upx;
+		.scrool-more{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			.for-help-box{
+				padding: 0 30upx 30upx 30upx;
+				.for-help-group {
+					background-color: #ffffff;
+					padding: 1upx 30upx 1upx 40upx;
+					display: flex;
+					align-items: center;
+					min-height: 104upx;
+					justify-content: space-between;
+					.title {
+						text-align: justify;
+						width: 180upx;
+						padding-right: 30upx;
+						font-size: 30upx;
+						position: relative;
+						height: 60upx;
+						line-height: 60upx;
+					}
+				}
+				.for-help-group+.for-help-group {
+					border-top: 1upx solid #eee;
+				}
+			}
+		}
 	}
 }
 </style>

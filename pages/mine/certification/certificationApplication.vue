@@ -17,7 +17,7 @@ export default {
 		onBack(){
 			uni.switchTab({
 				url:'/pages/mine/mine'
-			})
+			});
 		}
 	}
 }

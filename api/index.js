@@ -1,6 +1,7 @@
 import loginService from "./loginService.js";
 import userService from "./userService.js";
 import commonService from "./commonService.js";
+import forHelpService from "./forHelpService.js";
 import homeService from "./homeService.js";
 import teamService from "./teamService.js";
 
@@ -9,5 +10,6 @@ export {
 	userService,
 	commonService,
 	homeService,
-	teamService
+	teamService,
+	forHelpService	
 }

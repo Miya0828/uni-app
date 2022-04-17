@@ -1,25 +1,24 @@
 <template>
 	<view class="login-view">
-		<view class="logo margin-left-xl">
-			<image style="width: 100upx; height: 100upx;" src="../../static/logo.png">
-			</image>
+		<view class="logo">
+			<image src="../../static/logo.png"></image>
 		</view>
-		<view class="margin-left-lg text-lg  text-bold text-xxl login-tip">欢迎来到驴友通</view>
-		<block  v-if="loginWay == 1">
-			<view class="padding-lr-xl login-paddingtop">
-				<view class="cu-form-group margin-top form-item">
+		<view class="login-view-title">欢迎来到驴友通</view>
+		<block v-if="loginWay == 1">
+			<view class="login-view-padding-top">
+				<view class="login-view-group">
 					<input placeholder="请输入账户名" type="text" v-model="username"></input>
 				</view>
-				<view class="cu-form-group margin-top form-item">
+				<view class="login-view-group">
 					<input placeholder="请输入登录密码" :type="passwordType" v-model="password"></input>
 					<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowPassword"></image>
 				</view>
-				<view class="margin-top-xl">
-					<button class="bg-blue line-blue text-white login-btn" @click="onLogin">登录</button>
+				<view class="login-view-btn-box">
+					<button @click="onLogin">登录</button>
 				</view>
-				<view class="flex justify-between margin-top-lg bg-white">
+				<view class="login-view-login-way">
 					<text @tap="onSelectLoginWay(2)">手机号登录</text>
-					<view class="flex justify-between" >
+					<view class="login-view-operation" >
 						<text class="forgetPassword">忘记密码</text>
 						<text @click="goToRegister">快速注册</text>
 					</view>
@@ -28,49 +27,47 @@
 			</view>
 		</block>
 		<block v-if="loginWay == 2">
-			<view class="padding-lr-xl login-paddingtop">
-				<view class="cu-form-group margin-top form-item">
+			<view class="login-view-padding-top">
+				<view class="login-view-group">
 					<picker @change="bindPickerChange" :value="index" :range="array">
-						<view class="uni-input">{{array[index]}}</view>
+						<view class="login-view-group-area">{{array[index]}}</view>
 					</picker>
-					<input placeholder="请输入手机号" type="number" maxlength="11" v-model="phoneNo"></input>
+					<input class="login-view-group-phone" placeholder="请输入手机号" type="number" maxlength="11" v-model="phoneNo"></input>
 				</view>
-				<view class="cu-form-group margin-top form-item">
+				<view class="login-view-group">
 					<input class="uni-input" type="number" maxlength="6" placeholder="请输入验证码" v-model="smsCode" />
-					<button class="cu-btn line-blue sm" :disabled="!isSendSMSEnable" @click="onSMSSend">
+					<button class="login-view-group-smscode" :disabled="!isSendSMSEnable" @click="onSMSSend">
 						{{ getSendBtnText }}</button>
 				</view>
-				<view class="margin-top-xl">
-					<button class="bg-blue line-blue text-white login-btn" @click="onSMLogin">登录</button>
+				<view class="login-view-btn-box">
+					<button @click="onSMLogin">登录</button>
 				</view>
-				<view class="flex justify-between margin-top-lg bg-white">
+				<view class="login-view-login-way">
 					<text @tap="onSelectLoginWay(1)">账号密码登录</text>
 					<text @click="goToRegister">快速注册</text>
 				</view>
 			</view>
 		</block>
-		<view class="way padding-xl text-center">
-			<view class="operLine bg-white">
+		<view class="login-view-thirdth-way">
+			<view class="operLine">
 				<text class="line">第三方账号登录</text>
 			</view>
-			<view class="login-way flex justify-between margin-top margin-bottom">
+			<view class="login-way">
 				<text class="cuIcon-weixin text-green"></text>
-				<image src='/static//login/ic_qq.png'></image>
+				<image src='/static/login/ic_qq.png'></image>
 				<text class="cuIcon-weibo text-yellow"></text>
 			</view>
-			<view class="margin-top-xl text-center bg-white">
-				登录即同意，<text selectable="true" class="text-black" @tap="showModal" data-target="Modal">《用户服务协议》</text>
+			<view class="login-view-agree">
+				登录即同意，<text selectable="true" class="login-view-agree-title" @tap="showModal" data-target="Modal">《用户服务协议》</text>
 			</view>
-			<view class="cu-modal" :class="modalName=='Modal'?'show':''">
-				<view class="cu-dialog">
-					<view class="cu-bar bg-white justify-end">
-						<view class="content">Modal标题</view>
-						<view class="action" @tap="hideModal">
-							<text class="cuIcon-close text-red"></text>
-						</view>
+			<view class="login-view-modal" :class="modalName=='Modal'?'show':''">
+				<view class="login-view-dialog">
+					<view class="login-view-dialog-bar">
+						<view class="title">《用户服务协议》</view>
+						<uni-icons type="closeempty" size="18" color="gray" class="cloable" @tap="hideModal"></uni-icons>
 					</view>
-					<view class="padding-xl">
-						Modal 内容。
+					<view class="login-view-dialog-content">
+						《用户服务协议》
 					</view>
 				</view>
 			</view>
@@ -275,51 +272,119 @@
 	.login-view {
 		position: relative;
 		height: 100vh;
-		.login-tip {
-			margin-top: 36upx;
+		.logo{
+			margin-left: 50upx;
+			image{
+				width: 100upx; 
+				height: 100upx;
+			}
 		}
-		.login-paddingtop {
-			padding-top: 50upx;
-			.form-item {
+		uni-input,input{
+			font-size: 34upx;
+			flex: 1;
+			font-weight: 500;
+			color: #333333;
+		}
+		.login-view-title {
+			margin-top: 36upx;
+			margin-left: 40upx;
+			font-weight: bold;
+			font-size: 44upx;
+		}
+		.login-view-padding-top {
+			padding: 50upx 50upx 0 50upx;
+			.login-view-group{
+				background-color: #ffffff;
+				padding: 1upx 30upx;
+				display: flex;
+				align-items: center;
+				min-height: 100upx;
+				justify-content: space-between;
+				margin-top: 30upx;
 				border-bottom-style: solid;
 				border-bottom-color: #f0f0f0;
 				border-bottom-width: 2upx;
+				.login-view-group-smscode{
+					padding: 0 20upx;
+					font-size: 20upx;
+					height: 48upx;
+					position: relative;
+					border: 0upx;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					box-sizing: border-box;
+					text-align: center;
+					overflow: visible;
+				}
+				uni-picker {
+					flex: 0.2;
+					font-size: 32upx;
+					position: relative;
+					.login-view-group-area::after{
+						content: "";
+						width: 0px;
+						height: 0px;
+						border-top: 12upx solid #333333;
+						border-left: 8upx solid transparent;
+						border-right: 8upx solid transparent;
+						position: absolute;
+						top: 20upx;
+						left: 74upx
+					}
+				}
+				.login-view-group-area{
+					flex: 0.1;
+					font-size: 19px;
+					font-weight: 500;
+					color: #333333;
+					padding-right: 52upx;
+				}
+				.login-view-group-phone{
+					flex: 1;
+					font-size: 19px;
+					color: #555;
+					padding-right: 10px;
+				}
 				.icon-eye{
 					width: 36upx;
 					height: 36upx;
 					margin-right: 16upx;
 				}
 			}
-			.cu-form-group+.cu-form-group {
-				border-top: 0;
+			.login-view-btn-box{
+				margin-top: 70upx;
+				button{
+					background-color: #0086FF;
+					color: #FFFFFF;
+					border-radius: 40upx;
+				}
 			}
-			.login-btn {
-				border-radius: 40upx;
-			}
-		}
-		.cu-form-group{
-			padding:0;
-			uni-picker {
-				flex: 0.1;
-				font-size: 32upx;
-				.uni-input::after{
-					content: "";
-					width: 0px;
-					height: 0px;
-					border-top: 12upx solid #333333;
-					border-left: 8upx solid transparent;
-					border-right: 8upx solid transparent;
-					position: absolute;
-					top: 14upx;
-					left: 62upx;
+			.login-view-login-way{
+				display: flex;
+				justify-content:space-between ;
+				background-color: #FFFFFF;
+				margin-top: 40upx;
+				.login-view-operation{
+					display: flex;
+					justify-content: space-between;
+				}
+				.forgetPassword::after {
+					display: inline-block;
+					height: 30upx;
+					margin: 0 20upx 4upx;
+					vertical-align: middle;
+					border-right: 1px solid #eeeeee;
+					content: '';
 				}
 			}
 		}
-		.way {
+		.login-view-thirdth-way {
 			padding: 40upx 120upx;
 			width: 100%;
 			position: absolute;  
 			bottom: 20upx;
+			text-align: center;
 			.operLine {
 				width: 100%;
 				height: 80ux;
@@ -350,20 +415,87 @@
 			}
 
 			.login-way {
+				display: flex;
+				justify-content: space-between;
+				margin: 30upx 0;
 				font-size: 60upx;
 				>uni-image{
 					width: 31px;
 					height: 34px;
 				}
 			}
+			.login-view-agree{
+				margin-top: 50upx;
+				text-align: center;
+				background-color: #FFFFFF;
+				.login-view-agree-title{
+					color: #0086FF;
+				}
+			}
 		}
-		.forgetPassword::after {
+		.login-view-modal {
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 1110;
+			opacity: 0;
+			outline: 0;
+			text-align: center;
+			-ms-transform: scale(1.185);
+			transform: scale(1.185);
+			backface-visibility: hidden;
+			perspective: 2000upx;
+			background: rgba(0, 0, 0, 0.6);
+			transition: all 0.3s ease-in-out 0s;
+			pointer-events: none;
+		}
+		
+		.login-view-modal::before {
+			content: "\200B";
 			display: inline-block;
-			height: 30upx;
-			margin: 0 20upx 4upx;
+			height: 100%;
 			vertical-align: middle;
-			border-right: 1px solid #eeeeee;
-			content: '';
+		}
+		
+		.login-view-modal.show {
+			opacity: 1;
+			transition-duration: 0.3s;
+			-ms-transform: scale(1);
+			transform: scale(1);
+			overflow-x: hidden;
+			overflow-y: auto;
+			pointer-events: auto;
+		}
+		.login-view-dialog {
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: auto;
+			margin-right: auto;
+			width: 680upx;
+			max-width: 100%;
+			background-color: #f8f8f8;
+			border-radius: 10upx;
+			overflow: hidden;
+			.login-view-dialog-content{
+				padding: 50upx;
+			}
+		}
+		.login-view-dialog-bar{
+			display: flex;
+			position: relative;
+			align-items: center;
+			min-height: 100upx;
+			justify-content: space-between;
+			padding: 0 20upx;
+			.title{
+				text-align: center;
+				flex: 1;
+				font-size: 32upx;
+				font-weight: 500;
+			}
 		}
 	}
 </style>
