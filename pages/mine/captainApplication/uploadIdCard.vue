@@ -74,7 +74,6 @@ export default {
 	},
 	onLoad(param) {
 	    let data = JSON.parse(param.userInfo);
-		//赋值
 		this.userInfo = data;
 	},
 	methods: {
@@ -144,22 +143,11 @@ export default {
 				this.$tip.toast("请完成身份证照片上传");
 				return;
 			}
-			let params = {
-				areaCode:this.userInfo.areaCode,
-				name:this.userInfo.name,
-				phone:this.userInfo.phone,
-				identityCard:this.userInfo.identityCard,
-				frontOfFile:this.userInfo.frontOfImgUrl,
-				reverseSideFile:this.userInfo.reverseSideImgUrl,
-				inHandFile:this.userInfo.inHandImgUrl
-			};
-			userService.certification(params).then((res)=>{
-				if(res.data.success){
-					uni.reLaunch({
-						url:"/pages/mine/mine"
-					})
-				}
-			})
+			uni.$emit('captainUserInfo', this.userInfo);
+			//上传数据
+			uni.navigateTo({
+				url:"/pages/mine/captainApplication/captainApplication"
+			});
 			
 		}
 	}

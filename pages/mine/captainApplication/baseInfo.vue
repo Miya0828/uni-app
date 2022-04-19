@@ -1,11 +1,11 @@
 <template>
 	<view class="baseInfo">
 		<form @submit="onAuth">
-			<uni-step :list="stepList" :step="2"></uni-step>
+			<uniStep :list="stepList" :step="2"></uniStep>
 			<view>
 				<view class="baseInfo-group">
 					<view class="title">工作单位</view>
-					<input placeholder="请输入工作单位" v-model="userInfo.username" name="username"></input>
+					<input placeholder="请输入工作单位" v-model="userInfo.workUnit" name="workUnit"></input>
 				</view>
 				<view class="baseInfo-group" @click="onFinishPersonIntroduce">
 						<text class="item title">个人介绍</text>
@@ -23,7 +23,7 @@
 						</uni-icons>
 				</view>
 				<view class="baseInfo-tips">
-					<tex class="baseInfo-tips-flag">*</tex>
+					<text class="baseInfo-tips-flag">*</text>
 					 擅长区域和擅长类型决定可领活动的范围
 				</view>
 			</view>
@@ -37,103 +37,67 @@
 <script>
 	import uniStep from "@/components/uni-step/uni-step.vue";
 	export default {
-		components(){
-			uniStep
+		components: {
+			uniStep: uniStep
 		},
 		data() {
 			return {
-				smsCountDown: 0,
-				smsCountInterval: null,
 				userInfo:{
-					username:'',
-					phone:'',
-					identityCard:'',
-					smsCode:''
+					workUnit:'', //工作单位
+					personalIntroduction:'',  //个人介绍
+					beGoodAtRegion:'',//擅长区域
+					beGoodAtType:'',  //擅长类型
 				},
 				stepList:['身份信息','基本资料','能力说明']
 			}
 		},
-		computed: {
-			isSendSMSEnable() {
-				return this.smsCountDown <= 0 && this.userInfo.phone.length > 4;
-			},
-			getSendBtnText() {
-				if (this.smsCountDown > 0) {
-					return this.smsCountDown + '秒后发送';
-				} else {
-					return '发送验证码';
-				}
-			},
-		},
-		mounted(){
-			
+		onLoad(){
+			uni.$once("personalIntroduction",data=>{
+				this.userInfo.personalIntroduction = data;
+			});
+			uni.$once("beGoodAtRegion",data=>{
+				this.userInfo.beGoodAtRegion = data;
+				console.log(this.userInfo.beGoodAtRegion);
+			});
+			uni.$once("beGoodAtType",data=>{
+				this.userInfo.beGoodAtType = data;
+				console.log(this.userInfo.beGoodAtType);
+			});
 		},
 		methods: {
 			onFinishPersonIntroduce(){
+				let { personalIntroduction } = this.userInfo;
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/personInfo"
+					url:"/pages/mine/captainApplication/personInfo?personalIntroduction="+personalIntroduction
 				});
 			},
 			onFinishSkilledIn(){
+				let { beGoodAtRegion } = this.userInfo;
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/skilledIn"
+					url:"/pages/mine/captainApplication/skilledIn?beGoodAtRegion="+JSON.stringify(beGoodAtRegion)
 				});
 			},
 			onFinishGoodType(){
+				console.log(this.userInfo);
+				let { beGoodAtType } = this.userInfo;
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/goodType"
+					url:"/pages/mine/captainApplication/goodType?beGoodAtType="+JSON.stringify(beGoodAtType)
 				});
-			},
-			onSMSSend() {
-				let smsParams = {};
-				smsParams.mobile = this.phoneNo;
-				smsParams.smsmode = SMS_MODE.register;
-				let checkPhone = new RegExp(/^[1]([3-9])[0-9]{9}$/);
-				if (!smsParams.mobile || smsParams.mobile.length == 0) {
-					this.$tip.toast('请输入手机号');
-					return false;
-				}
-				if (!checkPhone.test(smsParams.mobile)) {
-					this.$tip.toast('请输入正确的手机号');
-					return false;
-				}
-				loginService.sendCaptcha(smsParams).then(res => {
-					if (res.data.success) {
-						this.smsCountDown = 60;
-						this.startSMSTimer();
-					} else {
-						this.smsCountDown = 0;
-						this.$tip.toast(res.data.message);
-					}
-				});
-			},
-			startSMSTimer() {
-				this.smsCountInterval = setInterval(() => {
-					this.smsCountDown--;
-					if (this.smsCountDown <= 0) {
-						clearInterval(this.smsCountInterval);
-					}
-				}, 1000);
-			},
-			beforeDestroy() {
-				if (this.smsCountInterval) {
-					clearInterval(this.smsCountInterval);
-				}
 			},
 			onAuth(e){
 				//进行表单检查
-				// var formData = e.detail.value;
-				// //定义表单规则
-				// var rule = [
-				// 	{name:"username", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
-				// 	{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
-				// 	{name:'identityCard',checkType:'identityCard',errorMsg:'请输入正确格式的身份证号'},
-				// ];
-				// var checkRes = graceChecker.check(formData, rule);
-				// if(!checkRes){
-				//     uni.showToast({ title: graceChecker.error, icon: "none" });
-				// 	return;
-				// }
+				var formData = e.detail.value;
+				//定义表单规则
+				var rule = [
+					{name:"workUnit", checkType : "notnull", checkRule:"",  errorMsg:"请输入工作单位"},
+					{name:"beGoodAtRegion", checkType : "notnull", checkRule:"",  errorMsg:"请选择擅长区域"},
+					{name:"beGoodAtType", checkType : "notnull", checkRule:"",  errorMsg:"请选择擅长技能"},
+				];
+				var checkRes = graceChecker.check(formData, rule);
+				if(!checkRes){
+				    uni.showToast({ title: graceChecker.error, icon: "none" });
+					return;
+				}
 				uni.navigateTo({
 					url:"/pages/mine/captainApplication/ability"
 				})

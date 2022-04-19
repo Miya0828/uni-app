@@ -269,7 +269,29 @@
 			}
 
 		}
-	],
+        ,{
+            "path" : "pages/forHelp/learnAid/learnAid",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "学习急救"
+            }
+            
+        }
+        ,{
+            "path" : "pages/forHelp/hikeReady/hikeReady",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "徒步准备"
+            }
+            
+        },
+		{
+			"path": "pages/mine/captainApplication/uploadIdCard",
+			"style": {
+				"navigationBarTitleText": "上传证件照片"
+			}
+		}
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

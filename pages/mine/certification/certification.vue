@@ -4,7 +4,7 @@
 			<view>
 				<view class="certificate-group">
 					<view class="title">姓名</view>
-					<input placeholder="请输入真实姓名"  name="name"></input>
+					<input placeholder="请输入真实姓名" v-model="userInfo.name"  name="name"></input>
 				</view>
 				<view class="certificate-group">
 					<view class="title">区号</view>
@@ -12,11 +12,11 @@
 				</view>
 				<view class="certificate-group certificate-group-item">
 					<view class="title">手机号码</view>
-					<input placeholder="请输入手机号码" type="number" maxlength="11" name="phone"></input>
+					<input placeholder="请输入手机号码" v-model="userInfo.phone" type="number" maxlength="11" name="phone"></input>
 				</view>
 				<view class="certificate-group">
 					<view class="title">身份证号</view>
-					<input placeholder="请输入证件号码" name="identityCard"></input>
+					<input placeholder="请输入证件号码" v-model="userInfo.identityCard" name="identityCard"></input>
 				</view>
 			</view>
 			<view class="btn">
@@ -27,16 +27,43 @@
 </template>
 
 <script>
+	import { userService } from "@/api/index.js";
 	import graceChecker from '@/common/biz/graceChecker.js';
 	export default {
 		data() {
 			return {
+				userInfo:{
+					areaCode:'',
+					name:'',
+					phone:'',
+					identityCard:'',
+					frontOfImgUrl:"",
+					reverseSideImgUrl:'',
+					inHandImgUrl:''
+				},
 			}
 		},
 		mounted(){
-			
+			this.queryByUserId();
 		},
 		methods: {
+			queryByUserId(){
+				let _this = this;
+				userService.queryIdentityCard().then((res)=>{
+					let data = res.data;
+					if(data.success){
+						if(!data.result) return;
+						let { areaCode,name,phone,identityCard,frontOfImgUrl,reverseSideImgUrl,inHandImgUrl } = data.result;
+						_this.userInfo.areaCode = areaCode;
+						_this.userInfo.name = name;
+						_this.userInfo.phone = phone;
+						_this.userInfo.identityCard = identityCard;
+						_this.userInfo.frontOfImgUrl = frontOfImgUrl;
+						_this.userInfo.reverseSideImgUrl = reverseSideImgUrl;
+						_this.userInfo.inHandImgUrl = inHandImgUrl;
+					}
+				});
+			},
 			onAuth(e){
 				//进行表单检查
 				var formData = e.detail.value;
@@ -52,7 +79,7 @@
 					return;
 				}
 				uni.navigateTo({
-					url:"/pages/mine/certification/uploadIdCard?userInfo="+JSON.stringify(formData)
+					url:'/pages/mine/certification/uploadIdCard?userInfo='+JSON.stringify(this.userInfo)
 				})
 			}
 		}

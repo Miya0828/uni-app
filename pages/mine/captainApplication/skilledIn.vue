@@ -31,34 +31,16 @@
 		</view>
 		<view class="skilled-in-container-list">
 			<uni-collapse accordion @change="change">
-				<uni-collapse-item title="北京">
+				<uni-collapse-item :title="item.key" v-for="(item) of area" :open="isIncludeElement(item)">
 					<view class="skilled-in-container-city-list">
-						<view class="skilled-in-container-list-city">
-							北京
+						<view v-for="ite of item.value" class="list" @click="getSelectedTypes(ite.name)">
+							<view class="item">
+								<text>{{ite.name}}</text>
+								<uni-icons  v-if="(selected.includes(ite.name))" color="#0089FF" type="checkmarkempty" size="18"></uni-icons>
+							</view>
 						</view>
 					</view>
-				</uni-collapse-item>
-				<uni-collapse-item title="江苏" v-for="(item,index) in [1,2,3,4,5,6,7,8,9,0,1,2,3]" :key="index">
-					<view class="skilled-in-container-city-list">
-						<view class="skilled-in-container-list-city">
-							徐州
-						</view>
-						<view class="skilled-in-container-list-city">
-							连云港
-						</view>
-						<view class="skilled-in-container-list-city">
-							南京
-						</view>
-						<view class="skilled-in-container-list-city">
-							宿迁
-						</view>
-						<view class="skilled-in-container-list-city">
-							常州
-						</view>
-						<view class="skilled-in-container-list-city">
-							苏州
-						</view>
-					</view>
+					
 				</uni-collapse-item>
 			</uni-collapse>
 		</view>
@@ -66,11 +48,19 @@
 </template>
 
 <script>
+	import { userService } from "@/api/index.js";
 	export default {
 		data() {
 			return {
-				accordionVal: '1',
+				area:[],
+				selected:[]
 			}
+		},
+		onLoad(options){
+			this.selected = JSON.parse(options.beGoodAtRegion);
+		},
+		mounted(){
+			this.queryArea();
 		},
 		methods: {
 			change(e) {
@@ -86,6 +76,36 @@
 				uni.showToast({
 					title: '点击取消，输入值为：' + res.value,
 					icon: 'none'
+				})
+			},
+			isIncludeElement(data){
+				let flag = false;
+				for(let item of data.value){
+					if(this.selected.includes(item)){
+						flag = true;
+						break;
+					}
+				}
+				return flag;
+			},
+			getSelectedTypes(item){
+				let index = this.selected.indexOf(item);
+				if(index > -1){
+					this.selected.splice(index,1);
+					return;
+				}
+				this.selected.push(item);
+			},
+			queryArea(){
+				userService.queryArea().then((res)=>{
+					let data = res.data;
+					if(data.success){
+						let area = [];
+						for(let item of data.result || []){
+							area.push({key:item.province,value:item.cities});
+						}
+						this.area = area;
+					}
 				})
 			}
 		}
@@ -155,24 +175,20 @@
 		}
 
 		.skilled-in-container-list {
-			flex-grow: 1;
-			overflow: auto;
-			.skilled-in-container-city-list {
-				display: flex;
-				padding: 32rpx;
-				flex-wrap: wrap;
-
-				.skilled-in-container-list-city {
+			.list {
+				border-bottom: 2upx solid #F8F8F8;
+				.item {
+					position: relative;
 					display: flex;
+					padding: 0 50upx;
+					min-height: 104upx;
+					background-color: #ffffff;
+					justify-content: space-between;
 					align-items: center;
-					justify-content: center;
-					border-radius: 8rpx;
-					border: 2rpx solid #999;
-					color: #999;
-					min-width: 100rpx;
-					height: 64rpx;
-					margin-right: 20rpx;
-					margin-bottom: 20rpx;
+					.cuIcon-check{
+						color:#0089FF;
+						font-size: 40upx;
+					}
 				}
 			}
 		}

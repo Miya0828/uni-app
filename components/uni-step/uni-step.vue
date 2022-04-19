@@ -21,7 +21,6 @@
 </template>
 <script>
 	export default {
-		name:'uni-step',
 		props:{
 			list:{
 				type:Array,
