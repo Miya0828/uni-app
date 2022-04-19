@@ -74,10 +74,16 @@
 					uni.navigateBack();
 					return
 				}
+				homeService.addUserRoute({
+					routeId: route.id,
+					userId:store.state.userInfo.id
+				}).then(res=>{
+					console.log(res)
+				})
 				homeService.queryRouteSiteByRouteId({
 					id: parseInt(route.id)
 				}).then(res => {
-					// console.log(res.data.result)
+					console.log(res.data.result)
 					store.state.map.route = res.data.result
 					uni.navigateBack();
 				})

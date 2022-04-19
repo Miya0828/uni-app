@@ -83,9 +83,9 @@
 			return {				
 				loginWay: 1,
 				phoneNo: '',
-				username:'Miya',
+				username:'Miya1',
 				smsCode: '',
-				password:'Passw0rd',
+				password:'P@ssw0rd',
 				array: ['+86'],
 				index: 0,
 				modalName:'',

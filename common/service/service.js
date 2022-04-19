@@ -66,8 +66,15 @@ http.interceptor.response(
 		if (response.config.custom.loading) {
 			uni.hideLoading();
 		}
-		// let data = response.data;
-		// console.log(response)
+		let data = response.data;		
+		if(data.success==false){
+			uni.showToast({
+				icon: 'none',
+				title: data.message,
+				duration: 2000
+			});
+		}
+		// console.log('success',response)
 		return response;
 	}, (response) => {
 		// 请求错误做点什么

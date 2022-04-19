@@ -1,7 +1,7 @@
 <template>
 	<view class="team-chat-container">
 		<view v-if="teamList.length" class="team-chat-container-list">
-			<view class="team-chat-container-list-item" @click="toteam(item.teamName)" v-for="(item,index) in teamList"
+			<view class="team-chat-container-list-item" @click="toteam(item)" v-for="(item,index) in teamList"
 				:key="index">
 				<view class="team-chat-container-item-logo">
 					<image :src="item.teamIcon" mode="aspectFit"></image>
@@ -17,7 +17,7 @@
 			</view>
 		</view>
 
-		<view  class="team-chat-container-create" @click="createTeam">
+		<view v-else class="team-chat-container-create" @click="createTeam">
 			<view class="team-chat-container-item-logo">
 				<image src="/static/chat/ic_createateam@3x.png" mode=""></image>
 			</view>
@@ -50,8 +50,8 @@
 			teamService.queryTeam().then(res => {
 				// console.log(res)
 				if (res.data.success) {
-					console.log(res.data.result)
-					this.teamList = res.data.result
+					// console.log(res.data.result)
+					this.teamList = res.data.result					
 				}
 			})
 		},
@@ -61,9 +61,9 @@
 					url: '/pages/teamChat/teamCreate'
 				})
 			},
-			toteam(title) {
+			toteam(team) {
 				uni.navigateTo({
-					url: '/pages/teamChat/chat?title=' + title
+					url: `/pages/teamChat/chat?title=${team.teamName}&id=${team.id}`
 				})
 			}
 		},

@@ -43,7 +43,27 @@
 		{
 			"path": "pages/teamChat/teamList",
 			"style": {
-				"navigationBarTitleText": "团队成员"
+				"navigationBarTitleText": "团队成员",
+				"app-plus": {
+					"titleNView": {
+						"titleSize": "20px",
+						"buttons": [{							
+							"color": "#000000",
+							"text": "\ue88b",
+							"fontSrc": "/static/font/iconfont.ttf",
+							"fontSize": "22px"
+						}]
+					},
+					"softinputNavBar": "none",
+					"bounce": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/teamChat/teamView",
+			"style": {
+				"navigationBarTitleText": "团队信息",
+				"softinputMode": "adjustResize"
 			}
 		},
 		{
@@ -149,7 +169,6 @@
 				"navigationBarTitleText": "实名认证"
 			}
 		},
-
 		{
 			"path": "pages/mine/certification/uploadIdCard",
 			"style": {
@@ -173,7 +192,8 @@
 			"style": {
 				"navigationBarTitleText": "活动信息上传"
 			}
-		}, {
+		},
+		{
 			"path": "pages/mine/captainApplication/captainApplication",
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
@@ -208,76 +228,48 @@
 			"style": {
 				"navigationBarTitleText": "领队认证申请"
 			}
-		}, {
-			"path": "pages/teamChat/teamChat",
-			"style": {
-				"navigationBarTitleText": "队聊",
-				"app-plus": {
-					"titleNView": {
-						"titleSize": "20px",
-						"buttons": [{
-							"color": "#00C435",
-							"text": "\ue6e5",
-							"fontSrc": "/static/font/iconfont.ttf",
-							"fontSize": "22px"
-						}]
-					}
-				}
-			}
-
-		}, {
-			"path": "pages/teamChat/chat",
-			"style": {
-				"navigationBarTitleText": "聊天室"
-			}
-
-		}, {
+		},
+		{
 			"path": "pages/mine/captainApplication/tourGuide",
 			"style": {
 				"navigationBarTitleText": "上传证件"
 			}
 
-		}, {
+		},
+		{
 			"path": "pages/mine/captainApplication/teamLeader",
 			"style": {
 				"navigationBarTitleText": "上传证件"
 			}
 
-		}, {
+		},
+		{
 			"path": "pages/mine/captainApplication/goodType",
 			"style": {
 				"navigationBarTitleText": "擅长类型"
 			}
 		},
 		{
-			"path": "pages/mine/captainApplication/skilledIn",
-			"style": {
-				"navigationBarTitleText": "擅长领域"
-			}
-		}, {
 			"path": "pages/mine/personalCenter/personalCenter",
 			"style": {
 				"navigationBarTitleText": "个人中心"
 			}
 
+		},
+		{
+			"path": "pages/forHelp/learnAid/learnAid",
+			"style": {
+				"navigationBarTitleText": "学习急救"
+			}
+		},
+		{
+			"path": "pages/forHelp/hikeReady/hikeReady",
+			"style": {
+				"navigationBarTitleText": "徒步准备"
+			}
+
 		}
-        ,{
-            "path" : "pages/forHelp/learnAid/learnAid",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "学习急救"
-            }
-            
-        }
-        ,{
-            "path" : "pages/forHelp/hikeReady/hikeReady",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "徒步准备"
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

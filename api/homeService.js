@@ -48,7 +48,60 @@ const homeService = {
 	 * 站点和路线查询
 	 */
 	queryRouteSiteByRouteId(params, loading = true) {
-		return http.get('/tour-pal/sys/site/queryRouteSiteByRouteId?routeId='+params.id, params, {
+		return http.get('/tour-pal/sys/site/queryRouteSiteByRouteId?routeId=' + params.id, params, {
+			custom: {
+				loading: loading
+			}
+		})
+	},
+	/**
+	 * 驴友最新位置获取接口
+	 */
+	queryUserRealtime(params, loading = false) {
+		return http.get('/tour-pal/sys/position/queryUserRealtime?teamId=' + params.teamId, params, {
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			},
+			custom: {
+				loading: loading
+			}
+		})
+	},
+	/**
+	 * 新增用户徒步路线历史数据接口
+	 */
+	addUserRoute(params, loading = false) {
+		return http.get('/tour-pal/sys/route/addUserRoute?routeId=' + params.routeId + '&userId=' + params.userId,
+			params, {
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
+				},
+				custom: {
+					loading: loading
+				}
+			})
+	},
+	/**
+	 * 查询当前用户正在进行路线数据接口
+	 */
+	queryRouteByUserId(params, loading = false) {
+		return http.get('/tour-pal/sys/route/queryRouteByUserId?userId=' + params.userId, params, {
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			},
+			custom: {
+				loading: loading
+			}
+		})
+	},
+	/**
+	 * 路线打卡接口
+	 */
+	routePunch(params, loading = false) {
+		return http.get('/tour-pal/sys/route/punch?id=' + params.routeId, params, {
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			},
 			custom: {
 				loading: loading
 			}
