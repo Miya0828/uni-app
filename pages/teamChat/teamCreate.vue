@@ -141,6 +141,38 @@
 				this.$refs.popup.close()
 			},
 			save() {
+				if (!this.form.avatar) {
+					uni.showToast({
+						icon: 'error',
+						title: '请选择头像',
+						duration: 2000
+					});
+					return
+				}
+				if (!this.form.teamName) {
+					uni.showToast({
+						icon: 'error',
+						title: '请填写团队名称',
+						duration: 2000
+					});
+					return
+				}
+				if (!this.teamRoute.id) {
+					uni.showToast({
+						icon: 'error',
+						title: '请选择路线',
+						duration: 2000
+					});
+					return
+				}
+				if (!this.form.teamIntroduce) {
+					uni.showToast({
+						icon: 'error',
+						title: '请填写团队介绍',
+						duration: 2000
+					});
+					return
+				}
 				teamService.createTeam({
 					// 徒步路线
 					hikingRouteId: this.teamRoute.id,
@@ -156,6 +188,7 @@
 						uni.navigateBack({
 
 						})
+						store.state.teamRoute = null
 					}
 				})
 			}

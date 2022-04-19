@@ -116,7 +116,7 @@
 		</uni-popup>
 		<uni-popup ref="popupRoute" type="bottom" class="home-route-box">
 			<view class="home-route-box-container">
-				<view class="home-route-box-container-finish">
+				<view class="home-route-box-container-finish" @click="routePunch">
 					<image src="/static/home/ic_medal@3x.png" mode="aspectFit"></image>
 					<view>
 						<view>
@@ -165,11 +165,13 @@
 							{{item.siteName}}
 						</view>
 						<view class="home-route-scenery-spot-des">
-							<view>
-								<image src="/static/home/ic_walk@3x.png" mode="aspectFit"></image>
+							<view :class="index<=siteIndex?'current':''">
+								<image v-if="index<=siteIndex" src="/static/home/ic_walked@3x.png" mode="aspectFit">
+								</image>
+								<image v-else src="/static/home/ic_walk@3x.png" mode="aspectFit"></image>
 								约{{item.intervalKilometers}}
 							</view>
-							<view>
+							<view :class="index<=siteIndex?'current':''">
 								约{{item.intervalTime}}
 							</view>
 							<view>
@@ -196,12 +198,15 @@
 	import data from './data/demo.js'
 	import store from '@/store/index.js';
 	import {
-		homeService
+		homeService,
+		teamService
 	} from "@/api/index.js";
 	let timer = null
 	export default {
 		data() {
 			return {
+				siteIndex: 0,
+				userId: null,
 				difficultyLevel: ['', '低', '中', '高'],
 				route: {},
 				addressList: [],
@@ -277,9 +282,11 @@
 					overviewFlag: true,
 					// 当前人
 					currentUser: {
-						userImage: '',
+						avatar: '',
 						orientation: 0
 					},
+					// 绘制已走地图
+					drawAlreadyFlag: false,
 					// 同队驴友
 					touristFlag: false,
 					tourist: [{
@@ -290,6 +297,25 @@
 			}
 		},
 		methods: {
+			routePunch() {
+				if (!store.state.map.route) {
+					uni.showToast({
+						icon: 'none',
+						title: '请先选择路线',
+					})
+					return
+				}				
+				homeService.routePunch({
+					routeId: store.state.map.route.onfootRouteInfo.id
+				}).then(res => {
+					if (res.data.success) {
+						uni.showToast({
+							title: res.data.message,
+						})
+						this.$refs.popupRoute.close()
+					}
+				})
+			},
 			scroll(e) {
 				// console.log(e)
 			},
@@ -320,33 +346,62 @@
 				this.$refs.popupRoute.open()
 			},
 			showTourlist() {
-				this.mergeOptions({
-					touristFlag: !this.option.touristFlag,
-					tourist: [{
-						longitude: 121.316381,
-						latitude: 31.223812
-					}]
-				})
+				// 如果已显示就取消
+				if(this.option.touristFlag){
+					this.mergeOptions({
+						touristFlag: !this.option.touristFlag,
+						tourist: []
+					})
+					return
+				}
+				teamService.queryTeam().then(res => {
+					if (res.data.success) {
 
+						var teamList = res.data.result
+						var team = teamList[0] || {}
+						console.log(team.id)
+						homeService.queryUserRealtime({
+							teamId: team.id
+						}).then(res => {
+							console.log(res)
+							if (res.data.success) {
+								var currentId = this.userInfo.id
+								var tourist = res.data.result.filter(item => item.id != currentId)
+							}
+							this.mergeOptions({
+								touristFlag: !this.option.touristFlag,
+								tourist: tourist
+							})
+						})
+					}
+				})
 			},
 			location() {
 				uni.getLocation({
 					type: 'wgs84',
 					success: (res) => {
 
-						this.getAddress(res.longitude, res.latitude)
+						var longitude = res.longitude
+						var latitude = res.latitude
+						longitude = "120.93589338209433"
+						latitude = "28.347535197969975"
 
-						this.getWeather(res.longitude + ',' + res.latitude)
+						this.getAddress(longitude, latitude)
 
-						this.uploadPosition(res.longitude, res.latitude, res.altitude)
+						this.getWeather(longitude + ',' + latitude)
 
-						store.state.map.longitude = res.longitude
-						store.state.map.latitude = res.latitude
+						store.state.map.longitude = longitude
+						store.state.map.latitude = latitude
 						this.mergeOptions({
-							longitude: res.longitude,
-							latitude: res.latitude,
+							longitude: longitude,
+							latitude: latitude,
 							coordinateFlag: !this.option.coordinateFlag,
 						})
+						setTimeout(()=>{
+							this.mergeOptions({
+								drawAlreadyFlag: !this.option.drawAlreadyFlag,
+							})
+						},100)						
 					}
 				});
 			},
@@ -411,44 +466,119 @@
 				);
 			},
 			uploadPosition(longitude, latitude, altitude) {
-				homeService.uploadPosition({
-					"high": altitude,
-					"latitude": latitude,
-					"longitude": longitude,
-					"userId": uni.getStorageSync(USER_INFO).id
-				}).then(res => {
-					console.log(res.data && res.data.message)
-				})
+				uni.getLocation({
+					type: 'wgs84',
+					success: (res) => {
 
+						var longitude = res.longitude
+						var latitude = res.latitude
+						var altitude = res.altitude
+
+						this.mergeOptions({
+							drawAlreadyFlag: !this.option.drawAlreadyFlag,
+						})
+
+						homeService.uploadPosition({
+							"high": altitude,
+							"latitude": latitude,
+							"longitude": longitude,
+							"userId": this.userInfo.id
+						}).then(res => {
+							// console.log(res)
+						})
+
+					}
+				});
 			},
 			listeningGPS() {
 				clearInterval(timer)
-
 				// 方向
 				uni.onCompassChange((res) => {
 					// console.log("方向" + res.direction);
 					store.state.map.orientation = res.direction
-
 					this.option.currentUser.orientation = res.direction
 				});
 				timer = setInterval(() => {
-					// 坐标
-					this.location()
+					// 10s上传一次位置
+					this.uploadPosition()
 				}, 10000)
-			}
-		},
-		onLoad() {
-			this.isLogin()
-			this.initMap()
-			// this.listeningGPS()
-
-			setTimeout(() => {
+			},
+			afterInit() {
 				this.mergeOptions({
 					currentUser: {
 						...this.option.currentUser,
-						userImage: "static/logo.png"
+						avatar: this.userInfo.avatar
 					}
 				})
+			},
+			currentRoute() {
+				homeService.queryRouteByUserId({
+					"userId": this.userInfo.id
+				}).then(res => {
+					if (res.data.result && res.data.result.id) {
+						homeService.queryRouteSiteByRouteId({
+							id: res.data.result.id
+						}).then(res => {
+							store.state.map.route = res.data.result
+							// console.log(store.state.map.route )
+							this.drawRoute()
+						})
+					}
+				})
+			},
+			drawRoute() {
+				if (store.state.map.route && store.state.map.route.onfootRouteInfo) {
+					this.route = store.state.map.route.onfootRouteInfo
+					let trackjson = store.state.map.route.routeLngLatMapList
+					this.mergeOptions({
+						routeFlag: !this.option.routeFlag,
+						footprintsjson: store.state.map.route.siteList.sort((a, b) => a.routeSort - b.routeSort),
+						trackjson: trackjson
+					})
+				} else {
+					this.currentRoute()
+				}
+			},
+			showSite(site) {
+				this.siteIndex = site
+				// console.log(site)
+			}
+		},
+		onLoad() {
+			this.userInfo = uni.getStorageSync(USER_INFO)
+			Object.assign(store.state.userInfo, this.userInfo)
+			console.log(this.userInfo)
+			store.commit('socket')
+
+			uni.onSocketError(function(res) {
+				console.log('WebSocket连接打开失败，请检查！');
+			});
+			uni.onSocketClose(function(res) {
+				console.log('WebSocket 已关闭！');
+			});
+			uni.onSocketOpen(function(res) {
+				console.log('WebSocket连接已打开！');
+
+				uni.onSocketMessage(function(res) {
+					console.log('收到服务器内容：' + res.data);
+				});
+
+				// uni.sendSocketMessage({
+				// 	data: '一条消息',
+				// 	fail(e) {
+				// 		console.log(e)
+				// 	},					
+				// });
+			});
+
+
+			this.isLogin()
+			this.initMap()
+
+			this.listeningGPS()
+
+			setTimeout(() => {
+
 				this.scrollTop = 10000
 				setTimeout(() => {
 					this.msgList.push({
@@ -469,18 +599,7 @@
 			this.mergeOptions({
 				currentLayer: store.state.map.layer
 			})
-
-			if (store.state.map.route && store.state.map.route.onfootRouteInfo) {
-
-				this.route = store.state.map.route.onfootRouteInfo
-				let trackjson = store.state.map.route.routeLngLatMapList
-				this.mergeOptions({
-					routeFlag: !this.option.routeFlag,
-					footprintsjson: store.state.map.route.siteList.sort((a, b) => a.routeSort - b.routeSort),
-					trackjson: trackjson
-				})
-			}
-
+			this.drawRoute()
 		}
 	}
 </script>
@@ -542,18 +661,19 @@
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
 				} else if (newValue.coordinateFlag != oldValue.coordinateFlag) {
-					// console.log("定位用户位置")
-					// map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);									
-					map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
-					// console.log("设置用户位置")
+					console.log("定位用户位置")
+					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);
+					// map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
+					console.log("设置用户位置")
 					currentPositionObj.setLnglat(new T.LngLat(newValue.longitude, newValue.latitude))
-					// console.log('绘制已走过路线')
-					if (newValue.trackjson.length) {
 
+				} else if (newValue.drawAlreadyFlag != oldValue.drawAlreadyFlag) {
+					if (newValue.trackjson.length) {
+						console.log('绘制已走过路线')
 						this.drawAlreadyPath(newValue.trackjson, {
 							longitude: newValue.longitude,
 							latitude: newValue.latitude
-						})
+						}, newValue.footprintsjson)
 					}
 				} else if (newValue.currentLayer != oldValue.currentLayer) {
 					console.log("设置图层")
@@ -566,9 +686,10 @@
 				} else if (newValue.currentUser.orientation != oldValue.currentUser.orientation) {
 					// console.log("设置用户方向")
 					currentPositionObj && currentPositionObj.updateOrientation(newValue.currentUser.orientation)
-				} else if (newValue.currentUser.userImage != oldValue.currentUser.userImage) {
+				} else if (newValue.currentUser.avatar != oldValue.currentUser.avatar) {
 					console.log("设置用户头像")
-					currentPositionObj && currentPositionObj.updateImage(newValue.currentUser.userImage)
+					currentPositionObj && currentPositionObj.updateImage(newValue.currentUser.avatar ||
+						'static/home/user.png')
 				} else if (newValue.overviewFlag != oldValue.overviewFlag) {
 					console.log("全揽")
 					map.setViewport(pointsline)
@@ -587,13 +708,17 @@
 				map.centerAndZoom(new T.LngLat(longitude, latitude), 14);
 				map.setMaxBounds(new T.LngLatBounds(new T.LngLat(0, 90), new T.LngLat(180, -90)));
 
-				// this.addUserPosition(121.306381, 31.213812, 0)
-
 				// 创建用户图标
-				currentPositionObj = this.addUserPosition(longitude, latitude, 0)
+				currentPositionObj = this.addUserPosition({
+					longitude,
+					latitude,
+					orientation: 0,
+					avatar: 'static/home/user.png'
+				})
 
 				// currentPositionObj.updatedStatus('red')
 
+				_ownerInstance.callMethod('afterInit')
 				_ownerInstance.callMethod('location')
 
 			},
@@ -605,42 +730,46 @@
 				touristObj = []
 				tourist.forEach(tour => {
 					touristObj.push(
-						this.addUserPosition(tour.longitude, tour.latitude, 0)
+						this.addUserPosition({
+							...tour,
+							orientation: false,
+						})
 					)
 				})
 			},
 			// 绘制已走过路线
-			drawAlreadyPath(trackjson, currentPosition) {
+			drawAlreadyPath(trackjson, currentPosition, footprintsjson) {
+				lineObjAlready && map.removeOverLay(lineObjAlready)
+
 				trackjson = trackjson.map(res => [res.longitude, res.latitude])
-				// console.log(trackjson, currentPosition)
-				// return
+
 				var line = turf.lineString(trackjson);
-				var pt = turf.point(["120.91986447403987", "28.341998223837688"]);
-				// var pt = turf.point([currentPosition.longitude, currentPosition.latitude]);
+				// var pt = turf.point(["120.91986447403987", "28.341998223837688"]);
+				var pt = turf.point([currentPosition.longitude, currentPosition.latitude]);
+
 
 				var snapped = turf.nearestPointOnLine(line, pt, {
 					units: 'kilometers'
 				});
-				/*
-				"properties": {
-					"dist": 320.1844878459131,
-					"index": 0,
-					"location": 0
-				},
-				"geometry": {
-					"type": "Point",
-					"coordinates": ["120.94099606155498", "28.350833726164286"]
-				}*/
+
 				// 500米内算开始
 				if (snapped.properties.dist < 0.5) {
 					var coordinates = snapped.geometry.coordinates
 
 					// 清空上次线段集合
 					pointslineAlready = []
+					var _pointslineAlready = []
 					// 绘制线段
 					for (let i = 0, len = trackjson.length; i < len; i++) {
-						console.log(trackjson[i][0], trackjson[i][1])
+
 						pointslineAlready.push(new T.LngLat(trackjson[i][0], trackjson[i][1]));
+
+						// 判断包含哪几个站点,然后通知
+						_pointslineAlready.push({
+							longitude: trackjson[i][0],
+							latitude: trackjson[i][1]
+						})
+
 						if (trackjson[i][0] == coordinates[0] && trackjson[i][1] == coordinates[1]) {
 							break
 						}
@@ -656,13 +785,34 @@
 					//向地图上添加路线
 					map.addOverLay(lineObjAlready);
 
+
+
+					var site = 0
+					for (var j = 0, jlen = footprintsjson.length; j < jlen; j++) {
+
+						let {
+							"positionLongitude": longitude,
+							"positionLatitude": latitude
+						} = {
+							...footprintsjson[j]
+						}
+						for (var i = 0, len = _pointslineAlready.length; i < len; i++) {
+							var item = _pointslineAlready[i]
+
+							if (item.longitude == longitude && item.latitude == latitude) {
+								site = j
+							}
+
+						}
+					}
+
+					_ownerInstance.callMethod('showSite', site)
 				}
-				console.log(snapped)
 
 			},
 			drawPath(trackjson, footprintsjson) {
-				console.log(trackjson)
-				console.log(footprintsjson)
+				// console.log(trackjson)
+				// console.log(footprintsjson)
 				// 清空上次脚印
 				footPrintSet.forEach(foot => {
 					map.removeOverLay(foot)
@@ -693,11 +843,16 @@
 
 			},
 			// 添加用户标识
-			addUserPosition(longitude, latitude, orientation) {
-
+			addUserPosition({
+				longitude,
+				latitude,
+				orientation,
+				avatar
+			}) {
 				var definedOverlay = T.Overlay.extend({
-					initialize: function(lnglat, options) {
+					initialize: function(lnglat, orientation, options) {
 						this.lnglat = lnglat;
+						this.orientation = orientation
 						this.setOptions(options);
 					},
 
@@ -718,6 +873,10 @@
 						div.style.whiteSpace = "nowrap";
 						div.style.MozUserSelect = "none";
 						div.style.textalign = "center";
+
+						if (this.orientation === false) {
+							div.style.visibility = "hidden";
+						}
 
 						var img = this._img = document.createElement("img");
 						img.style.position = "absolute";
@@ -801,7 +960,7 @@
 				var point = new T.LngLat(longitude, latitude);
 				var userPositionObj = new definedOverlay(point, orientation, {});
 				setTimeout(() => {
-					userPositionObj.updateImage('static/home/user.png')
+					userPositionObj.updateImage(avatar)
 					userPositionObj.updatedzIndex(zIndex--)
 				})
 				map.addOverLay(userPositionObj);
@@ -877,18 +1036,28 @@
 						this.lnglat = this.map.layerPointToLngLat(pos);
 						this.update();
 					},
+					updatedzIndex: function(zIndex) {
+						this._zIndex = zIndex
+						this.update();
+					},
 					/**
 					 * 更新位置
 					 */
 					update: function() {
 						var pos = this.map.lngLatToLayerPoint(this.lnglat);
 						this._div.style.top = (pos.y - 30) + "px";
-						this._div.style.left = (pos.x - 11) + "px";
+						this._div.style.left = (pos.x - 10) + "px";
+
+						this._div.style.zIndex = this._zIndex
 					}
 				});
 
+
 				var point = new T.LngLat(lng, lat);
 				var pdefinedOverlay = new definedOverlay(point, content, {});
+				setTimeout(() => {
+					pdefinedOverlay.updatedzIndex(zIndex--)
+				})
 				footPrintSet.push(pdefinedOverlay)
 				map.addOverLay(pdefinedOverlay);
 			},
@@ -1290,6 +1459,15 @@
 						font-size: 24rpx;
 						font-weight: 400;
 						color: #B8B8B8;
+
+						&>view {
+							display: flex;
+							align-items: center;
+						}
+
+						.current {
+							color: #E41000;
+						}
 					}
 				}
 			}

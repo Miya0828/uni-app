@@ -9,21 +9,21 @@ import {
 
 Vue.use(Vuex)
 
+var socketTask = null
+var userId = null
 export default new Vuex.Store({
 	state: {
-		token: '',
-		userid: '',
-		username: '',
-		realname: '',
-		welcome: '',
-		avatar: '',
-		teamRoute:null,
+		userInfo: {
+			id: null
+		},
+		teamRoute: null,
+		team: {},
 		map: {
 			layer: 0,
 			route: null,
 			longitude: 116.40769,
 			latitude: 39.89945,
-			orientation:'0',
+			orientation: '0',
 			address: ['上海市']
 		}
 	},
@@ -42,26 +42,25 @@ export default new Vuex.Store({
 		},
 		SET_AVATAR: (state, avatar) => {
 			state.avatar = avatar
-		}
+		},
+		socket(state) {
+			console.log("socket:==" + userId)
+			if (userId != state.userInfo.id) {
+				userId = state.userInfo.id
+				uni.closeSocket();
+				socketTask = uni.connectSocket({
+					url: 'ws://119.23.214.166:8080/tour-pal/websocket/_app' + userId,
+					complete: () => {}
+				});
+				return userId
+			}
+			return userId
+		},
 	},
-	actions: {},
+	actions: {
+
+	},
 	getters: {
-		token: state => state.token,
-		username: state => {
-			state.userid = uni.getStorageSync(USER_INFO).username;
-			return state.username
-		},
-		nickname: state => {
-			state.userid = uni.getStorageSync(USER_INFO).realname;
-			return state.user.realname
-		},
-		avatar: state => {
-			state.userid = uni.getStorageSync(USER_INFO).avatar;
-			return state.user.avatar
-		},
-		userid: state => {
-			state.userid = uni.getStorageSync(USER_INFO).id;
-			return state.userid
-		},
+
 	}
 })

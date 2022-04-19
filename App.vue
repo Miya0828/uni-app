@@ -1,44 +1,23 @@
 <script>
 	import Vue from 'vue';
 	import {
-		ACCESS_TOKEN
+		ACCESS_TOKEN,
+		USER_INFO
 	} from '@/common/util/constants.js'
-
+	import store from '@/store/index.js';
 	export default {
 		globalData: {
 			text: 'text'
 		},
 		onLaunch: function() {
+			console.log('App Launch');
+
 			let token = uni.getStorageSync(ACCESS_TOKEN);
 			if (!token) {
 				uni.reLaunch({
 					url: '/pages/login/login',
 				});
 			}
-			uni.getSystemInfo({
-				success: function(e) {
-					// #ifndef MP
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					if (e.platform == 'android') {
-						Vue.prototype.CustomBar = e.statusBarHeight + 50;
-					} else {
-						Vue.prototype.CustomBar = e.statusBarHeight + 45;
-					}
-					// #endif
-
-					// #ifdef MP-WEIXIN
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					let custom = wx.getMenuButtonBoundingClientRect();
-					Vue.prototype.Custom = custom;
-					Vue.prototype.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
-					// #endif
-
-					// #ifdef MP-ALIPAY
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					Vue.prototype.CustomBar = e.statusBarHeight + e.titleBarHeight;
-					// #endif
-				}
-			});
 		},
 		onShow: function() {
 			console.log('App Show');
@@ -54,8 +33,9 @@
 	@import 'plugin/colorui/main.css';
 	@import 'plugin/colorui/icon.css';
 	@import 'plugin/colorui/animation.css';
+
 	/* #endif*/
-	.uni-input-placeholder{
+	.uni-input-placeholder {
 		color: rgba(184, 184, 184, 1);
 	}
 </style>
