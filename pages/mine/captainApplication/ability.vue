@@ -1,7 +1,7 @@
 <template>
 	<view class="ability">
 		<view>
-			<uni-step :list="stepList" :step="3"></uni-step>
+			<uniStep :list="stepList" :step="3"></uniStep>
 			<view class="ability-tips">本页内容仅用于平台审核，不对其他用户公开</view>
 			<view class="ability-group" @click="onUploadTourGuide">
 					<text class="item title">导游证</text>
@@ -52,7 +52,7 @@
 <script>
 	import uniStep from "@/components/uni-step/uni-step.vue";
 	export default {
-		components(){
+		components:{
 			uniStep
 		},
 		data() {

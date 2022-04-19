@@ -1,10 +1,10 @@
 <template>
 	<view class="personInfo">
 		<view class="box">
-			<textarea placeholder="请输入个人介绍"/>
+			<textarea placeholder="请输入个人介绍" value="personalIntroduction"  v-model="personalIntroduction" @input="onInput" />
 		</view>
 		<view class="btn">
-			<button class="text-blue margin-lr-xl" form-type="submit">下一步</button>
+			<button class="text-blue margin-lr-xl" @click="onFinish">下一步</button>
 		</view>
 	</view>
 </template>
@@ -13,11 +13,22 @@
 	export default {
 		data() {
 			return {
-				
+				personalIntroduction:''
 			}
 		},
+		onLoad(options){
+			this.personalIntroduction = options.personalIntroduction;
+		},
 		methods: {
-			
+			onInput(event){
+				this.personalIntroduction = event.detail.value;
+			},
+			onFinish(){
+				uni.$emit("personalIntroduction",this.personalIntroduction);
+				uni.navigateTo({
+					url:'/pages/mine/captainApplication/baseInfo'
+				})
+			}
 		}
 	}
 </script>

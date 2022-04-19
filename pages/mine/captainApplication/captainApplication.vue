@@ -1,16 +1,16 @@
 <template>
 	<view class="captain-application">
-		<uni-step :list="stepList" :step="0"></uni-step>
+		<uniStep :list="stepList" :step="0"></uniStep>
 		<view class="captain-application-tips">本页内容仅用于平台审核，不对其他用户公开</view>
 		<form @submit="onAuth">
 			<view>
 				<view class="captain-application-group">
 					<view class="title">姓名</view>
-					<input placeholder="请输入真实姓名" v-model="userInfo.username" name="username"></input>
+					<input placeholder="请输入真实姓名" v-model="userInfo.name" name="name"></input>
 				</view>
 				<view class="captain-application-group">
 					<view class="title">区号</view>
-					<input placeholder="86" disabled="true"></input>
+					<input placeholder="86" disabled="true" value="86" name="areaCode"></input>
 				</view>
 				<view class="captain-application-group captain-application-group-item">
 					<view class="title">手机号码</view>
@@ -34,49 +34,99 @@
 </template>
 <script>
 	import uniStep from "@/components/uni-step/uni-step.vue";
+	import { userService } from "@/api/index.js";
+	import graceChecker from '@/common/biz/graceChecker.js';
 	export default {
-		components(){
+		components: {
 			uniStep
 		},
 		data() {
 			return {
-				smsCountDown: 0,
-				smsCountInterval: null,
 				userInfo:{
-					username:'',
+					areaCode:'',
+					name:'',
 					phone:'',
 					identityCard:'',
-					smsCode:''
+					frontOfImgUrl:"",
+					reverseSideImgUrl:'',
+					inHandImgUrl:''
 				},
 				stepList:['身份信息','基本资料','能力说明']
 			}
 		},
+		created() {
+			// 监听
+			uni.$once('captainUserInfo', data=>{
+				this.userInfo = data;
+			});
+		},
 		mounted(){
-			
+			this.queryByUserId();
 		},
 		methods: {
 			onUploadImg(){
-				uni.navigateTo({
-					url:'/pages/mine/certification/uploadIdCard'
+				let {frontOfImgUrl,reverseSideImgUrl,inHandImgUrl} = this.userInfo;
+				if(frontOfImgUrl || reverseSideImgUrl || inHandImgUrl){
+					uni.navigateTo({
+						url:'/pages/mine/captainApplication/uploadIdCard?userInfo='+JSON.stringify({frontOfImgUrl,reverseSideImgUrl,inHandImgUrl})
+					})
+				}else{
+					uni.navigateTo({
+						url:'/pages/mine/captainApplication/uploadIdCard?userInfo'
+					})
+				}
+			},
+			queryByUserId(){
+				userService.queryIdentityCard().then((res)=>{
+					let data = res.data;
+					if(data.success){
+						if(!data.result) return;
+						let { areaCode,name,phone,identityCard,frontOfImgUrl,reverseSideImgUrl,inHandImgUrl } = data.result;
+						this.userInfo.areaCode = areaCode;
+						this.userInfo.name = name;
+						this.userInfo.phone = phone;
+						this.userInfo.identityCard = identityCard;
+						this.userInfo.frontOfImgUrl = frontOfImgUrl;
+						this.userInfo.reverseSideImgUrl = reverseSideImgUrl;
+						this.userInfo.inHandImgUrl = inHandImgUrl;
+					}
 				})
 			},
 			onAuth(e){
-				//进行表单检查
-				// var formData = e.detail.value;
-				// //定义表单规则
-				// var rule = [
-				// 	{name:"username", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
-				// 	{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
-				// 	{name:'identityCard',checkType:'identityCard',errorMsg:'请输入正确格式的身份证号'},
-				// ];
-				// var checkRes = graceChecker.check(formData, rule);
-				// if(!checkRes){
-				//     uni.showToast({ title: graceChecker.error, icon: "none" });
-				// 	return;
-				// }
-				uni.navigateTo({
-					url:"/pages/mine/captainApplication/baseInfo"
+				// 进行表单检查
+				var formData = e.detail.value;
+				formData = {...this.userInfo,...formData};
+				//定义表单规则
+				var rule = [
+					{name:"name", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
+					{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
+					{name:'identityCard',checkType:'identityCard',errorMsg:'请输入正确格式的身份证号'},
+					{name:"frontOfImgUrl", checkType : "notnull", checkRule:"",  errorMsg:"请上传正面证件照片"},
+					{name:"reverseSideImgUrl", checkType : "notnull", checkRule:"",  errorMsg:"请反面证件照片"},
+					{name:"inHandImgUrl", checkType : "notnull", checkRule:"",  errorMsg:"请上传手持证件照片"},
+				];
+				var checkRes = graceChecker.check(formData, rule);
+				if(!checkRes){
+				    uni.showToast({ title: graceChecker.error, icon: "none" });
+					return;
+				}
+				let params = {
+					areaCode:this.userInfo.areaCode,
+					name:this.userInfo.name,
+					phone:this.userInfo.phone,
+					identityCard:this.userInfo.identityCard,
+					frontOfFile:this.userInfo.frontOfImgUrl,
+					reverseSideFile:this.userInfo.reverseSideImgUrl,
+					inHandFile:this.userInfo.inHandImgUrl
+				};
+				userService.certification(params).then((res)=>{
+					if(res.data.success){
+						uni.navigateTo({
+							url:"/pages/mine/captainApplication/baseInfo"
+						});
+					}
 				})
+				
 			}
 		}
 	}

@@ -149,7 +149,6 @@
 				"navigationBarTitleText": "实名认证"
 			}
 		},
-
 		{
 			"path": "pages/mine/certification/uploadIdCard",
 			"style": {
@@ -276,7 +275,13 @@
                 "navigationBarTitleText": "徒步准备"
             }
             
-        }
+        },
+		{
+			"path": "pages/mine/captainApplication/uploadIdCard",
+			"style": {
+				"navigationBarTitleText": "上传证件照片"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

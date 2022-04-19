@@ -123,6 +123,7 @@ export default {
 			}
 			userService.queryByUserId({userId:userInfo.id}).then((res)=>{
 				if(res.data.success){
+					console.log(res);
 					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact} = res.data.result;
 					$this.userInfo.id = id;
 					$this.userInfo.avatar = avatar || '../../static/mine/ic_avatar.png';

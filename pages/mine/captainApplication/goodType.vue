@@ -5,23 +5,37 @@
 				<view v-for="item of goodTypes" class="list" @click="getSelectedTypes(item)">
 					<view class="item">
 						<text>{{item}}</text>
-						<text v-if="(selected.includes(item))" class="cuIcon-check text-blue"></text>
+						<uni-icons  v-if="(selected.includes(item))" color="#0089FF" type="checkmarkempty" size="18"></uni-icons>
 					</view>
 				</view>
 			</scroll-view>
 		</view>
 		<view class="footer">
-			<button type="primary">完成</button>
+			<button type="primary" @click="onFinish">完成</button>
 		</view>
 	</view>
 </template>
 <script>
+	import { userService } from "@/api/index.js";
 	export default {
 		data() {
 			return {
-				goodTypes:['皮划艇','徒步','登山','雪山','沙漠','皮划艇','徒步','登山','雪山','沙漠','皮划艇','徒步','登山','雪山','沙漠','皮划艇','徒步','登山','雪山','沙漠','皮划艇','徒步','登山','雪山','沙漠','皮划艇','徒步','登山','雪山','沙漠'
-				],
+				goodTypes:[],
 				selected:[]
+			}
+		},
+		mounted(){
+			this.queryBeGoodAtRegion();
+		},
+		onLoad(options){
+			let  beGoodAtType = JSON.parse(options.beGoodAtType);
+			if(beGoodAtType){
+				if(beGoodAtType.indexOf(',') > -1){
+					this.selected = beGoodAtType.split(',');
+				}else{
+					this.selected = beGoodAtType;
+				}
+				
 			}
 		},
 		methods: {
@@ -32,6 +46,24 @@
 					return;
 				}
 				this.selected.push(item);
+			},
+			queryBeGoodAtRegion(){
+				userService.queryBeGoodAtRegion().then((res)=>{
+					let data = res.data;
+					if(data.success){
+						let goodTypes = [];
+						for(let item of data.result || []){
+							goodTypes.push(item.itemText);
+						}
+						this.goodTypes = goodTypes;
+					}
+				})
+			},
+			onFinish(){
+				uni.$emit("beGoodAtType",this.selected.join(','));
+				uni.navigateTo({
+					url:'/pages/mine/captainApplication/baseInfo'
+				})
 			}
 		}
 	}
