@@ -304,7 +304,7 @@
 						title: '请先选择路线',
 					})
 					return
-				}				
+				}
 				homeService.routePunch({
 					routeId: store.state.map.route.onfootRouteInfo.id
 				}).then(res => {
@@ -347,7 +347,7 @@
 			},
 			showTourlist() {
 				// 如果已显示就取消
-				if(this.option.touristFlag){
+				if (this.option.touristFlag) {
 					this.mergeOptions({
 						touristFlag: !this.option.touristFlag,
 						tourist: []
@@ -397,11 +397,11 @@
 							latitude: latitude,
 							coordinateFlag: !this.option.coordinateFlag,
 						})
-						setTimeout(()=>{
+						setTimeout(() => {
 							this.mergeOptions({
 								drawAlreadyFlag: !this.option.drawAlreadyFlag,
 							})
-						},100)						
+						}, 100)
 					}
 				});
 			},
@@ -576,7 +576,10 @@
 			this.initMap()
 
 			this.listeningGPS()
-
+			setTimeout(() => {
+				this.drawRoute()
+			}, 100)
+			
 			setTimeout(() => {
 
 				this.scrollTop = 10000
@@ -599,7 +602,7 @@
 			this.mergeOptions({
 				currentLayer: store.state.map.layer
 			})
-			this.drawRoute()
+
 		}
 	}
 </script>
