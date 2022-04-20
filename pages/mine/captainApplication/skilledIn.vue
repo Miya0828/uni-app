@@ -1,10 +1,8 @@
 <template>
 	<view class="skilled-in-container">
 		<view class="skilled-in-container-header">
-			<uni-section title="控制清除/取消按钮" subTitle="使用 clearButton 属性设置清除按钮" type="line">
-				<uni-search-bar class="uni-mt-10" radius="5" placeholder="地名、地名首字母" clearButton="auto"
-					cancelButton="none" @confirm="search" />
-			</uni-section>
+			<uni-search-bar class="uni-mt-10" radius="5" placeholder="地名、地名首字母" clearButton="auto"
+				cancelButton="none" @confirm="search" />
 		</view>
 		<view class="skilled-in-container-address">
 			<view class="skilled-in-container-address-des">
@@ -29,20 +27,27 @@
 				国外
 			</view>
 		</view>
-		<view class="skilled-in-container-list">
-			<uni-collapse accordion @change="change">
-				<uni-collapse-item :title="item.key" v-for="(item) of area" :open="isIncludeElement(item)">
-					<view class="skilled-in-container-city-list">
-						<view v-for="ite of item.value" class="list" @click="getSelectedTypes(ite.name)">
-							<view class="item">
-								<text>{{ite.name}}</text>
-								<uni-icons  v-if="(selected.includes(ite.name))" color="#0089FF" type="checkmarkempty" size="18"></uni-icons>
+		<view class="list-cont">
+			<scroll-view class="scrool-more" style="height: 100%" scroll-y="true" scroll-with-animation="true">
+				<view class="skilled-in-container-list">
+					<uni-collapse accordion @change="change">
+						<uni-collapse-item :title="item.key" v-for="(item) of area" :open="isIncludeElement(item)">
+							<view class="skilled-in-container-city-list">
+								<view v-for="ite of item.value" class="list" @click="getSelectedTypes(ite.code)">
+									<view class="item">
+										<text>{{ite.name}}</text>
+										<uni-icons  v-if="(selected.includes(ite.code))" color="#0089FF" type="checkmarkempty" size="18"></uni-icons>
+									</view>
+								</view>
 							</view>
-						</view>
-					</view>
-					
-				</uni-collapse-item>
-			</uni-collapse>
+							
+						</uni-collapse-item>
+					</uni-collapse>
+				</view>
+			</scroll-view>
+		</view>
+		<view class="footer">
+			<button type="primary" @click="onFinish">完成</button>
 		</view>
 	</view>
 </template>
@@ -57,7 +62,15 @@
 			}
 		},
 		onLoad(options){
-			this.selected = JSON.parse(options.beGoodAtRegion);
+			let  beGoodAtRegion = JSON.parse(options.beGoodAtRegion);
+			if(beGoodAtRegion){
+				if(beGoodAtRegion.indexOf(',') > -1){
+					this.selected = beGoodAtRegion.split(',');
+				}else{
+					this.selected = [beGoodAtRegion];
+				}
+				
+			}
 		},
 		mounted(){
 			this.queryArea();
@@ -81,7 +94,7 @@
 			isIncludeElement(data){
 				let flag = false;
 				for(let item of data.value){
-					if(this.selected.includes(item)){
+					if(this.selected.includes(item.code)){
 						flag = true;
 						break;
 					}
@@ -107,6 +120,12 @@
 						this.area = area;
 					}
 				})
+			},
+			onFinish(){
+				uni.$emit("beGoodAtRegion",this.selected.join(','));
+				uni.navigateBack({
+					url:'/pages/mine/captainApplication/baseInfo'
+				})
 			}
 		}
 	}
@@ -125,7 +144,7 @@
 				background-color: #F8F8F8;
 				font-size: 24rpx;
 				font-weight: 400;
-				color: #999999;
+				color: #333333;
 				padding: 20rpx 32rpx;
 			}
 
@@ -173,23 +192,48 @@
 				border-bottom: 5rpx solid #0089FF;
 			}
 		}
-
-		.skilled-in-container-list {
-			.list {
-				border-bottom: 2upx solid #F8F8F8;
-				.item {
-					position: relative;
-					display: flex;
-					padding: 0 50upx;
-					min-height: 104upx;
-					background-color: #ffffff;
-					justify-content: space-between;
-					align-items: center;
-					.cuIcon-check{
-						color:#0089FF;
-						font-size: 40upx;
+		.list-cont{
+			background-color: #FFFFFF;
+			flex: 1;
+			position: relative;
+			.scrool-more {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				.skilled-in-container-list {
+					.list {
+						border-bottom: 2upx solid #F8F8F8;
+						.item {
+							position: relative;
+							display: flex;
+							padding: 0 50upx;
+							min-height: 104upx;
+							background-color: #ffffff;
+							justify-content: space-between;
+							align-items: center;
+							.cuIcon-check{
+								color:#0089FF;
+								font-size: 40upx;
+							}
+						}
 					}
 				}
+			}
+		}
+		.footer {
+			line-height: 100rpx;
+			background-color: #FFFFFF;
+			/* 不放大不缩小固定100rpx */
+			flex: 0 0 100rpx;
+			padding: 0 50upx;
+			button{
+				border-radius: 38upx;
+				background: #0089FF;
+			}
+			uni-button:after{
+				border: 0;
 			}
 		}
 	}

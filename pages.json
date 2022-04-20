@@ -182,7 +182,7 @@
 			}
 		},
 		{
-			"path": "pages/mine/certification/certificationApplication",
+			"path": "pages/mine/certification/checking",
 			"style": {
 				"navigationBarTitleText": "认证申请"
 			}
@@ -289,6 +289,12 @@
 			"path": "pages/mine/captainApplication/uploadIdCard",
 			"style": {
 				"navigationBarTitleText": "上传证件照片"
+			}
+		},
+		{
+			"path": "pages/mine/captainApplication/checking",
+			"style": {
+				"navigationBarTitleText": "团队认证申请"
 			}
 		}
     ],

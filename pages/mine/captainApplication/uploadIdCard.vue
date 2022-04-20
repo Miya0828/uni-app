@@ -145,10 +145,9 @@ export default {
 			}
 			uni.$emit('captainUserInfo', this.userInfo);
 			//上传数据
-			uni.navigateTo({
+			uni.navigateBack({
 				url:"/pages/mine/captainApplication/captainApplication"
 			});
-			
 		}
 	}
 };

@@ -110,16 +110,7 @@
 				    uni.showToast({ title: graceChecker.error, icon: "none" });
 					return;
 				}
-				let params = {
-					areaCode:this.userInfo.areaCode,
-					name:this.userInfo.name,
-					phone:this.userInfo.phone,
-					identityCard:this.userInfo.identityCard,
-					frontOfFile:this.userInfo.frontOfImgUrl,
-					reverseSideFile:this.userInfo.reverseSideImgUrl,
-					inHandFile:this.userInfo.inHandImgUrl
-				};
-				userService.certification(params).then((res)=>{
+				userService.certification(formData).then((res)=>{
 					if(res.data.success){
 						uni.navigateTo({
 							url:"/pages/mine/captainApplication/baseInfo"

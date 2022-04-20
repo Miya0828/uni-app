@@ -22,7 +22,7 @@
 					<view class="large-title-content">我们将在1-3个工作日完成审核，并告知您结果。</view>
 				</view>
 				<view class="start-application">
-					<navigator url="/pages/mine/captainApplication/captainApplication">
+					<navigator url="/pages/mine/captainApplication/baseInfo">
 						<button style="background:#0089FF;color:#FFFFFF">知道了，开始申请</button>
 					</navigator>
 					<button style="background:rgba(38, 132, 255, 0.1);" @click="onGoBack">退出申请</button>
@@ -51,6 +51,7 @@
 
 <style lang="less">
 .captain-guide{
+	font-size: 22upx;
 	.captain-guide-modal {
 		position: fixed;
 		top: 0;
@@ -98,7 +99,7 @@
 		border-radius: 10upx;
 		overflow: hidden;
 		.captain-guide-dialog-content{
-			padding: 50upx;
+			padding: 50upx 50upx 10upx 50upx;
 		}
 		// .start-application{
 		// 	margin:0 40upx 20upx 40upx;
@@ -115,10 +116,11 @@
 			line-height: 54upx;
 		}
 		.large-title-content{
-			margin-bottom: 50upx;
+			margin-bottom: 34upx;
 		}
 	}
 	button{
+		font-size: 32upx;
 		color:#0089FF;
 		border-radius: 50upx;
 		margin:0 50upx 30upx 50upx;

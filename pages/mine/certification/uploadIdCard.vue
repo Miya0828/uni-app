@@ -144,19 +144,11 @@ export default {
 				this.$tip.toast("请完成身份证照片上传");
 				return;
 			}
-			let params = {
-				areaCode:this.userInfo.areaCode,
-				name:this.userInfo.name,
-				phone:this.userInfo.phone,
-				identityCard:this.userInfo.identityCard,
-				frontOfFile:this.userInfo.frontOfImgUrl,
-				reverseSideFile:this.userInfo.reverseSideImgUrl,
-				inHandFile:this.userInfo.inHandImgUrl
-			};
-			userService.certification(params).then((res)=>{
+			userService.certification(this.userInfo).then((res)=>{
 				if(res.data.success){
-					uni.reLaunch({
-						url:"/pages/mine/mine"
+					
+					uni.navigateTo({
+						url:"/pages/mine/certification/checking"
 					})
 				}
 			})
@@ -181,6 +173,8 @@ export default {
 			border-bottom: 1px solid #f8f8f8;
 			margin-top: 20upx;
 			margin-bottom: 20upx;
+			font-size: 28upx;
+			color:#333333;
 		}
 		.upload-group-box {
 			background-color: #ffffff;
@@ -210,6 +204,7 @@ export default {
 	.upload-item-title{
 		color:#0089FF;
 		margin-top: 20upx;
+		font-size: 24upx;
 	}
 	.upload-item-ready {
 		width: 200upx;
@@ -256,7 +251,6 @@ export default {
 		}
 	}
 	.pic-require {
-		width: 100%;
 		height: 202upx;
 		padding: 20upx 32upx;
 		background-color: #ffffff;
@@ -271,6 +265,7 @@ export default {
 		width: 100%;
 		margin-top: 50upx;
 		margin-bottom: 50upx;
+		font-size: 32upx;
 		button {
 			color:#0089FF;
 			margin-left: 50upx;

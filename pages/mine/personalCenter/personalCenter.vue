@@ -207,6 +207,7 @@
 			uni-image{
 				width: 40upx;
 				height: 40upx;
+				margin-left: 20upx;
 			}
 		}
 		uni-picker {

@@ -11,7 +11,6 @@
 		},
 		onLaunch: function() {
 			console.log('App Launch');
-
 			let token = uni.getStorageSync(ACCESS_TOKEN);
 			if (!token) {
 				uni.reLaunch({
@@ -30,9 +29,9 @@
 <style>
 	/*每个页面公共css */
 	/* #ifndef APP-PLUS-NVUE */
-	@import 'plugin/colorui/main.css';
+	/* @import 'plugin/colorui/main.css';
 	@import 'plugin/colorui/icon.css';
-	@import 'plugin/colorui/animation.css';
+	@import 'plugin/colorui/animation.css'; */
 
 	/* #endif*/
 	.uni-input-placeholder {
