@@ -2,7 +2,7 @@
 	<view class="pic-require">
 		<view class="pic-require-modal show">
 			<view class="pic-require-dialog">
-				<view class="padding-xl">
+				<view class="pic-require-dialog-box">
 					<view class="large-title">一、请上传清晰彩色，完整的原件扫 描或者照片；</view>
 					<view class="large-title">二、身份证各项信息及头像清晰可见 容易识别；</view>
 					<view class="large-title">三、证件照必须真是拍摄，不能使用 复印件；</view>
@@ -11,7 +11,6 @@
 				</view>
 			</view>
 		</view>
-		
 	</view>
 </template>
 
@@ -83,12 +82,15 @@
 	.pic-require-dialog{
 		text-align: left;
 		border-radius: 20upx;
-		.large-title{
-			font-size: 32upx;
-			font-weight: 500;
-			color: #333333;
-			margin-bottom: 30upx;
-			line-height: 54upx;
+		.pic-require-dialog-box{
+			padding: 50upx;
+			.large-title{
+				font-size: 32upx;
+				font-weight: 500;
+				color: #333333;
+				margin-bottom: 30upx;
+				line-height: 54upx;
+			}
 		}
 	}
 }

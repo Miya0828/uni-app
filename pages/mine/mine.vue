@@ -35,7 +35,8 @@
 				<view class="list-content-menu">
 					<view class="mine-page-group mine-page-group-item radius" @click="onGoPage('/pages/mine/certification/certification')">
 						<text class="item title">实名认证</text>
-						<image src="@/static/mine/ic_verifiedIdCard.png"></image>
+						<image v-if="checkStatus == 2" src="@/static/mine/ic_verifiedIdCard.png"></image>
+						<image v-else src="@/static/mine/ic_notcertified.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
 					</view>
@@ -46,7 +47,8 @@
 					</view>
 					<view class="mine-page-group bottom-boder" @click="onGoPage('/pages/mine/captainApplication/captainGuide')">
 						<text class="item title">成为队长</text>
-						<image src="@/static/mine/ic_verifiedTeam.png"></image>
+						<image  v-if="checkStatus == 2"  src="@/static/mine/ic_verifiedTeam.png"></image>
+						<image v-else src="@/static/mine/ic_notcertifiedTeam.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
 					</view>
@@ -84,6 +86,20 @@
 				</view>
 			</scroll-view>
 		</view>
+		<view class="mine-require-modal" :class="show?'show':''">
+			<view class="mine-require-dialog">
+				<view class="pic-require-dialog-box">
+					<image src="@/static/mine/ic_clickmine.png"></image>
+					<view class="pic-require-dialog-box-tips">请完成实名验证…</view>
+					<view class="pic-require-dialog-btn">
+						<navigator url="/pages/mine/certification/certification">
+							<button style="background:#0089FF;color:#FFFFFF">实名认证</button>
+						</navigator>
+						<button style="background:rgba(38, 132, 255, 0.1);" @click="onClose">取消</button>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -112,6 +128,7 @@ export default {
 			  {title: '打卡路线',number:'23' },
 			  {title: '徒步旅程',number:'123.4' },
 			],
+			show:false
 		};
 	},
 	mounted(){
@@ -144,10 +161,6 @@ export default {
 		},
 		onGoPage(url){
 			if(url){
-				uni.navigateTo({
-					url
-				});
-				return
 				if(url === '/pages/mine/certification/certification'){
 					this.$tip.alert(this.checkMsg+',实名认证失败，请修改实名认证信息!');
 					switch(this.checkStatus){
@@ -175,8 +188,7 @@ export default {
 							});
 							break;
 						default:
-							//完成实名认证
-							this.$tip.alert('请先完成实名认证');
+							this.show = true;
 					}
 				}
 			}
@@ -198,9 +210,11 @@ export default {
 				url:"/pages/mine/personalCenter/personalCenter"
 			})
 		},
+		onClose(){
+			this.show = false;
+		},
 		logout() {
 			store.commit('clearUser')
-			
 			uni.reLaunch({
 				url: '/pages/login/login',				
 			});
@@ -384,6 +398,89 @@ page{
 				}
 				.bottom{
 					height: 40upx;
+				}
+			}
+		}
+	}
+	.mine-require-modal {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1110;
+		opacity: 0;
+		outline: 0;
+		text-align: center;
+		-ms-transform: scale(1.185);
+		transform: scale(1.185);
+		backface-visibility: hidden;
+		perspective: 2000upx;
+		background: rgba(0, 0, 0, 0.6);
+		transition: all 0.3s ease-in-out 0s;
+		pointer-events: none;
+	}
+	
+	.mine-require-modal::before {
+		content: "\200B";
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+	}
+	
+	.mine-require-modal.show {
+		opacity: 1;
+		transition-duration: 0.3s;
+		-ms-transform: scale(1);
+		transform: scale(1);
+		overflow-x: hidden;
+		overflow-y: auto;
+		pointer-events: auto;
+	}
+	.mine-require-dialog {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: auto;
+		margin-right: auto;
+		width: 680upx;
+		max-width: 100%;
+		background-color: #f8f8f8;
+		border-radius: 10upx;
+		overflow: hidden;
+		.pic-require-dialog-content{
+			padding: 50upx;
+		}
+	}
+	.mine-require-dialog{
+		text-align: left;
+		border-radius: 20upx;
+		.pic-require-dialog-box{
+			margin-top: 84upx;
+			text-align: center;
+			uni-image{
+				border: 2upx dashed #666666;
+				width: 80%;
+			}
+			.pic-require-dialog-box-tips{
+				text-align: center;
+				font-size: 28upx;
+				font-weight: 400;
+				color: #333333;
+				margin:30upx 0 0 0;
+			}
+			.pic-require-dialog-btn{
+				padding: 100upx 0 100upx 0;
+				button{
+					color:#0089FF;
+					margin-left: 50upx;
+					margin-right: 50upx;
+					border-radius: 38upx;
+					background: rgba(0, 134, 255, 0.1);
+					margin-top:30upx;
+				}
+				uni-button:after{
+					border: 0;
 				}
 			}
 		}

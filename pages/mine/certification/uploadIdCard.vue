@@ -146,7 +146,6 @@ export default {
 			}
 			userService.certification(this.userInfo).then((res)=>{
 				if(res.data.success){
-					
 					uni.navigateTo({
 						url:"/pages/mine/certification/checking"
 					})
