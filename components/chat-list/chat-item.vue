@@ -10,12 +10,12 @@
 				<slot></slot>
 			</view>
 			<uni-load-more iconType="snow" v-if="loading" color="#999" :iconSize="16" class="loading"
-				:contentText="{ contentrefresh: '' }" status="loading"></uni-load-more>
+				:contentText="{ contentrefresh: '正在发送' }" status="loading"></uni-load-more>
 			<image v-if="isError && right && !loading" class="error-icon" @click="errorClick"
 				src="/static/img/chat/wring.png" mode=""></image>
-			<view class="read" v-if="!isError && !loading && showIsRead && right">
+			<!-- <view class="read" v-if="!isError && !loading && showIsRead && right">
 				<text class="text" :class="{ 'not-read': !isRead}">{{ isRead ? '已读' : '未读' }}</text>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>

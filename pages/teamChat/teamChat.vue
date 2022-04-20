@@ -50,7 +50,7 @@
 			teamService.queryTeam().then(res => {
 				// console.log(res)
 				if (res.data.success) {
-					// console.log(res.data.result)
+					console.log(res.data.result)
 					this.teamList = res.data.result					
 				}
 			})

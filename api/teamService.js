@@ -24,6 +24,16 @@ const teamService = {
 		})
 	},
 	/**
+	 * 团队发送信息
+	 */
+	sendText(params, loading = false) {
+		return http.post('/tour-pal/sys/messageData/sendText', params, {
+			custom: {
+				loading: loading
+			}
+		})
+	},
+	/**
 	 * 创建团队
 	 */
 	createTeam(params, loading = false) {

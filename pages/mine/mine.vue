@@ -90,7 +90,7 @@
 <script>
 import { userService } from "@/api/index.js";
 import { ACCESS_TOKEN,USER_INFO } from '@/common/util/constants';
-
+import store from '@/store/index.js';
 export default {
 	data() {
 		return {
@@ -199,11 +199,10 @@ export default {
 			})
 		},
 		logout() {
-			uni.setStorageSync(ACCESS_TOKEN, '');
-			uni.navigateTo({
-				url: '/pages/login/login',
-				animationType: 'slide-in-left',
-				animationDuration: 200
+			store.commit('clearUser')
+			
+			uni.reLaunch({
+				url: '/pages/login/login',				
 			});
 		}
 	}

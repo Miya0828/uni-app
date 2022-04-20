@@ -201,7 +201,7 @@
 		homeService,
 		teamService
 	} from "@/api/index.js";
-	let timer = null
+	
 	export default {
 		data() {
 			return {
@@ -304,7 +304,7 @@
 						title: '请先选择路线',
 					})
 					return
-				}				
+				}
 				homeService.routePunch({
 					routeId: store.state.map.route.onfootRouteInfo.id
 				}).then(res => {
@@ -347,7 +347,7 @@
 			},
 			showTourlist() {
 				// 如果已显示就取消
-				if(this.option.touristFlag){
+				if (this.option.touristFlag) {
 					this.mergeOptions({
 						touristFlag: !this.option.touristFlag,
 						tourist: []
@@ -397,11 +397,11 @@
 							latitude: latitude,
 							coordinateFlag: !this.option.coordinateFlag,
 						})
-						setTimeout(()=>{
+						setTimeout(() => {
 							this.mergeOptions({
 								drawAlreadyFlag: !this.option.drawAlreadyFlag,
 							})
-						},100)						
+						}, 100)
 					}
 				});
 			},
@@ -426,16 +426,7 @@
 				uni.navigateTo({
 					url: '/pages/home/layer'
 				});
-			},
-			// 未登录去登录
-			isLogin() {
-				let token = uni.getStorageSync(ACCESS_TOKEN);
-				if (!token) {
-					uni.navigateTo({
-						url: '/pages/login/login'
-					});
-				}
-			},
+			},			
 			initMap() {
 				setTimeout(() => {
 					this.mergeOptions({
@@ -491,25 +482,28 @@
 				});
 			},
 			listeningGPS() {
-				clearInterval(timer)
 				// 方向
 				uni.onCompassChange((res) => {
 					// console.log("方向" + res.direction);
 					store.state.map.orientation = res.direction
 					this.option.currentUser.orientation = res.direction
 				});
-				timer = setInterval(() => {
-					// 10s上传一次位置
+				
+				uni.$on('triggerHeartbeat',()=>{					
 					this.uploadPosition()
-				}, 10000)
+				})				
 			},
 			afterInit() {
-				this.mergeOptions({
-					currentUser: {
-						...this.option.currentUser,
-						avatar: this.userInfo.avatar
-					}
-				})
+				this.drawRoute()
+
+				setTimeout(() => {
+					this.mergeOptions({
+						currentUser: {
+							...this.option.currentUser,
+							avatar: this.userInfo.avatar
+						}
+					})
+				}, 1000)
 			},
 			currentRoute() {
 				homeService.queryRouteByUserId({
@@ -541,41 +535,25 @@
 			},
 			showSite(site) {
 				this.siteIndex = site
-				// console.log(site)
-			}
+			},
+		},
+		onUnload() {
+			console.log('onUnload')
+			
 		},
 		onLoad() {
-			this.userInfo = uni.getStorageSync(USER_INFO)
-			Object.assign(store.state.userInfo, this.userInfo)
-			console.log(this.userInfo)
-			store.commit('socket')
-
-			uni.onSocketError(function(res) {
-				console.log('WebSocket连接打开失败，请检查！');
-			});
-			uni.onSocketClose(function(res) {
-				console.log('WebSocket 已关闭！');
-			});
-			uni.onSocketOpen(function(res) {
-				console.log('WebSocket连接已打开！');
-
-				uni.onSocketMessage(function(res) {
-					console.log('收到服务器内容：' + res.data);
-				});
-
-				// uni.sendSocketMessage({
-				// 	data: '一条消息',
-				// 	fail(e) {
-				// 		console.log(e)
-				// 	},					
-				// });
-			});
-
-
-			this.isLogin()
+			
 			this.initMap()
-
 			this.listeningGPS()
+
+			this.userInfo = store.state.userInfo
+			console.log(this.userInfo)
+
+			uni.$on('socketMessage', function(data) {
+				console.log('home:socketMessage')
+				console.log(data)
+			})
+
 
 			setTimeout(() => {
 
@@ -599,7 +577,7 @@
 			this.mergeOptions({
 				currentLayer: store.state.map.layer
 			})
-			this.drawRoute()
+
 		}
 	}
 </script>
@@ -669,7 +647,7 @@
 
 				} else if (newValue.drawAlreadyFlag != oldValue.drawAlreadyFlag) {
 					if (newValue.trackjson.length) {
-						console.log('绘制已走过路线')
+						// console.log('绘制已走过路线')
 						this.drawAlreadyPath(newValue.trackjson, {
 							longitude: newValue.longitude,
 							latitude: newValue.latitude
@@ -883,10 +861,11 @@
 						img.style.border = "2px solid #FFFFFF";
 						this._src = '/static/home/user.png'
 						img.src = this._src
-						img.style.width = "100%";
+						img.style.width = "25px";
+						img.style.height = "25px";
 						img.style.borderRadius = "50%";
-						img.style.top = "-7px";
-						img.style.left = "-2px";
+						img.style.top = "-2.5px";
+						img.style.left = "0px";
 
 						container.appendChild(div);
 						container.appendChild(img);
