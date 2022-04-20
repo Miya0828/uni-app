@@ -66,14 +66,7 @@ http.interceptor.response(
 		if (response.config.custom.loading) {
 			uni.hideLoading();
 		}
-		let data = response.data;		
-		if(data.success==false){
-			uni.showToast({
-				icon: 'none',
-				title: data.message,
-				duration: 2000
-			});
-		}
+		let data = response.data;			
 		// console.log('success',response)
 		return response;
 	}, (response) => {
@@ -95,10 +88,15 @@ http.interceptor.response(
 						title: data.message,
 						duration: 2000
 					});
-					uni.setStorageSync(ACCESS_TOKEN, '');
-					uni.navigateTo({
-						url: '/pages/login/login',
-					});
+																			
+					store.commit('closeSocket')
+					store.commit('clearUser')
+					uni.$emit('closeHeartbeat')
+					
+					uni.reLaunch({
+						url: '/pages/login/login'
+					})
+					
 					break;
 				case 500:
 					uni.showToast({

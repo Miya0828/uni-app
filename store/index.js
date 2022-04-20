@@ -6,13 +6,20 @@ import {
 	USER_NAME,
 	USER_INFO
 } from "@/common/util/constants";
+import {
+	teamService
+} from "@/api/index.js";
+import configService from '@/common/service/config.service.js'
+
+let apiUrl = configService.apiUrl;
 
 Vue.use(Vuex)
 
 var socketTask = null
 var userId = null
-export default new Vuex.Store({
+let store =  new Vuex.Store({
 	state: {
+		token: '',
 		userInfo: {
 			id: null
 		},
@@ -28,30 +35,69 @@ export default new Vuex.Store({
 		}
 	},
 	mutations: {
-		SET_TOKEN: (state, token) => {
+		clearUser(state) {
+			uni.clearStorage();
+			state.token = ''
+			state.userInfo = {
+				id: null
+			}
+		},
+		setToken(state, token) {
+			console.log(state, token)
+			uni.setStorageSync(ACCESS_TOKEN, token);
 			state.token = token
+
+			// 是否开启socket
+			teamService.queryTeam().then(res => {
+				if (res.data.success) {
+					var teamList = res.data.result
+					if(teamList.length){
+						store.commit('startSocket')
+					}
+				}
+			})
 		},
-		SET_NAME: (state, {
-			username,
-			realname,
-			welcome
-		}) => {
-			state.username = username
-			state.realname = realname
-			state.welcome = welcome
+		setUserInfo(state, userInfo) {
+			uni.setStorageSync(USER_INFO, userInfo);
+			state.userInfo = userInfo
 		},
-		SET_AVATAR: (state, avatar) => {
-			state.avatar = avatar
+		closeSocket() {
+			uni.closeSocket();
 		},
-		socket(state) {
+		startSocket(state) {			
 			console.log("socket:==" + userId)
 			if (userId != state.userInfo.id) {
 				userId = state.userInfo.id
 				uni.closeSocket();
 				socketTask = uni.connectSocket({
-					url: 'ws://119.23.214.166:8080/tour-pal/websocket/_app' + userId,
-					complete: () => {}
+					url: apiUrl.replace('http','ws')+'/tour-pal/websocket/_app' + userId,
+					complete: () => {
+						console.log("start connectSocket")
+					}
 				});
+
+				uni.onSocketError(function(res) {
+					console.log('WebSocket连接打开失败，请检查！');
+				});
+				uni.onSocketClose(function(res) {
+					console.log('WebSocket 已关闭！');
+				});
+				uni.onSocketOpen(function(res) {
+					console.log('WebSocket连接已打开！');
+
+					uni.onSocketMessage(function(res) {
+						console.log('App.vue收到服务器内容：' + res.data);
+						uni.$emit('socketMessage', JSON.parse(res.data))
+					});
+
+					// uni.sendSocketMessage({
+					// 	data: '一条消息',
+					// 	fail(e) {
+					// 		console.log(e)
+					// 	},					
+					// });
+				});
+
 				return userId
 			}
 			return userId
@@ -64,3 +110,5 @@ export default new Vuex.Store({
 
 	}
 })
+
+export default store

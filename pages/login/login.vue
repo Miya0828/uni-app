@@ -78,6 +78,7 @@
 	import { ACCESS_TOKEN,USER_NAME,USER_INFO,SMS_MODE } from "@/common/util/constants";
 	import graceChecker from "../../common/biz/graceChecker.js"
 	import { loginService } from "@/api/index.js";
+	import store from '@/store/index.js';
 	export default {
 		data() {
 			return {				
@@ -150,8 +151,10 @@
 					let {data}  = res;
 					if (data.success) {
 						let {token,userInfo} = data.result;
-						uni.setStorageSync(ACCESS_TOKEN,token);
-						uni.setStorageSync(USER_INFO,userInfo);
+						// uni.setStorageSync(ACCESS_TOKEN,token);
+						// uni.setStorageSync(USER_INFO,userInfo);
+						store.commit('setToken',token)
+						store.commit('setUserInfo',userInfo)
 						this.$tip.success('登录成功!')
 						uni.reLaunch({
 							url: '/pages/home/home',
@@ -231,8 +234,11 @@
 					let {data}  = res;
 					if (data.success) {
 						let {token,userInfo} = data.result;
-						uni.setStorageSync(ACCESS_TOKEN,token);
-						uni.setStorageSync(USER_INFO,userInfo);
+						
+						// uni.setStorageSync(ACCESS_TOKEN,token);
+						// uni.setStorageSync(USER_INFO,userInfo);
+						store.commit('setToken',token)
+						store.commit('setUserInfo',userInfo)
 						this.$tip.success('登录成功!')
 						uni.reLaunch({
 							url: '/pages/home/home',
@@ -243,7 +249,7 @@
 						this.$tip.toast(res.data.message);
 					}
 				})
-				uni.setStorageSync(ACCESS_TOKEN, '111');
+				// uni.setStorageSync(ACCESS_TOKEN, '111');
 				this.$tip.success('登录成功!')
 				uni.reLaunch({
 					url: '/pages/home/home',

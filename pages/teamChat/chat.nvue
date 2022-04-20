@@ -9,8 +9,16 @@
 </template>
 
 <script>
-	import ChatList from '@/components/chat-list/chat-list.vue'	
-
+	import ChatList from '@/components/chat-list/chat-list.vue'
+	import {
+		ACCESS_TOKEN,
+		USER_INFO
+	} from '@/common/util/constants.js'
+	import {
+		teamService
+	} from "@/api/index.js";
+	import store from '@/store/index.js';
+	import md5 from '@/js_sdk/js-md5'
 	export default {
 		components: {
 			ChatList,
@@ -18,29 +26,34 @@
 		data() {
 			return {
 				team: {
-					id:null,
-					teamName:''
+					id: null,
+					teamName: ''
 				},
 				listData: [],
 				finish: false,
+				isCompleted: true,
 				pageIdx: 1
 			}
 		},
-		onLoad(options) {			
-			// console.log(options)
+		onLoad(options) {
 			this.team = options
 			uni.setNavigationBarTitle({
 				title: options.title
 			});
+
+			uni.$on('socketMessage', function(data) {
+				console.log('chat=========')
+				console.log(data)
+			})
 		},
 		onNavigationBarButtonTap() {
 			console.log("点击了右上角 添加按钮");
 			uni.navigateTo({
-				url: '/pages/teamChat/teamList?id='+this.team.id
+				url: '/pages/teamChat/teamList?id=' + this.team.id
 			})
 		},
 		created() {
-			this.getData()
+			// this.getData()
 		},
 		methods: {
 			getPay() {
@@ -78,26 +91,61 @@
 				content,
 				length
 			}) {
-				let id = this.listData.length
+				console.log(type,
+					content,
+					length)
+
+				// 消息类型: 0 为文字、 1 为表情、 2 图片、 3 视频、 4 语音
+				var typeMap = {
+					'text': 0,
+					'image': 2,
+					'sound': 4,
+					'video': 3,
+				}
+
+				let id = md5(Math.random() * (new Date().getTime()) + '')
+
+
+				// nvue 的store 重新赋值 和vue 不互通
+				store.state.userInfo = uni.getStorageSync(USER_INFO)
+				let userInfo = store.state.userInfo
+
+
+				teamService.sendText({
+					"dataType": "_app",
+					"groupId": this.team.id,
+					"msgText": JSON.stringify({
+						time: new Date().valueOf() / 1000,
+						id,
+						userId: userInfo.id,
+						avatar: userInfo.avatar,
+						type,
+						right: true,
+						content,
+						duration: length,
+					}),
+					"msgType": typeMap[type],
+					"userId": userInfo.id
+				}).then(res => {
+					if (res.data.success) {
+						
+						let item = this.listData.find((item) => item.id === id)
+						if (item) {
+							item.loading = false
+						}
+					}
+				})
 				this.listData.unshift({
 					time: new Date().valueOf() / 1000,
 					id,
+					userId: userInfo.id,
+					avatar: userInfo.avatar,
 					type,
 					right: true,
 					content,
-					duration: length,
 					loading: true,
-					avatar: 'https://img2.woyaogexing.com/2021/07/03/37bd35bb2a8a4f0c8af170e9e6abb7fd!400x400.jpeg'
+					duration: length,
 				})
-
-				setTimeout(() => {
-					let item = this.listData.find((item) => item.id === id)
-
-					if (item) {
-						item.loading = false
-					}
-
-				}, 200)
 			},
 			getData() {
 				let data = [{

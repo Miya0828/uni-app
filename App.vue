@@ -5,19 +5,57 @@
 		USER_INFO
 	} from '@/common/util/constants.js'
 	import store from '@/store/index.js';
+	import {
+		teamService
+	} from "@/api/index.js";	
+	
 	export default {
 		globalData: {
 			text: 'text'
 		},
 		onLaunch: function() {
-			console.log('App Launch');
-
-			let token = uni.getStorageSync(ACCESS_TOKEN);
-			if (!token) {
+			console.log('App Launch');			
+			
+			if (!uni.getStorageSync(ACCESS_TOKEN)) {
 				uni.reLaunch({
-					url: '/pages/login/login',
-				});
+					url: '/pages/login/login'
+				})
+				return
 			}
+			store.state.token = uni.getStorageSync(ACCESS_TOKEN)
+			store.state.userInfo = uni.getStorageSync(USER_INFO)			
+			// 是否有teamChat&&判断token是否过期
+			teamService.queryTeam().then(res => {
+				if (res.data.success) {
+					let timer = null
+					uni.$emit('closeHeartbeat', () => {
+						console.log('closeHeartbeat')
+						clearInterval(timer)
+					})
+					var second = 10;
+					(function heartbeat() {
+						timer = setInterval(() => {
+							uni.$emit('triggerHeartbeat', '❤')
+						}, 1000 * second)
+					})();
+
+					var teamList = res.data.result
+					if (teamList.length) {
+						(function initChat() {
+							console.log("initChat")
+							store.commit('startSocket')
+						})()
+					}
+
+					;
+					(function initUser() {
+						store.state.userInfo = uni.getStorageSync(USER_INFO)
+						store.state.token = uni.getStorageSync(ACCESS_TOKEN)
+					})();
+
+
+				}
+			});
 		},
 		onShow: function() {
 			console.log('App Show');
