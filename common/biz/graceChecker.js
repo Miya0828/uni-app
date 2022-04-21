@@ -66,7 +66,7 @@ export default {
 					if (!reg.test(data[rule[i].name])) { this.error = rule[i].errorMsg; return false; }
 				break;
 				case 'password':
-					var reg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*_=])[A-Za-z\d!@#$%^&*_=]{6,12}$/;
+					var reg = /^(?=.*[a-zA-Z])(?=.*\d)[\w\W]{6,12}$/;
 					if (!reg.test(data[rule[i].name])) { this.error = rule[i].errorMsg; return false; }
 				break;
 				case 'zipcode':

@@ -18,10 +18,12 @@
 					<input placeholder="请输入账号" name="username"></input>
 				</view>
 				<view class="register-page-group">
-					<input placeholder="输入密码" password name="password"></input>
+					<input placeholder="6-12位,必须包含大小写字母及数字" :type="passwordType" name="password"></input>
+					<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowPassword"></image>
 				</view>
 				<view class="register-page-group">
-					<input placeholder="输入密码确认" password name="confirmPassword"></input>
+					<input placeholder="输入密码确认" :type="confirmPasswordType" name="confirmPassword"></input>
+					<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowConfirmPassword"></image>
 				</view>
 				<view class="register-page-group">
 					<input placeholder="请输入昵称" name="realname"></input>
@@ -95,7 +97,11 @@
 				birthday: 0,
 				isAgree:1,
 				sexName:SEX_LIST[0].label,
-				sexList:SEX_LIST
+				sexList:SEX_LIST,
+				passwordType:'password',
+				confirmPasswordType:'password',
+				isShowPassword:false,
+				isShowConfirmPassword:false,
 			}
 		},
 		computed: {
@@ -146,6 +152,14 @@
 						clearInterval(this.smsCountInterval);
 					}
 				}, 1000);
+			},
+			onShowPassword(){
+				this.isShowPassword = !this.isShowPassword;
+				this.passwordType = this.isShowPassword?'text':'password';
+			},
+			onShowConfirmPassword(){
+				this.isShowConfirmPassword = !this.isShowConfirmPassword;
+				this.passwordType = this.isShowConfirmPassword?'text':'password';
 			},
 			onChangSex(e){
 				for(let item of SEX_LIST){
@@ -286,6 +300,11 @@
 			uni-image{
 				width: 40upx;
 				height: 40upx;
+			}
+			.icon-eye{
+				width: 36upx;
+				height: 36upx;
+				margin-right: 16upx;
 			}
 		}
 		.register-page-group-flex{

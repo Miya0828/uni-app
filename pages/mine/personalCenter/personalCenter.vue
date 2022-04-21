@@ -102,7 +102,7 @@
 			queryByUserId(){
 				let userInfo = uni.getStorageSync(USER_INFO),$this = this;
 				if(!userInfo){
-					uni.navigateTo({
+					uni.navigateBack({
 						url:"/pages/login/login"
 					})
 				}
