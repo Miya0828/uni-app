@@ -2,7 +2,7 @@
 	<view class="uni-step">
 		<view class="uni-step-item" v-for="(item,index) in list" :key="index">
 			<view v-if="step > index" class="uni-step-item-child active">
-				<uni-icons color="#0089FF" size="18" type="checkbox-filled"></uni-icons>
+				<uni-icons color="#0089FF" size="22" type="checkbox-filled"></uni-icons>
 				<text class="name">{{item}}</text>
 				<view class="ellipse" v-if="index != list.length-1">·········</view>
 			</view>
@@ -67,6 +67,7 @@
 	.uni-step .uni-step-item-child .number{
 		width: 28upx;
 		height: 28upx;
+		line-height: 28upx;
 		font-size: 24upx;
 		border-radius: 50%;
 		text-align: center;

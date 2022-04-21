@@ -25,7 +25,7 @@
 			}
 		},
 		onLoad(options){
-			this.personalIntroduction = options.personalIntroduction;
+			this.personalIntroduction = options.personalIntroduction||'';
 		},
 		methods: {
 			onInput(event){

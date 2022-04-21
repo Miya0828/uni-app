@@ -718,7 +718,6 @@
 				})
 
 				// currentPositionObj.updatedStatus('red')
-
 				_ownerInstance.callMethod('afterInit')
 				_ownerInstance.callMethod('location')
 

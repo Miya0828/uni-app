@@ -3,7 +3,7 @@
 		<view class="center-bg">
 			<view class="mine-page-top-part">
 				<view class="mine-page-top-part-left">
-					<image v-bind:src="userInfo.avatar"  mode="scaleToFill"></image>
+					<image v-bind:src="userInfo.avatar || '/static/mine/ic_avatar.png'"  mode="scaleToFill"></image>
 				</view>
 				<view class="mine-page-top-part-right">
 					<view class="user-info">
@@ -90,7 +90,7 @@
 			<view class="mine-require-dialog">
 				<view class="pic-require-dialog-box">
 					<image src="@/static/mine/ic_clickmine.png"></image>
-					<view class="pic-require-dialog-box-tips">请完成实名验证…</view>
+					<view class="pic-require-dialog-box-tips">请完成实名验证…</view>										
 					<view class="pic-require-dialog-btn">
 						<button style="background:#0089FF;color:#FFFFFF" @click="onGoCertification">实名认证</button>
 						<button style="background:rgba(38, 132, 255, 0.1);" @click="onClose">取消</button>
@@ -154,7 +154,7 @@ export default {
 					let {sysUser, check_status,realName_Indentity} = res.data.result;
 					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 					$this.userInfo.id = id;
-					$this.userInfo.avatar = avatar || '../../static/mine/ic_avatar.png';
+					$this.userInfo.avatar = avatar;
 					$this.userInfo.realname = realname;
 					$this.userInfo.birthday = birthday;
 					$this.userInfo.signature = signature;
