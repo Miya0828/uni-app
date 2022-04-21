@@ -48,6 +48,7 @@
 
 
 			store.state.userInfo = uni.getStorageSync(USER_INFO)
+			console.log(store.getters.userInfo.avatar);
 			this.userInfo = store.state.userInfo
 
 			this.team = options

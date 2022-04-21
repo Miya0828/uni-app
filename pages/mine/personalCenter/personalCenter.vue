@@ -58,8 +58,8 @@
 		</view>
 		<view class="pull-down-modal  bottom-modal" :class="isShowBottomModal?'show':''" >
 			<view class="pull-down-dialog">
-				<button class="margin-sm" @click="onUploadImg">更换图像</button>
-				<button  class="margin-lr-sm margin-bottom-sm" @tap="hideModal">取消</button>
+				<button style="background:#0089FF;color:#FFFFFF" @click="onUploadImg">更换图像</button>
+				<button style="background: rgba(0, 134, 255, 0.1);color:#0089FF" @tap="hideModal">取消</button>
 			</view>
 		</view>
 	</view>
@@ -68,6 +68,7 @@
 	import { userService } from "@/api/index.js";
 	import { USER_INFO } from "@/common/util/constants";
 	import { uploadFile } from "@/common/biz/common.js";
+	import store from '@/store/index.js';
 	export default {
 		data() {
 			return {
@@ -174,6 +175,7 @@
 			},
 			onSubmit(){
 				let profession = this.userInfo.post;
+				store.commit('setUserInfo',this.userInfo);
 				let params = Object.assign({},this.userInfo,{profession});
 				userService.editUser(params).then((res)=>{
 					if(res.data.success){
@@ -309,10 +311,15 @@
 		margin-right: auto;
 		width: 680upx;
 		max-width: 100%;
+		background: #FFFFFF;
 		border-radius: 10upx;
 		overflow: hidden;
 		uni-button{
 			border-radius: 24upx;
+			margin: 40upx;
+		}
+		uni-button:after{
+			border: 0;
 		}
 	}
 	

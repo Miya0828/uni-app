@@ -147,7 +147,8 @@
 		{
 			"path": "pages/community/community",
 			"style": {
-				"navigationBarTitleText": "社区与消息"
+				"navigationBarTitleText": "社区与消息",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -160,7 +161,8 @@
 			"path": "pages/mine/mine",
 			"style": {
 				"navigationBarBackgroundColor": "#f7f8fe",
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
 			}
 		},
 		{

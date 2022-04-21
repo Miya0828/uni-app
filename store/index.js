@@ -59,7 +59,7 @@ let store =  new Vuex.Store({
 		},
 		setUserInfo(state, userInfo) {
 			uni.setStorageSync(USER_INFO, userInfo);
-			state.userInfo = userInfo
+			state.userInfo = userInfo;
 		},
 		closeSocket() {
 			console.log('closeSocket')
@@ -108,7 +108,7 @@ let store =  new Vuex.Store({
 
 	},
 	getters: {
-
+		userInfo: state => {state.userInfo=uni.getStorageSync(USER_INFO); return state.userInfo},
 	}
 })
 

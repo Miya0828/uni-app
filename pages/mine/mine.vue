@@ -135,7 +135,11 @@ export default {
 	},
 	mounted(){
 		this.queryByUserId();
-		this.queryIdentityCard()
+		this.queryIdentityCard();
+	},
+	onPullDownRefresh(){
+		this.queryByUserId();
+		this.queryIdentityCard();
 	},
 	methods: {
 		queryByUserId(){
@@ -146,6 +150,8 @@ export default {
 				})
 			}
 			userService.queryByUserId({userId:userInfo.id}).then((res)=>{
+				//关闭下拉刷新
+				uni.stopPullDownRefresh();
 				if(res.data.success){
 					let {sysUser, check_status,realName_Indentity} = res.data.result;
 					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
@@ -166,7 +172,6 @@ export default {
 		onGoPage(url){
 			if(url){
 				if(url === '/pages/mine/certification/certification'){
-					this.$tip.alert(this.checkMsg+',实名认证失败，请修改实名认证信息!');
 					switch(this.checkStatus){
 						case 0:
 							uni.navigateTo({
@@ -174,7 +179,7 @@ export default {
 							})
 							break;
 						case 1:
-							this.$tip.alert(this.checkMsg+',实名认证失败，请修改实名认证信息!');
+							this.$tip.alert('审核不通过!');
 							uni.navigateTo({
 								url
 							})
@@ -211,6 +216,8 @@ export default {
 		queryIdentityCard(){
 			let _this = this;
 			userService.queryIdentityCard().then((res)=>{
+				//关闭下拉刷新
+				uni.stopPullDownRefresh();
 				let data = res.data;
 				if(data.success){
 					if(!data.result) return;

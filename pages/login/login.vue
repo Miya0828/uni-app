@@ -115,11 +115,9 @@
 		   return true  
 		},
 		onLoad() {
-						
 			store.commit('closeSocket')
 			store.commit('clearUser')
 			uni.$emit('closeHeartbeat')
-			
 		},
 		beforeDestroy() {
 			if (this.smsCountInterval) {
@@ -161,15 +159,10 @@
 					let {data}  = res;
 					if (data.success) {
 						let {token,userInfo} = data.result;
-						// uni.setStorageSync(ACCESS_TOKEN,token);
-						// uni.setStorageSync(USER_INFO,userInfo);
-						store.commit('setToken',token)
-						store.commit('setUserInfo',userInfo)
-						this.$tip.success('登录成功!')
+						store.commit('setToken',token);
+						store.commit('setUserInfo',userInfo);
 						uni.reLaunch({
 							url: '/pages/home/home',
-							animationType: 'slide-in-left',
-							animationDuration: 200
 						});
 					} else {
 						this.$tip.toast(res.data.message);
@@ -244,34 +237,19 @@
 					let {data}  = res;
 					if (data.success) {
 						let {token,userInfo} = data.result;
-						
-						// uni.setStorageSync(ACCESS_TOKEN,token);
-						// uni.setStorageSync(USER_INFO,userInfo);
-						store.commit('setToken',token)
-						store.commit('setUserInfo',userInfo)
-						this.$tip.success('登录成功!')
+						store.commit('setToken',token);
+						store.commit('setUserInfo',userInfo);
 						uni.reLaunch({
 							url: '/pages/home/home',
-							animationType: 'slide-in-left',
-							animationDuration: 200
 						});
 					} else {
 						this.$tip.toast(res.data.message);
 					}
 				})
-				// uni.setStorageSync(ACCESS_TOKEN, '111');
-				this.$tip.success('登录成功!')
-				uni.reLaunch({
-					url: '/pages/home/home',
-					animationType: 'slide-in-left',
-					animationDuration: 200
-				});
 			},
 			goToRegister(){
 				uni.navigateTo({
 					url: '/pages/register/register',
-					animationType: 'slide-in-left',
-					animationDuration: 200
 				});
 			},
 			showModal(e) {
