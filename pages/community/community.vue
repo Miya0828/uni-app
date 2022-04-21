@@ -59,7 +59,12 @@
 </template>
 <script>
 	export default {
-
+		onPullDownRefresh() {
+			console.log("触发下拉刷新");
+			setTimeout(() => {
+				uni.stopPullDownRefresh()
+			},2000)
+		}
 	};
 </script>
 

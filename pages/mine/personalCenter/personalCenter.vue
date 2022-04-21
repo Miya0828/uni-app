@@ -68,6 +68,7 @@
 	import { userService } from "@/api/index.js";
 	import { USER_INFO } from "@/common/util/constants";
 	import { uploadFile } from "@/common/biz/common.js";
+	import store from '@/store/index.js';
 	export default {
 		data() {
 			return {
@@ -174,6 +175,7 @@
 			},
 			onSubmit(){
 				let profession = this.userInfo.post;
+				store.commit('setUserInfo',this.userInfo);
 				let params = Object.assign({},this.userInfo,{profession});
 				userService.editUser(params).then((res)=>{
 					if(res.data.success){
