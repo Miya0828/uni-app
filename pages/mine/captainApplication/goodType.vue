@@ -33,7 +33,7 @@
 				if(beGoodAtType.indexOf(',') > -1){
 					this.selected = beGoodAtType.split(',');
 				}else{
-					this.selected = beGoodAtType;
+					this.selected = [beGoodAtType];
 				}
 				
 			}
@@ -61,7 +61,7 @@
 			},
 			onFinish(){
 				uni.$emit("beGoodAtType",this.selected.join(','));
-				uni.navigateTo({
+				uni.navigateBack({
 					url:'/pages/mine/captainApplication/baseInfo'
 				})
 			}
@@ -103,6 +103,8 @@
 					background-color: #ffffff;
 					justify-content: space-between;
 					align-items: center;
+					font-size: 28upx;
+					color: #333333;
 					.cuIcon-check{
 						color:#0089FF;
 						font-size: 40upx;

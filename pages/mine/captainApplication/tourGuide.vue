@@ -15,18 +15,24 @@
 			上传导游证
 		</view>
 		<view class="btn">
-			<button>确认</button>
+			<button @click="onFinish">确认</button>
 		</view>
 	</view>
 </template>
 
 <script>
+	import { uploadFile } from "@/common/biz/common.js";
 	export default {
 		data() {
 			return {
 				tourGuide:'',
 				tourGuideUrl:''
 			}
+		},
+		onLoad(options){
+			let data = JSON.parse(options.tourGuideInfo);
+			this.tourGuide = data.guideCertificatesNumber;
+			this.tourGuideUrl = data.guideCertificates;
 		},
 		methods: {
 			uploadPicture(){
@@ -37,17 +43,21 @@
 					sourceType: ['album'],
 					success: function(chooseImageRes){
 						let {tempFilePaths} = chooseImageRes;
-						$this.tourGuideUrl = tempFilePaths[0];
-						// uni.uploadFile({
-						// 	url: 'https://www.example.com/upload', //仅为示例，非真实的接口地址
-						// 	filePath: tempFilePaths[0],
-						// 	name: 'file',
-						// 	success: (uploadFileRes) => {
-						// 		callback && callback(tempFilePaths);
-						// 	}
-						// });
-						
+						uploadFile(tempFilePaths[0],(path)=>{
+							$this.tourGuideUrl = path;
+						});
 					}
+				});
+			},
+			onFinish(){
+				if(!this.tourGuideUrl||!this.tourGuide){
+					this.$tip.toast("请完成导游信息");
+					return;
+				}
+				uni.$emit('tourGuideInfo', {guideCertificatesNumber:this.tourGuide,guideCertificates:this.tourGuideUrl});
+				//上传数据
+				uni.navigateBack({
+					url:"/pages/mine/captainApplication/ability"
 				});
 			}
 		}
@@ -70,7 +80,7 @@
 			text-align: justify;
 			width: 180upx;
 			padding-right: 30upx;
-			font-size: 30upx;
+			font-size: 28upx;
 			position: relative;
 			height: 60upx;
 			line-height: 60upx;
@@ -108,7 +118,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 28upx;
+		font-size: 24upx;
 		.tour-guide--upload-btn-add{
 			padding-right: 16upx;
 		}
@@ -117,6 +127,7 @@
 		width: 100%;
 		position: absolute;  
 		bottom: 100upx;
+		font-size: 32upx;
 		button{
 			color:#0089FF;
 			margin-left: 50upx;

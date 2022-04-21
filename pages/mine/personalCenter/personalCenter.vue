@@ -1,58 +1,56 @@
 <template>
-	<view class="personalCenter">
-		<view class="cu-list menu card-menu" @click="onShowBottomModal">
-			<view class="cu-item arrow">
+	<view class="personal-center">
+		<view class="personal-center-group" @click="onShowBottomModal">
 				<text class="item title">头像</text>
-				<view class="cu-avatar round" @click.stop="onPreview(userInfo.avatar)" :style="getStyle"></view>
-			</view>
+				<view class="personal-center-group-avatar" @click.stop="onPreview(userInfo.avatar)" :style="getStyle"></view>
+				<uni-icons color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
 		</view>
-		<view class="cu-list menu card-menu" @click="onChange('realname')">
-			<view class="cu-item arrow">
+		<view class="personal-center-group" @click="onChange('realname')">
 				<text class="item title">昵称</text>
 				<view>{{userInfo.realname}}</view>
-			</view>
+				<uni-icons color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
 		</view>
-		<view class="cu-form-group flex form-item">
-			<view class="title">出生日期</view>
-			<view class="flex birthday align-center">
+		<view class="personal-center-group personal-center-group-flex">
+				<text class="item title">出生日期</text>
 				<picker mode="date" :value="userInfo.birthday" @change="bindDateChange">
-					<view class="flex justify-end align-center" >
+					<view class="personal-center-group-item" >
 						<view class="uni-input">{{userInfo.birthday==0?'':userInfo.birthday}}</view>
 						<image src="/static/register/ic_date.png"></image>
 					</view>
 				</picker>
-			</view>
 		</view>
-		<view class="cu-list menu card-menu" @click="onChange('signature')">
-			<view class="cu-item arrow">
+		<view class="personal-center-group" @click="onChange('signature')">
 				<text class="item title">个性签名</text>
 				<view>{{userInfo.signature}}</view>
-			</view>
+				<uni-icons color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
 		</view>
-		<view class="cu-list menu card-menu" @click="onChange('post')">
-			<view class="cu-item arrow">
+		<view class="personal-center-group" @click="onChange('post')">
 				<text class="item title">职业</text>
 				<view>{{userInfo.post}}</view>
-			</view>
+				<uni-icons color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
 		</view>
-		<view class="cu-list menu card-menu" @click="onChange('emergencyContact')">
-			<view class="cu-item arrow">
+		<view class="personal-center-group" @click="onChange('emergencyContact')">
 				<text class="item title">紧急联系人</text>
 				<view>{{userInfo.emergencyContact}}</view>
-			</view>
+				<uni-icons color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
 		</view>
-		<view class="cu-list menu card-menu" @click="onChange('emergencyContactPhone')">
-			<view class="cu-item arrow">
+		<view class="personal-center-group" @click="onChange('emergencyContactPhone')">
 				<text class="item title">紧急联系人电话</text>
 				<view>{{userInfo.emergencyContactPhone}}</view>
-			</view>
+				<uni-icons color="#3D3D3D" type="forward" size="18">
+				</uni-icons>
 		</view>
 		<view class="btn">
-			<button class="text-blue margin-lr-xl"  @click="onSubmit">保存</button>
+			<button @click="onSubmit">保存</button>
 		</view>
 		<view class="team-create-container-uni-popup">
 			<uni-popup ref="popup" type="center">
-				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="onlose"
+				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="onClose"
 					@confirm="confirm">
 					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value" />
 				</uni-popup-dialog>
@@ -166,7 +164,7 @@
 				this.value = this.userInfo[type];
 				this.$refs.popup.open();
 			},
-			onclose(){
+			onClose(){
 				this.$refs.popup.close();
 			},
 			confirm(){
@@ -175,8 +173,11 @@
 			},
 			onSubmit(){
 				userService.editUser({...this.userInfo}).then((res)=>{
-					if(res.data.success){}
-					console.log("修改",res);
+					if(res.data.success){
+						uni.reLaunch({
+							url:"/pages/mine/mine"
+						})
+					}
 				})
 			}
 		}
@@ -184,40 +185,76 @@
 </script>
 
 <style lang="less">
-.personalCenter{
+.personal-center{
 	background-color:rgba(248, 248, 248, 1);
 	height: 100vh;
 	position: relative;
-	uni-scroll-view {
-	    height: calc(100% - 45px);
-	}
-	.cu-list.card-menu{
-		margin-left: 0;
-		margin-right: 0;
-		border-radius: 0;
-	}
-	.tips,.uni-input-placeholder{
-		color: rgba(184, 184, 184, 1);
-	}
-	.cu-form-group{
-		min-height: 57px;
-		.birthday{
-			flex:1;
-			text-align: right;
-			uni-image{
-				width: 40upx;
-				height: 40upx;
-			}
+	.personal-center-group {
+		background-color: #ffffff;
+		padding: 1upx 30upx;
+		display: flex;
+		align-items: center;
+		min-height: 120upx;
+		margin-top: 20upx;
+		margin-bottom: 20upx;
+		justify-content: space-between;
+		&.personal-center-group-flex{
+			display: flex;
+			justify-content: space-between;
 		}
-		uni-picker {
-		    padding-right: 0;
+		.personal-center-group-item{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 		}
+		.title {
+			flex: 1;
+			text-align: justify;
+			padding-right: 30upx;
+			font-size: 28upx;
+			position: relative;
+			height: 60upx;
+			line-height: 60upx;
+			color: #333333;
+		}
+		.personal-center-group-avatar {
+			font-variant: small-caps;
+			margin: 0;
+			padding: 0;
+			display: inline-flex;
+			text-align: center;
+			justify-content: center;
+			align-items: center;
+			background-color: #ccc;
+			color: #ffffff;
+			white-space: nowrap;
+			position: relative;
+			width: 64upx;
+			height: 64upx;
+			background-size: cover;
+			background-position: center;
+			vertical-align: middle;
+			font-size: 1.5em;
+			border-radius:50%;
+		}
+		uni-image{
+		    width: 40upx;
+		    height: 40upx;
+		}
+	}
+	
+	.personal-center-group+.personal-center-group {
+		border-top: 1upx solid #eee;
 	}
 	.btn{
 		width: 100%;
 		position: absolute;  
 		bottom: 100upx;
+		font-size: 32upx;
 		button{
+			color:#0089FF;
+			margin-left: 50upx;
+			margin-right: 50upx;
 			border-radius: 38upx;
 			background: rgba(0, 134, 255, 0.1);
 		}

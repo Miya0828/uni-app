@@ -24,7 +24,7 @@
 					<input placeholder="输入密码确认" password name="confirmPassword"></input>
 				</view>
 				<view class="register-page-group">
-					<input placeholder="请输入姓名" name="realname"></input>
+					<input placeholder="请输入昵称" name="realname"></input>
 				</view>
 				<view class="register-page-group register-page-group-flex">
 					<text class="item" :style="{'color': birthday== 0?'#B8B8B8':'#333333'}">{{birthday==0?'请选择出生日期':birthday}}</text>

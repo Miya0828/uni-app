@@ -32,9 +32,11 @@
 		<!-- 列表list-->
 		<view class="list-content">
 			<scroll-view scroll-y="true" style="height: 100%;" class="scrool-more">
-				<view class="cu-list menu card-menu shadow-lg">
+				<view class="list-content-menu">
 					<view class="mine-page-group mine-page-group-item radius" @click="onGoPage('/pages/mine/certification/certification')">
 						<text class="item title">实名认证</text>
+						<image v-if="checkStatus == 2" src="@/static/mine/ic_verifiedIdCard.png"></image>
+						<image v-else src="@/static/mine/ic_notcertified.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
 					</view>
@@ -45,6 +47,8 @@
 					</view>
 					<view class="mine-page-group bottom-boder" @click="onGoPage('/pages/mine/captainApplication/captainGuide')">
 						<text class="item title">成为队长</text>
+						<image  v-if="checkStatus == 2"  src="@/static/mine/ic_verifiedTeam.png"></image>
+						<image v-else src="@/static/mine/ic_notcertifiedTeam.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
 					</view>
@@ -82,6 +86,20 @@
 				</view>
 			</scroll-view>
 		</view>
+		<view class="mine-require-modal" :class="show?'show':''">
+			<view class="mine-require-dialog">
+				<view class="pic-require-dialog-box">
+					<image src="@/static/mine/ic_clickmine.png"></image>
+					<view class="pic-require-dialog-box-tips">请完成实名验证…</view>
+					<view class="pic-require-dialog-btn">
+						<navigator url="/pages/mine/certification/certification">
+							<button style="background:#0089FF;color:#FFFFFF">实名认证</button>
+						</navigator>
+						<button style="background:rgba(38, 132, 255, 0.1);" @click="onClose">取消</button>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -102,16 +120,20 @@ export default {
 				emergencyContact:'',
 				emergencyContactPhone:''
 			},
+			checkStatus:'',
+			checkMsg:'',
 			usList: [
 			  {title: '点亮景点',number:'26' },
 			  {title: '走过温州',number:'86%' },
 			  {title: '打卡路线',number:'23' },
 			  {title: '徒步旅程',number:'123.4' },
 			],
+			show:false
 		};
 	},
 	mounted(){
 		this.queryByUserId();
+		this.queryIdentityCard()
 	},
 	methods: {
 		queryByUserId(){
@@ -123,8 +145,7 @@ export default {
 			}
 			userService.queryByUserId({userId:userInfo.id}).then((res)=>{
 				if(res.data.success){
-					console.log(res);
-					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact} = res.data.result;
+					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = res.data.result;
 					$this.userInfo.id = id;
 					$this.userInfo.avatar = avatar || '../../static/mine/ic_avatar.png';
 					$this.userInfo.realname = realname;
@@ -133,25 +154,69 @@ export default {
 					$this.userInfo.post = post;
 					$this.userInfo.emergencyContact = emergencyContact;
 					$this.userInfo.emergencyContactPhone = telephone;
+					
 				}
 				
 			});
 		},
 		onGoPage(url){
 			if(url){
-				uni.navigateTo({
-					url
-				})
+				if(url === '/pages/mine/certification/certification'){
+					this.$tip.alert(this.checkMsg+',实名认证失败，请修改实名认证信息!');
+					switch(this.checkStatus){
+						case 0:
+							uni.navigateTo({
+								url:"/pages/mine/certification/checking"
+							})
+							break;
+						case 1:
+							this.$tip.alert(this.checkMsg+',实名认证失败，请修改实名认证信息!');
+							uni.navigateTo({
+								url
+							})
+							break;
+						default:
+							uni.navigateTo({
+								url
+							});
+					}
+				}else if(url === '/pages/mine/captainApplication/captainGuide'){
+					switch(this.checkStatus){
+						case 2:
+							uni.navigateTo({
+								url
+							});
+							break;
+						default:
+							this.show = true;
+					}
+				}
 			}
+		},
+		queryIdentityCard(){
+			let _this = this;
+			userService.queryIdentityCard().then((res)=>{
+				let data = res.data;
+				if(data.success){
+					if(!data.result) return;
+					let { checkStatus, checkMsg } = data.result;
+					_this.checkStatus = checkStatus;
+					_this.checkMsg = checkMsg;
+				}
+			});
 		},
 		modifyUser(){
 			uni.navigateTo({
 				url:"/pages/mine/personalCenter/personalCenter"
 			})
 		},
+		onClose(){
+			this.show = false;
+		},
 		logout() {
 			store.commit('clearUser')
 			uni.$emit('closeHeartbeat')
+			
 			uni.reLaunch({
 				url: '/pages/login/login',				
 			});
@@ -173,7 +238,7 @@ page{
 	background-color:#f7f8fe;
 	color:#666666;
 	.center-bg {
-		height: 500rpx;
+		height: 360rpx;
 		padding-top: 108rpx;
 		overflow: hidden;
 		color: #fff;
@@ -208,12 +273,13 @@ page{
 					}
 				}
 				.description{
-					color:rgba(153, 153, 153, 1);
-					font-size: 30upx;
+					color:#999999;
+					font-size: 28upx;
 					padding: 8upx 0;
 				}
 				.person-introduce{
 					margin-top: 10upx;
+					font-size: 22upx;
 					.person-introduce-grade{
 						background: #2684FF;
 						padding:10upx 30upx;
@@ -224,7 +290,7 @@ page{
 						background: #FFFFFF;
 						padding:10upx 30upx;
 						border-radius: 30upx;
-						color: #000;
+						color: #999999;
 						margin-left: 30upx;
 						margin-right: 30upx;
 					}
@@ -232,7 +298,7 @@ page{
 						background: #FFFFFF;
 						padding:10upx 30upx;
 						border-radius: 30upx;
-						color: #000;
+						color: #999999;
 						margin-right: 30upx;
 					}
 				}
@@ -278,47 +344,146 @@ page{
 			right: 0;
 			top: 0;
 			bottom: 0;
-			.mine-page-group {
-				background-color: #ffffff;
-				padding: 1upx 30upx;
-				display: flex;
-				align-items: center;
-				min-height: 120upx;
-				justify-content: space-between;
-				&.mine-page-group-item{
-					margin-bottom: 20upx;
+			.list-content-menu {
+			    overflow: hidden;
+			    margin-right: 15px;
+			    margin-left: 15px;
+			    border-radius: 10px;
+				.mine-page-group {
+					background-color: #ffffff;
+					padding: 1upx 30upx;
+					display: flex;
+					align-items: center;
+					min-height: 120upx;
+					justify-content: space-between;
+					&.mine-page-group-item{
+						margin-bottom: 20upx;
+					}
+					&.bottom-boder{
+						border-bottom: 2upx solid #F6F6F6;
+					}
+					.title {
+						flex: 1;
+						text-align: justify;
+						padding-right: 30upx;
+						font-size: 28upx;
+						position: relative;
+						height: 60upx;
+						line-height: 60upx;
+						color: #666666;
+					}
+					.radius{
+						border-radius:16upx;
+					}
+					.top-radius{
+						border-radius:16upx 16upx 0 0;
+					}
+					.bottom-radius{
+						border-radius: 0 0 16upx 16upx;
+					}
+					uni-image{
+						width: 130upx;
+						height: 50upx;
+						padding-right: 20upx;
+					}
 				}
-				&.bottom-boder{
-					border-bottom: 2upx solid #F6F6F6;
+				.logout{
+					color:#666666;
+					border-radius: 50upx;
+					background-color: #FFFFFF;
+					margin: 40upx 0;
+					font-weight: bold;
+					font-size: 32upx;
 				}
-				.title {
-					flex: 1;
-					text-align: justify;
-					padding-right: 30upx;
-					font-size: 30upx;
-					position: relative;
-					height: 60upx;
-					line-height: 60upx;
+				uni-button:after{
+					border: 0;
 				}
-				.radius{
-					border-radius:16upx;
-				}
-				.top-radius{
-					border-radius:16upx 16upx 0 0;
-				}
-				.bottom-radius{
-					border-radius: 0 0 16upx 16upx;
+				.bottom{
+					height: 40upx;
 				}
 			}
-			.logout{
-				color:#666666;
-				border-radius: 50upx;
-				background-color: #FFFFFF;
-				margin: 40upx 0;
-				font-weight: bold;
+		}
+	}
+	.mine-require-modal {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1110;
+		opacity: 0;
+		outline: 0;
+		text-align: center;
+		-ms-transform: scale(1.185);
+		transform: scale(1.185);
+		backface-visibility: hidden;
+		perspective: 2000upx;
+		background: rgba(0, 0, 0, 0.6);
+		transition: all 0.3s ease-in-out 0s;
+		pointer-events: none;
+	}
+	
+	.mine-require-modal::before {
+		content: "\200B";
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+	}
+	
+	.mine-require-modal.show {
+		opacity: 1;
+		transition-duration: 0.3s;
+		-ms-transform: scale(1);
+		transform: scale(1);
+		overflow-x: hidden;
+		overflow-y: auto;
+		pointer-events: auto;
+	}
+	.mine-require-dialog {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: auto;
+		margin-right: auto;
+		width: 680upx;
+		max-width: 100%;
+		background-color: #f8f8f8;
+		border-radius: 10upx;
+		overflow: hidden;
+		.pic-require-dialog-content{
+			padding: 50upx;
+		}
+	}
+	.mine-require-dialog{
+		text-align: left;
+		border-radius: 20upx;
+		.pic-require-dialog-box{
+			margin-top: 84upx;
+			text-align: center;
+			uni-image{
+				border: 2upx dashed #666666;
+				width: 80%;
 			}
-			uni-button:after{
-				border: 0;
+			.pic-require-dialog-box-tips{
+				text-align: center;
+				font-size: 28upx;
+				font-weight: 400;
+				color: #333333;
+				margin:30upx 0 0 0;
+			}
+			.pic-require-dialog-btn{
+				padding: 100upx 0 100upx 0;
+				button{
+					color:#0089FF;
+					margin-left: 50upx;
+					margin-right: 50upx;
+					border-radius: 38upx;
+					background: rgba(0, 134, 255, 0.1);
+					margin-top:30upx;
+				}
+				uni-button:after{
+					border: 0;
+				}
 			}
 		}
 	}

@@ -113,16 +113,17 @@
 		text-align: justify;
 		width: 180upx;
 		padding-right: 30upx;
-		font-size: 30upx;
+		font-size: 28upx;
 		position: relative;
 		height: 60upx;
 		line-height: 60upx;
+		color:#333333;
 	}
 	
 	.certificate-group input {
 		flex: 1;
-		font-size: 30upx;
-		color: #555;
+		font-size: 28upx;
+		color: #000000;
 		padding-right: 20upx;
 	}
 	.uni-input-placeholder{
@@ -132,6 +133,7 @@
 		width: 100%;
 		position: absolute;  
 		bottom: 100upx;
+		font-size: 32upx;
 		button{
 			color:#0089FF;
 			margin-left: 50upx;

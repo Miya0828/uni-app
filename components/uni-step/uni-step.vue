@@ -65,8 +65,8 @@
 		line-height: 34upx;
 	}
 	.uni-step .uni-step-item-child .number{
-		width: 32upx;
-		height: 32upx;
+		width: 28upx;
+		height: 28upx;
 		font-size: 24upx;
 		border-radius: 50%;
 		text-align: center;
@@ -79,5 +79,6 @@
 	}
 	.uni-step .uni-step-item-child .name{
 		margin-left: 8upx;
+		font-size: 24upx;
 	}
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<view class="baseInfo">
 		<form @submit="onAuth">
-			<uniStep :list="stepList" :step="2"></uniStep>
+			<uniStep :list="stepList" :step="1"></uniStep>
 			<view>
 				<view class="baseInfo-group">
 					<view class="title">工作单位</view>
@@ -36,6 +36,8 @@
 
 <script>
 	import uniStep from "@/components/uni-step/uni-step.vue";
+	import graceChecker from '@/common/biz/graceChecker.js';
+	import { userService } from "@/api/index.js";
 	export default {
 		components: {
 			uniStep: uniStep
@@ -48,8 +50,11 @@
 					beGoodAtRegion:'',//擅长区域
 					beGoodAtType:'',  //擅长类型
 				},
-				stepList:['身份信息','基本资料','能力说明']
+				stepList:['基本资料','能力说明']
 			}
+		},
+		mounted(){
+			this.queryTeamLeader();
 		},
 		onLoad(){
 			uni.$once("personalIntroduction",data=>{
@@ -57,14 +62,39 @@
 			});
 			uni.$once("beGoodAtRegion",data=>{
 				this.userInfo.beGoodAtRegion = data;
-				console.log(this.userInfo.beGoodAtRegion);
 			});
 			uni.$once("beGoodAtType",data=>{
 				this.userInfo.beGoodAtType = data;
-				console.log(this.userInfo.beGoodAtType);
 			});
 		},
 		methods: {
+			queryTeamLeader(){
+				userService.queryTeamLeader().then((res)=>{
+					let data = res.data;
+					if(data.success){
+						let { 
+							workUnit,
+							personalIntroduction,
+							beGoodAtRegion,
+							beGoodAtType,
+							guideCertificatesNumber,
+							guideCertificates,
+							teamLeaderCertificates,
+							teamLeaderExp 
+						} = data.result || {};
+						this.userInfo = Object.assign({},{
+							workUnit,
+							personalIntroduction,
+							beGoodAtRegion,
+							beGoodAtType,
+							guideCertificatesNumber,
+							guideCertificates,
+							teamLeaderCertificates,
+							teamLeaderExp
+						})
+					}
+				})
+			},
 			onFinishPersonIntroduce(){
 				let { personalIntroduction } = this.userInfo;
 				uni.navigateTo({
@@ -85,21 +115,19 @@
 				});
 			},
 			onAuth(e){
-				//进行表单检查
-				var formData = e.detail.value;
 				//定义表单规则
 				var rule = [
 					{name:"workUnit", checkType : "notnull", checkRule:"",  errorMsg:"请输入工作单位"},
 					{name:"beGoodAtRegion", checkType : "notnull", checkRule:"",  errorMsg:"请选择擅长区域"},
 					{name:"beGoodAtType", checkType : "notnull", checkRule:"",  errorMsg:"请选择擅长技能"},
 				];
-				var checkRes = graceChecker.check(formData, rule);
+				var checkRes = graceChecker.check(this.userInfo, rule);
 				if(!checkRes){
 				    uni.showToast({ title: graceChecker.error, icon: "none" });
 					return;
 				}
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/ability"
+					url:"/pages/mine/captainApplication/ability?teamBaseInfo="+JSON.stringify(this.userInfo)
 				})
 			}
 		}
@@ -127,14 +155,15 @@
 			text-align: justify;
 			width: 180upx;
 			padding-right: 30upx;
-			font-size: 30upx;
+			font-size: 28upx;
 			position: relative;
 			height: 60upx;
 			line-height: 60upx;
+			color: #333333;
 		}
 		input {
 			flex: 1;
-			font-size: 30upx;
+			font-size: 28upx;
 			color: #555;
 			padding-right: 20upx;
 		}
@@ -152,6 +181,7 @@
 	.baseInfo-tips{
 		color:#999999;
 		padding: 30upx;
+		font-size: 24upx;
 		.baseInfo-tips-flag{
 			color:#F90000;
 			padding-right:10upx;

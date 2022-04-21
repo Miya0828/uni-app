@@ -15,7 +15,7 @@ export default {
 	},
 	methods:{
 		onBack(){
-			uni.switchTab({
+			uni.reLaunch({
 				url:'/pages/mine/mine'
 			});
 		}
@@ -33,11 +33,14 @@ export default {
 		}
 		.certification-application-checking{
 			margin-top: 40upx;
+			color:#333333;
+			font-size: 28upx;
 		}
 		.btn {
 			width: 100%;
 			margin-top: 50upx;
 			margin-bottom: 50upx;
+			font-size: 32upx;
 			button {
 				color:#0089FF;
 				margin-left: 50upx;

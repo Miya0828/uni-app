@@ -14,8 +14,6 @@
 			text: 'text'
 		},
 		onLaunch: function() {
-			console.log('App Launch');			
-			
 			if (!uni.getStorageSync(ACCESS_TOKEN)) {
 				uni.reLaunch({
 					url: '/pages/login/login'
@@ -68,9 +66,9 @@
 <style>
 	/*每个页面公共css */
 	/* #ifndef APP-PLUS-NVUE */
-	@import 'plugin/colorui/main.css';
+	/* @import 'plugin/colorui/main.css';
 	@import 'plugin/colorui/icon.css';
-	@import 'plugin/colorui/animation.css';
+	@import 'plugin/colorui/animation.css'; */
 
 	/* #endif*/
 	.uni-input-placeholder {

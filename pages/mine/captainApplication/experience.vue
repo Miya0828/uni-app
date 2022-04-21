@@ -1,10 +1,10 @@
 <template>
 	<view class="experience">
 		<view class="box">
-			<textarea placeholder="请填写领队经验说明（附上至少一条活动链接，限500字内）"/>
+			<textarea placeholder="请填写领队经验说明（附上至少一条活动链接，限500字内"  value="teamLeaderExp"  v-model="teamLeaderExp" @input="onInput"/>
 		</view>
 		<view class="btn">
-			<button class="text-blue margin-lr-xl" form-type="submit">下一步</button>
+			<button class="text-blue margin-lr-xl" @click="onFinish">下一步</button>
 		</view>
 	</view>
 </template>
@@ -13,11 +13,22 @@
 	export default {
 		data() {
 			return {
-				
+				teamLeaderExp:''
 			}
 		},
+		onLoad(options){
+			this.teamLeaderExp = JSON.parse(options.teamLeaderExp);
+		},
 		methods: {
-			
+			onInput(event){
+				this.teamLeaderExp = event.detail.value;
+			},
+			onFinish(){
+				uni.$emit("teamLeaderExp",this.teamLeaderExp);
+				uni.navigateBack({
+					url:'/pages/mine/captainApplication/ability'
+				})
+			}
 		}
 	}
 </script>

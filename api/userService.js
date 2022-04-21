@@ -45,6 +45,19 @@ const userService = {
 	queryArea(params,loading = true) {
 		return http.post('/tour-pal/sys/teamLeader/queryArea',params,{custom: {loading: loading}})	
 	},
+	/**
+	 * 获取领队信息
+	 */
+	queryTeamLeader(params,loading = true) {
+		return http.post('/tour-pal/sys/teamLeader/queryTeamLeader',params,{custom: {loading: loading}})	
+	},
+	/**
+	 * 领队认证
+	 */
+	uploadTeamLeader(params,loading = true) {
+		return http.post('/tour-pal/sys/teamLeader/uploadTeamLeader',params,{header: {"content-type":"application/x-www-form-urlencoded"},custom: {loading: loading}})	
+	},
+	
 	
 };
 

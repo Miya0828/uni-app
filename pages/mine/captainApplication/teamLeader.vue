@@ -11,17 +11,21 @@
 			上传领队证
 		</view>
 		<view class="btn">
-			<button>确认</button>
+			<button @click="onFinish">确认</button>
 		</view>
 	</view>
 </template>
 
 <script>
+	import { uploadFile } from "@/common/biz/common.js";
 	export default {
 		data() {
 			return {
 				tourLeaderUrl:""
 			}
+		},
+		onLoad(options){
+			this.tourLeaderUrl = JSON.parse(options.teamLeaderCertificates);
 		},
 		methods: {
 			uploadPicture(){
@@ -32,17 +36,21 @@
 					sourceType: ['album'],
 					success: function(chooseImageRes){
 						let {tempFilePaths} = chooseImageRes;
-						$this.tourLeaderUrl = tempFilePaths[0];
-						// uni.uploadFile({
-						// 	url: 'https://www.example.com/upload', //仅为示例，非真实的接口地址
-						// 	filePath: tempFilePaths[0],
-						// 	name: 'file',
-						// 	success: (uploadFileRes) => {
-						// 		callback && callback(tempFilePaths);
-						// 	}
-						// });
-						
+						uploadFile(tempFilePaths[0],(path)=>{
+							$this.tourLeaderUrl = path;
+						});
 					}
+				});
+			},
+			onFinish(){
+				if(!this.tourLeaderUrl){
+					this.$tip.toast("请完成领队证件上传");
+					return;
+				}
+				uni.$emit('tourLeaderInfo', this.tourLeaderUrl);
+				//上传数据
+				uni.navigateBack({
+					url:"/pages/mine/captainApplication/ability"
 				});
 			}
 		}

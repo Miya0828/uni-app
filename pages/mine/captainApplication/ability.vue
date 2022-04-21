@@ -1,7 +1,7 @@
 <template>
 	<view class="ability">
 		<view>
-			<uniStep :list="stepList" :step="3"></uniStep>
+			<uniStep :list="stepList" :step="2"></uniStep>
 			<view class="ability-tips">本页内容仅用于平台审核，不对其他用户公开</view>
 			<view class="ability-group" @click="onUploadTourGuide">
 					<text class="item title">导游证</text>
@@ -19,17 +19,17 @@
 					</uni-icons>
 			</view>
 			<view class="ability-tips">
-				<tex class="ability-tips-flag">*</tex>
+				<text class="ability-tips-flag">*</text>
 				 根据国家旅游局规定，需要导游资格证才可带队，若无导游资
 					格证，在认领活动时需邀请一位导游同行
 			</view>
 		</view>
 		<view class="btn">
-			<button @click="onNext">下一步</button>
+			<button @click="onNext">提交申请</button>
 			<view class="ability-agree">
-				<radio-group name="agree">
+				<radio-group @change="onAgree">
 					<label>
-						<radio value="1" class="form-radio"/>我已阅读并同意遵守
+						<radio value="true" class="form-radio"/>我已阅读并同意遵守
 					</label>
 					<text selectable="true" class="text-blue" @tap="showModal" data-target="Modal">领队认证协议</text>
 				</radio-group>
@@ -51,6 +51,8 @@
 
 <script>
 	import uniStep from "@/components/uni-step/uni-step.vue";
+	import { userService } from "@/api/index.js";
+	import graceChecker from '@/common/biz/graceChecker.js';
 	export default {
 		components:{
 			uniStep
@@ -58,27 +60,54 @@
 		data() {
 			return {
 				modalName:'',
-				stepList:['身份信息','基本资料','能力说明']
+				stepList:['基本资料','能力说明'],
+				userInfo:{
+					guideCertificates:'',
+					guideCertificatesNumber:'',
+					teamLeaderCertificates:'',
+					teamLeaderExp:''
+				},
+				isAgree:false
 			}
+		},
+		onLoad(options){
+			this.userInfo = Object.assign({},{...JSON.parse(options.teamBaseInfo)});
+			uni.$once("tourGuideInfo",data=>{
+				let {guideCertificatesNumber,guideCertificates} = data;
+				this.userInfo.guideCertificatesNumber = guideCertificatesNumber;
+				this.userInfo.guideCertificates = guideCertificates;
+			});
+			uni.$once("tourLeaderInfo",data=>{
+				this.userInfo.teamLeaderCertificates = data;
+			});
+			uni.$once("teamLeaderExp",data=>{
+				this.userInfo.teamLeaderExp = data;
+			});
 		},
 		mounted(){
 			
 		},
 		methods: {
 			onUploadTourGuide(){
+				let { guideCertificatesNumber,guideCertificates } = this.userInfo;
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/tourGuide",
+					url:"/pages/mine/captainApplication/tourGuide?tourGuideInfo="+JSON.stringify({guideCertificatesNumber,guideCertificates}),
 				})
 			},
 			onUploadTeamLeader(){
+				let {teamLeaderCertificates} = this.userInfo;
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/teamLeader",
+					url:"/pages/mine/captainApplication/teamLeader?teamLeaderCertificates="+JSON.stringify(teamLeaderCertificates),
 				})
 			},
 			onFinishExperience(){
+				let { teamLeaderExp } = this.userInfo;
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/experience",
+					url:"/pages/mine/captainApplication/experience?teamLeaderExp="+JSON.stringify(teamLeaderExp),
 				})
+			},
+			onAgree(e){
+				this.isAgree = e.detail.value;
 			},
 			showModal(e) {
 				this.modalName = e.currentTarget.dataset.target;
@@ -87,9 +116,37 @@
 				this.modalName = null;
 			},
 			onNext(e){
-				uni.navigateTo({
-					url:"/pages/mine/captainApplication/ability"
+				let param = Object.assign({},this.userInfo,{
+					guideCertificates:this.userInfo.guideCertificates,
+					guideCertificatesNumber:this.userInfo.guideCertificatesNumber,
+				});
+				//定义表单规则
+				var rule = [
+					{name:"workUnit", checkType : "notnull", checkRule:"",  errorMsg:"请输入工作单位"},
+					{name:"beGoodAtRegion", checkType : "notnull", checkRule:"",  errorMsg:"请选择擅长区域"},
+					{name:"beGoodAtType", checkType : "notnull", checkRule:"",  errorMsg:"请选择擅长技能"},
+					{name:"guideCertificatesNumber", checkType : "notnull", checkRule:"",  errorMsg:"请输入导游证号"},
+					{name:"guideCertificates", checkType : "notnull", checkRule:"",  errorMsg:"请上传导游证"},
+					{name:"teamLeaderCertificates", checkType : "notnull", checkRule:"",  errorMsg:"请上传领队证"},
+					{name:"teamLeaderExp", checkType : "notnull", checkRule:"",  errorMsg:"请填写领队经验"},
+				];
+				var checkRes = graceChecker.check(param, rule);
+				if(!checkRes){
+				    uni.showToast({ title: graceChecker.error, icon: "none" });
+					return;
+				}
+				if(!this.isAgree){
+					 uni.showToast({ title: "请阅读并勾选协议", icon: "none" });
+					return;
+				}
+				userService.uploadTeamLeader(param).then((res)=>{
+					if(res.data.success){
+						uni.navigateTo({
+							url:"/pages/mine/captainApplication/checking"
+						})
+					}
 				})
+				
 			}
 		}
 	}
@@ -115,7 +172,7 @@
 				text-align: justify;
 				width: 180upx;
 				padding-right: 30upx;
-				font-size: 30upx;
+				font-size: 28upx;
 				position: relative;
 				height: 60upx;
 				line-height: 60upx;
@@ -134,6 +191,7 @@
 		.ability-tips{
 			color:#999999;
 			padding: 30upx;
+			font-size: 24upx;
 			.ability-tips-flag{
 				color:#F90000;
 				padding-right:10upx;
