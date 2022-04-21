@@ -4,7 +4,8 @@ import MinCache from '@/common/util/MinCache.js';
 import {
 	ACCESS_TOKEN,
 	USER_NAME,
-	USER_INFO
+	USER_INFO,
+	CHECK_STATUS
 } from "@/common/util/constants";
 import {
 	teamService
@@ -32,7 +33,8 @@ let store =  new Vuex.Store({
 			latitude: 39.89945,
 			orientation: '0',
 			address: ['上海市']
-		}
+		},
+		check_status:0
 	},
 	mutations: {
 		clearUser(state) {
@@ -56,6 +58,10 @@ let store =  new Vuex.Store({
 					}
 				}
 			})
+		},
+		setCheckStatus(state,check_status){
+			uni.setStorageSync(CHECK_STATUS, check_status);
+			state.check_status = check_status;
 		},
 		setUserInfo(state, userInfo) {
 			uni.setStorageSync(USER_INFO, userInfo);
@@ -109,6 +115,7 @@ let store =  new Vuex.Store({
 	},
 	getters: {
 		userInfo: state => {state.userInfo=uni.getStorageSync(USER_INFO); return state.userInfo},
+		check_status: state =>{state.check_status=uni.getStorageSync("CHECK_STATUS"); return state.check_status}
 	}
 })
 

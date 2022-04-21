@@ -159,7 +159,7 @@
 			},
 			onShowConfirmPassword(){
 				this.isShowConfirmPassword = !this.isShowConfirmPassword;
-				this.passwordType = this.isShowConfirmPassword?'text':'password';
+				this.confirmPasswordType = this.isShowConfirmPassword?'text':'password';
 			},
 			onChangSex(e){
 				for(let item of SEX_LIST){

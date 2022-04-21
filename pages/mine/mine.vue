@@ -203,9 +203,9 @@ export default {
 			}
 		},
 		onGoCertification(){
-			if(this.checkStatus == 0){
+			if(this.checkStatus != 2){
 				uni.navigateTo({
-					url:'/pages/mine/certification/checking'
+					url:'/pages/mine/certification/baseInfo'
 				})
 				return;
 			}
