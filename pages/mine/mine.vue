@@ -35,7 +35,7 @@
 				<view class="list-content-menu">
 					<view class="mine-page-group mine-page-group-item radius" @click="onGoPage('/pages/mine/certification/certification')">
 						<text class="item title">实名认证</text>
-						<image v-if="checkStatus == 2" src="@/static/mine/ic_verifiedIdCard.png"></image>
+						<image v-if="check_status == 2" src="@/static/mine/ic_verifiedIdCard.png"></image>
 						<image v-else src="@/static/mine/ic_notcertified.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
@@ -47,7 +47,7 @@
 					</view>
 					<view class="mine-page-group bottom-boder" @click="onGoPage('/pages/mine/captainApplication/captainGuide')">
 						<text class="item title">成为队长</text>
-						<image  v-if="checkStatus == 2"  src="@/static/mine/ic_verifiedTeam.png"></image>
+						<image  v-if="realName_Indentity == 2"  src="@/static/mine/ic_verifiedTeam.png"></image>
 						<image v-else src="@/static/mine/ic_notcertifiedTeam.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
@@ -92,8 +92,8 @@
 					<image src="@/static/mine/ic_clickmine.png"></image>
 					<view class="pic-require-dialog-box-tips">请完成实名验证…</view>
 					<view class="pic-require-dialog-btn">
-						<navigator url="/pages/mine/certification/certification">
-							<button style="background:#0089FF;color:#FFFFFF">实名认证</button>
+						<navigator url="">
+							<button style="background:#0089FF;color:#FFFFFF" @click="onGoCertification">实名认证</button>
 						</navigator>
 						<button style="background:rgba(38, 132, 255, 0.1);" @click="onClose">取消</button>
 					</view>
@@ -128,7 +128,9 @@ export default {
 			  {title: '打卡路线',number:'23' },
 			  {title: '徒步旅程',number:'123.4' },
 			],
-			show:false
+			show:false,
+			check_status:'',
+			realName_Indentity:""
 		};
 	},
 	mounted(){
@@ -145,7 +147,8 @@ export default {
 			}
 			userService.queryByUserId({userId:userInfo.id}).then((res)=>{
 				if(res.data.success){
-					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = res.data.result;
+					let {sysUser, check_status,realName_Indentity} = res.data.result;
+					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 					$this.userInfo.id = id;
 					$this.userInfo.avatar = avatar || '../../static/mine/ic_avatar.png';
 					$this.userInfo.realname = realname;
@@ -154,7 +157,8 @@ export default {
 					$this.userInfo.post = post;
 					$this.userInfo.emergencyContact = emergencyContact;
 					$this.userInfo.emergencyContactPhone = telephone;
-					
+					$this.check_status = check_status;
+					$this.realName_Indentity = realName_Indentity;
 				}
 				
 			});
@@ -192,6 +196,17 @@ export default {
 					}
 				}
 			}
+		},
+		onGoCertification(){
+			if(this.checkStatus == 0){
+				uni.navigateTo({
+					url:'/pages/mine/certification/checking'
+				})
+				return;
+			}
+			uni.navigateTo({
+				url:'/pages/mine/certification/certification'
+			});
 		},
 		queryIdentityCard(){
 			let _this = this;
