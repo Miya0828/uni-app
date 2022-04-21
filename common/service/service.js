@@ -66,7 +66,14 @@ http.interceptor.response(
 		if (response.config.custom.loading) {
 			uni.hideLoading();
 		}
-		let data = response.data;			
+		let data = response.data;		
+		if(!data.success){
+			uni.showToast({
+				icon: 'none',
+				title: data.message,
+				duration: 2000
+			});
+		}
 		// console.log('success',response)
 		return response;
 	}, (response) => {

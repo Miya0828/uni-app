@@ -24,6 +24,7 @@ let store =  new Vuex.Store({
 		userInfo: {
 			id: null
 		},
+		check_status:0,
 		teamRoute: null,
 		team: {},
 		map: {

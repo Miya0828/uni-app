@@ -3,7 +3,9 @@ import {
 	sizeDeal
 } from "../util.js"
 import emoji from './emoji.js'
-
+import {
+	uploadFile
+} from "@/common/biz/common.js";
 export default {
 	data() {
 		return {
@@ -99,19 +101,22 @@ export default {
 						})
 					} else {
 						let path = e.tempFilePath
-						let name = path.substr(path.lastIndexOf('/') + 1);
+						// let name = path.substr(path.lastIndexOf('/') + 1);
+						
 						console.log(parseInt(this.voiceLength))
-
 						console.log(path)
-
-						this.addMsg({
-							type: 'sound',
-							content: path,
-							length: parseInt(this.voiceLength)
-						})
-						this.$nextTick(() => {
-							this.voiceLength = 0
-						})
+						
+						uploadFile(path, (_path) => {							 
+							 this.addMsg({
+							 	type: 'sound',
+							 	content: _path,
+							 	length: parseInt(this.voiceLength)
+							 })
+							 this.$nextTick(() => {
+							 	this.voiceLength = 0
+							 })
+						});
+						
 					}
 				}
 			})
@@ -205,26 +210,29 @@ export default {
 					// this.getChooseImage(['camera'])
 					this.getChooseVideo()
 					break;
-				// case 2:
-				// 	console.log('视频')
-				// 	this.getChooseVideo()
-				// 	break;
+					// case 2:
+					// 	console.log('视频')
+					// 	this.getChooseVideo()
+					// 	break;
 				default:
 			}
 		},
-		getChooseVideo(type) {
-			let _this = this;
+		getChooseVideo(type) {			
 
 			uni.chooseVideo({
 				sourceType: ['camera', 'album'],
 				compressed: false,
 				success: (res) => {
-					console.log(res)
-					_this.addMsg({
-						type: 'video',
-						content: res.tempFilePath,
-						length: res.duration
-					})
+					// console.log(res)
+					
+					uploadFile(res.tempFilePath, (_path) => {						
+						 this.addMsg({
+						 	type: 'video',
+						 	content: _path,
+						 	length: res.duration
+						 })
+					});
+										
 				},
 				fail(err) {
 					console.log(err)
@@ -233,32 +241,20 @@ export default {
 		},
 		//调起相册或拍摄
 		getChooseImage() {
-			let _this = this;
 
-			uni.chooseImage({				
-				count: 9,
+			uni.chooseImage({
+				count: 1,
 				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 				success: (res) => {
-					res.tempFilePaths.forEach(src => {
-						let srcImg = src
-						let name = srcImg.substr(srcImg.lastIndexOf('/') + 1); //截取文件名
-						// 压缩图片
-						plus.zip.compressImage({
-								src: srcImg,
-								dst: '_doc/jggTempData/' + name, //把图片重新保存到该目录下  
-								overwrite: true, //如果同名则覆盖文件  
-								quality: 25 //压缩比率，越大质量越好,不要用100出来比原文件还大一倍  
-							},
-							function(data) {
-								_this.addMsg({
-									type: 'image',
-									content: data.target
-								})
-							},
-							function(error) {
-								console.log("Compress error!");
-							});
-					})
+					
+					uploadFile(res.tempFilePaths[0], (_path) => {
+						 this.addMsg({
+						 	type: 'image',
+						 	content: _path
+						 })
+					});
+					
+										
 				},
 				fail(err) {
 					console.log(err)

@@ -30,7 +30,13 @@
 				</view>
 			</view>
 		</view>
-
+		<view>
+			<!-- 提示成为领队 -->
+			<uni-popup ref="alertDialog" type="dialog">
+				<uni-popup-dialog type="info" cancelText="取消" confirmText="队长申请" title="通知" content="只用队长才能创建队聊"
+					@confirm="dialogConfirm" @close="dialogClose"></uni-popup-dialog>
+			</uni-popup>
+		</view>
 	</view>
 </template>
 
@@ -51,12 +57,24 @@
 				// console.log(res)
 				if (res.data.success) {
 					console.log(res.data.result)
-					this.teamList = res.data.result					
+					this.teamList = res.data.result
 				}
 			})
 		},
 		methods: {
+			dialogConfirm() {
+				uni.reLaunch({
+					url:'/pages/mine/mine'
+				})				
+			},
+			dialogClose() {
+				this.$refs.alertDialog.close()
+			},
 			createTeam() {
+				if (store.state.check_status != 2) {
+					this.$refs.alertDialog.open()
+					return
+				}
 				uni.navigateTo({
 					url: '/pages/teamChat/teamCreate'
 				})
