@@ -37,7 +37,8 @@
 			</view>
 		</view>
 		<view class="home-container-chat">
-			<view class="chat-area-line-box" v-for="(item,index) in msgList" @click="toChatRoom(item.teamId,item.teamTitle)">
+			<view class="chat-area-line-box" v-for="(item,index) in msgList"
+				@click="toChatRoom(item.teamId,item.teamTitle)">
 				<view class="chat-area-line">
 					<text class="chat-area-line-name">
 						{{item.name}}
@@ -66,7 +67,7 @@
 				<view class="home-weather-box-container-1">
 					<view class="home-weather-box-container-1-left">
 						<image src="/static/home/ic_position@3x.png" mode="aspectFit"></image>
-						<text>{{''+addressList[0]+addressList[1]}}</text>
+						<text>{{''+addressObj['province']+addressObj['city']}}</text>
 					</view>
 					<view class="home-weather-box-container-1-right">
 						<image :src="'/static/home/weather_icons/'+weather.icon+'-fill.svg'" mode="aspectFit"></image>
@@ -209,8 +210,8 @@
 				siteIndex: 0,
 				userId: null,
 				difficultyLevel: ['', '低', '中', '高'],
-				route: {},
-				addressList: [],
+				route: {},				
+				addressObj:{},
 				weather: {
 					"obsTime": "2022-04-16T15:06+08:00",
 					"temp": "17",
@@ -320,7 +321,7 @@
 			}
 		},
 		methods: {
-			toChatRoom(teamId,teamTitle){
+			toChatRoom(teamId, teamTitle) {
 				uni.navigateTo({
 					url: `/pages/teamChat/chat?title=${teamTitle}&id=${teamId}`
 				})
@@ -413,8 +414,7 @@
 						var latitude = res.latitude
 						longitude = "120.93589338209433"
 						latitude = "28.347535197969975"
-
-						this.getAddress(longitude, latitude)
+						
 
 						this.getWeather(longitude + ',' + latitude)
 
@@ -462,27 +462,8 @@
 					})
 				})
 			},
-			getAddress(longitude, latitude) {
-				// 创建地图坐标对象
-				var point = new plus.maps.Point(longitude, latitude);
-				//静态方法，反向地理编码
-				plus.maps.Map.reverseGeocode(point, {}, (event) => {
-						var address = event.address; // 转换后的地理位置
-						var point = event.coord; // 转换后的坐标信息
-						var coordType = event.coordType; // 转换后的坐标系类型
-						var reg = /.+?(省|市|自治区|自治州|县|区)/g;
-						var addressList = address.match(reg).toString().split(",");
-						//注意 因为存在直辖市， 当所在地区为普通省市时，addressList.length == 3，city = addressList[1];当所在地区为直辖市时addressList.length == 2，city = addressList[0];
-						let city = addressList.length == 3 ? addressList[1] :
-							addressList[0];
-						// console.log("addressList", addressList);
-						this.addressList = addressList
-						store.state.map.address = addressList
-					},
-					function(e) {
-						console.log("失败回调", e);
-					}
-				);
+			setAddress(addressObj) {
+				this.addressObj = addressObj				
 			},
 			uploadPosition(longitude, latitude, altitude) {
 				uni.getLocation({
@@ -593,8 +574,8 @@
 
 				this.msgList.push({
 					name: content.name,
-					teamTitle:content.teamTitle,
-					teamId:data.groupId,
+					teamTitle: content.teamTitle,
+					teamId: data.groupId,
 					des: {
 						mediaType: typeMap[content.type], // 文本
 						content: content.content
@@ -679,7 +660,14 @@
 					// map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
 					console.log("设置用户位置")
 					currentPositionObj.setLnglat(new T.LngLat(newValue.longitude, newValue.latitude))
-
+				
+					console.log("逆地理编码")
+					var geocode = new T.Geocoder();
+					geocode.getLocation(new T.LngLat(newValue.longitude, newValue.latitude),function(res){
+						// console.log(res.addressComponent)
+						_ownerInstance.callMethod('setAddress',res.addressComponent)
+					});
+					
 				} else if (newValue.drawAlreadyFlag != oldValue.drawAlreadyFlag) {
 					if (newValue.trackjson.length) {
 						// console.log('绘制已走过路线')
@@ -1179,7 +1167,7 @@
 
 		.home-container-chat {
 			position: absolute;
-			z-index: 1000;
+			z-index: 999;
 			left: 0;
 			bottom: 0;
 
@@ -1503,7 +1491,7 @@
 
 		.home-container-left {
 			position: absolute;
-			z-index: 1001;
+			z-index: 1000;
 			top: 40%;
 			left: 32rpx;
 			width: 80rpx;
@@ -1531,14 +1519,15 @@
 			z-index: 1000;
 			top: 10%;
 			right: 32rpx;
-			width: 80rpx;
+			width: 80rpx;			
 		}
 
 		.home-container-right-top {
 			padding: 16rpx;
 			width: 80rpx;
+			box-sizing: border-box;
 			border-radius: 20rpx;
-			background: #FFFFFF;
+			background: #FFFFFF;			
 			margin-bottom: 12rpx;
 
 			.home-container-right-top-fankui,
