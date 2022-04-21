@@ -29,21 +29,54 @@
 					id: null,
 					teamName: ''
 				},
+				userInfo: {},
 				listData: [],
 				finish: false,
 				isCompleted: true,
-				pageIdx: 1
+				pageIdx: 1,
+				pageNo: 1,
+				pageSize: 20,
 			}
 		},
 		onLoad(options) {
+			console.log('onload chat')
+			this.pageNo = 1
+			this.pageSize = 20
+
+
+			store.state.userInfo = uni.getStorageSync(USER_INFO)
+			this.userInfo = store.state.userInfo
+
 			this.team = options
+			console.log(options)
 			uni.setNavigationBarTitle({
 				title: options.title
 			});
 
-			uni.$on('socketMessage', function(data) {
+			this.getHistory()
+			// {
+			// 	"time": 1650464273.07,
+			// 	"id": "9761183672057beca9251ef801677a17",
+			// 	"userId": "1516018629767106562",
+			// 	"avatar": "https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg",
+			// 	"type": "text",
+			// 	"right": true,
+			// 	"content": "6",
+			// 	"duration": ""
+			// }
+
+			uni.$on('socketMessage', (data) => {
 				console.log('chat=========')
-				console.log(data)
+				console.log(data)				
+
+				let userId = data.userId
+				let content = JSON.parse(data.msgTxt)
+				console.log(content)
+
+				if (this.userInfo.id != userId) {
+					content.right = false
+					this.listData.unshift(content)
+				}
 			})
 		},
 		onNavigationBarButtonTap() {
@@ -52,22 +85,54 @@
 				url: '/pages/teamChat/teamList?id=' + this.team.id
 			})
 		},
-		created() {
-			// this.getData()
-		},
 		methods: {
+			getHistory() {
+				teamService.teamChatlist({
+					teamId: this.team.id,
+					pageNo: this.pageNo,
+					pageSize: this.pageSize,
+				}).then(res => {
+					console.log(res)
+					if (res.data.success) {
+						let records = res.data.result.records
+						if (records.length == 0) {
+							uni.showToast({
+								icon: 'none',
+								title: '没有更多消息了',
+								duration: 2000
+							});
+							return
+						}
+						console.log(records)
+						this.isCompleted = true
+						records.forEach(item => {
+
+							let userId = item.userId
+							let content = JSON.parse(item.dataContent)
+
+							if (this.userInfo.id != userId) {
+								content.right = false
+							} else {
+								content.right = true
+							}
+
+							this.listData.push(content)
+						})
+					}
+				})
+			},
 			getPay() {
 
 			},
 			// 滚动到底部
 			loadmore() {
+				this.isCompleted = false
 				setTimeout(() => {
-					this.getData()
-					console.log("loadmore", this.pageIdx)
-					if (this.pageIdx >= 2) {
-						this.finish = true
-					}
-					this.pageIdx++
+					this.pageNo = this.pageNo + 1
+					this.getHistory()
+
+					console.log("loadmore")
+
 				}, 100)
 			},
 			// 消息重发
@@ -107,28 +172,26 @@
 
 
 				// nvue 的store 重新赋值 和vue 不互通
-				store.state.userInfo = uni.getStorageSync(USER_INFO)
-				let userInfo = store.state.userInfo
-
-
 				teamService.sendText({
 					"dataType": "_app",
 					"groupId": this.team.id,
 					"msgText": JSON.stringify({
 						time: new Date().valueOf() / 1000,
 						id,
-						userId: userInfo.id,
-						avatar: userInfo.avatar,
+						teamTitle:this.team.title,
+						name: this.userInfo.username,
+						avatar: this.userInfo.avatar,
 						type,
 						right: true,
 						content,
 						duration: length,
 					}),
 					"msgType": typeMap[type],
-					"userId": userInfo.id
+					"userId": this.userInfo.id
 				}).then(res => {
+					console.log(res)
 					if (res.data.success) {
-						
+
 						let item = this.listData.find((item) => item.id === id)
 						if (item) {
 							item.loading = false
@@ -138,8 +201,10 @@
 				this.listData.unshift({
 					time: new Date().valueOf() / 1000,
 					id,
-					userId: userInfo.id,
-					avatar: userInfo.avatar,
+					userId: this.userInfo.id,
+					teamTitle:this.team.title,
+					name: this.userInfo.username,
+					avatar: this.userInfo.avatar,
 					type,
 					right: true,
 					content,

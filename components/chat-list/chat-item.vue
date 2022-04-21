@@ -29,8 +29,7 @@
 		},
 		props: {
 			name: {
-				type: String,
-				default: 'yangCJ'
+				type: String,				
 			},
 			avatar: String,
 			right: Boolean,

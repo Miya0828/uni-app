@@ -11,7 +11,7 @@
 					<ChatItem :isError="item.isError" @retry="retryClick(item)" :showIsRead="showIsRead"
 						:isRead="item.isRead" :time="item.time" :showTime="item.showTime"
 						@leftAvatarClick="leftAvatarClick(item)" @rightAvatarClick="rightAvatarClick(item)"
-						:loading="item.loading" :avatar="item.avatar" :right="item.right">
+						:loading="item.loading" :avatar="item.avatar" :name="item.name" :right="item.right">
 						<ChatText v-if="item.type === 'text'" :data="item"></ChatText>
 						<ChatSound v-else-if="item.type === 'sound'" :data="item"></ChatSound>
 						<ChatRedPacket @redPacketClick="redPacketClick(item)" v-else-if="item.type === 'red-packet'"
@@ -158,13 +158,13 @@
 		mounted() {
 			uni.getSystemInfo({
 				success: (res) => {
-					console.log(res.model);
-					console.log(res.pixelRatio);
-					console.log(res.windowWidth);
-					console.log(res.windowHeight);
-					console.log(res.language);
-					console.log(res.version);
-					console.log(res.platform);
+					// console.log(res.model);
+					// console.log(res.pixelRatio);
+					// console.log(res.windowWidth);
+					// console.log(res.windowHeight);
+					// console.log(res.language);
+					// console.log(res.version);
+					// console.log(res.platform);
 					this.height = res.windowHeight
 				}
 			});

@@ -62,6 +62,7 @@ let store =  new Vuex.Store({
 			state.userInfo = userInfo
 		},
 		closeSocket() {
+			console.log('closeSocket')
 			uni.closeSocket();
 		},
 		startSocket(state) {			
