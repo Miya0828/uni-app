@@ -91,7 +91,7 @@
 		computed:{
 			getStyle(){
 				return {                
-					  'background-image':`url(${this.userInfo.avatar})`,                 
+					  'background-image':`url(${this.userInfo.avatar||'/static/mine/ic_avatar.png'})`,                 
 				}   
 			}
 		},
@@ -111,7 +111,7 @@
 						let {sysUser, check_status,realName_Indentity} = res.data.result;
 						let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 						$this.userInfo.id = id;
-						$this.userInfo.avatar = avatar || '../../static/mine/ic_avatar.png';
+						$this.userInfo.avatar = avatar;
 						$this.userInfo.realname = realname;
 						$this.userInfo.birthday = birthday;
 						$this.userInfo.signature = signature;
