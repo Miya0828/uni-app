@@ -90,9 +90,9 @@
 			<view class="mine-require-dialog">
 				<view class="pic-require-dialog-box">
 					<image src="@/static/mine/ic_clickmine.png"></image>
-					<view class="pic-require-dialog-box-tips">请完成实名验证…</view>
-					<view class="pic-require-dialog-btn">						
-						<button style="background:#0089FF;color:#FFFFFF" @click="onGoCertification">实名认证</button>						
+					<view class="pic-require-dialog-box-tips">请完成实名验证…</view>										
+					<view class="pic-require-dialog-btn">
+						<button style="background:#0089FF;color:#FFFFFF" @click="onGoCertification">实名认证</button>
 						<button style="background:rgba(38, 132, 255, 0.1);" @click="onClose">取消</button>
 					</view>
 				</view>
@@ -169,25 +169,7 @@ export default {
 		},
 		onGoPage(url){
 			if(url){
-				if(url === '/pages/mine/certification/certification'){
-					switch(this.checkStatus){
-						case 0:
-							uni.navigateTo({
-								url:"/pages/mine/certification/checking"
-							})
-							break;
-						case 1:
-							this.$tip.alert('审核不通过!');
-							uni.navigateTo({
-								url
-							})
-							break;
-						default:
-							uni.navigateTo({
-								url
-							});
-					}
-				}else if(url === '/pages/mine/captainApplication/captainGuide'){
+				if(url === '/pages/mine/captainApplication/captainGuide'){
 					switch(this.checkStatus){
 						case 2:
 							uni.navigateTo({
@@ -197,6 +179,10 @@ export default {
 						default:
 							this.show = true;
 					}
+				}else{
+					uni.navigateTo({
+						url
+					});
 				}
 			}
 		},
@@ -296,6 +282,7 @@ page{
 					color:#999999;
 					font-size: 28upx;
 					padding: 8upx 0;
+					min-height: 40upx;
 				}
 				.person-introduce{
 					margin-top: 10upx;
