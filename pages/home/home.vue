@@ -37,28 +37,29 @@
 			</view>
 		</view>
 		<view class="home-container-chat">
-			<scroll-view :scroll-with-animation="true" class="home-container-chat-scroll" @scroll="scroll"
-				show-scrollbar="false" scroll-y :scroll-top="scrollTop">
-				<view class="chat-area-line-box" v-for="(item,index) in msgList">
-					<view class="chat-area-line">
-						<text class="chat-area-line-name">
-							{{item.name}}
-						</text>
-						<template v-if="item.des.mediaType==1">
-							{{item.des.content}}
-						</template>
-						<template v-if="item.des.mediaType==2">
-							发来一张图片
-						</template>
-						<template v-if="item.des.mediaType==3">
-							发来一条语音
-						</template>
-						<template v-if="item.des.mediaType==4">
-							发来一条视频
-						</template>
-					</view>
+			<view class="chat-area-line-box" v-for="(item,index) in msgList" @click="toChatRoom(item.teamId,item.teamTitle)">
+				<view class="chat-area-line">
+					<text class="chat-area-line-name">
+						{{item.name}}
+					</text>
+					<template v-if="item.des.mediaType==1">
+						{{item.des.content}}
+					</template>
+					<template v-if="item.des.mediaType==2">
+						发来一张图片
+					</template>
+					<template v-if="item.des.mediaType==3">
+						发来一条语音
+					</template>
+					<template v-if="item.des.mediaType==4">
+						发来一条视频
+					</template>
 				</view>
-			</scroll-view>
+			</view>
+			<!-- <scroll-view :scroll-with-animation="true" class="home-container-chat-scroll" @scroll="scroll"
+				show-scrollbar="false" scroll-y :scroll-top="scrollTop">
+				
+			</scroll-view> -->
 		</view>
 		<uni-popup ref="popupWeather" type="bottom" class="home-weather-box">
 			<view class="home-weather-box-container">
@@ -201,7 +202,7 @@
 		homeService,
 		teamService
 	} from "@/api/index.js";
-	
+
 	export default {
 		data() {
 			return {
@@ -228,7 +229,29 @@
 					"dew": "-3"
 				},
 				scrollTop: 0,
-				msgList: [{
+				msgList: [],
+				msgList2: [{
+						name: '用户123:',
+						des: {
+							mediaType: 1, // 文本
+							content: '王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！'
+						}
+					},
+					{
+						name: '用户123:',
+						des: {
+							mediaType: 1, // 文本
+							content: '王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！'
+						}
+					},
+					{
+						name: '用户123:',
+						des: {
+							mediaType: 1, // 文本
+							content: '王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！'
+						}
+					},
+					{
 						name: '用户123:',
 						des: {
 							mediaType: 1, // 文本
@@ -297,6 +320,11 @@
 			}
 		},
 		methods: {
+			toChatRoom(teamId,teamTitle){
+				uni.navigateTo({
+					url: `/pages/teamChat/chat?title=${teamTitle}&id=${teamId}`
+				})
+			},
 			routePunch() {
 				if (!store.state.map.route) {
 					uni.showToast({
@@ -426,7 +454,7 @@
 				uni.navigateTo({
 					url: '/pages/home/layer'
 				});
-			},			
+			},
 			initMap() {
 				setTimeout(() => {
 					this.mergeOptions({
@@ -488,10 +516,10 @@
 					store.state.map.orientation = res.direction
 					this.option.currentUser.orientation = res.direction
 				});
-				
-				uni.$on('triggerHeartbeat',()=>{					
+
+				uni.$on('triggerHeartbeat', () => {
 					this.uploadPosition()
-				})				
+				})
 			},
 			afterInit() {
 				this.drawRoute()
@@ -539,39 +567,46 @@
 		},
 		onUnload() {
 			console.log('onUnload')
-			
+
 		},
 		onLoad() {
-			
+
 			this.initMap()
 			this.listeningGPS()
 
 			this.userInfo = store.state.userInfo
 			console.log(this.userInfo)
 
-			uni.$on('socketMessage', function(data) {
+			uni.$on('socketMessage', (data) => {
 				console.log('home:socketMessage')
 				console.log(data)
+
+				let userId = data.userId
+				let content = JSON.parse(data.msgTxt)
+				console.log(content)
+				var typeMap = {
+					text: 1,
+					image: 2,
+					sound: 3,
+					video: 4
+				}
+
+				this.msgList.push({
+					name: content.name,
+					teamTitle:content.teamTitle,
+					teamId:data.groupId,
+					des: {
+						mediaType: typeMap[content.type], // 文本
+						content: content.content
+					}
+				})
+				if (this.msgList.length > 6) {
+					this.msgList.shift()
+				}
+
 			})
 
 
-			setTimeout(() => {
-
-				this.scrollTop = 10000
-				setTimeout(() => {
-					this.msgList.push({
-						name: '用户123:',
-						des: {
-							mediaType: 1, // 文本
-							content: '王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！王杰，你现在在哪？你到 了四街峰等我一下呀！'
-						}
-					})
-					setTimeout(() => {
-						this.scrollTop = 10001
-					}, 1000)
-				}, 1000)
-				// this.warnTip()
-			}, 1000)
 		},
 		onShow() {
 			this.mergeOptions({
@@ -1167,6 +1202,15 @@
 				color: #FFFFFF;
 				line-height: 40rpx;
 
+				display: -webkit-box;
+				/* 将对象作为弹性伸缩盒子模型显示 */
+				-webkit-box-orient: vertical;
+				/* 设置或检索伸缩盒对象的子元素的排列方式 */
+				-webkit-line-clamp: 2;
+				/* 2行，只有 webkit内核支持 */
+				word-break: break-all;
+				/* 纯英文换行 */
+				overflow: hidden;
 
 				text {
 					color: #0086FF;
@@ -1459,7 +1503,7 @@
 
 		.home-container-left {
 			position: absolute;
-			z-index: 1000;
+			z-index: 1001;
 			top: 40%;
 			left: 32rpx;
 			width: 80rpx;

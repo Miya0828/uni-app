@@ -230,6 +230,8 @@ export default {
 		},
 		logout() {
 			store.commit('clearUser')
+			uni.$emit('closeHeartbeat')
+			
 			uni.reLaunch({
 				url: '/pages/login/login',				
 			});

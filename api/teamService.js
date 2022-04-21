@@ -124,6 +124,19 @@ const teamService = {
 			}
 		})
 	},
+	/**
+	 * 队聊历史-分页列表查询
+	 */
+	teamChatlist(params, loading = false) {
+		return http.get(`/tour-pal/sys/teamChat/list?teamId=${params.teamId}&pageNo=${params.pageNo}&pageSize=${params.pageSize}`, params, {
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			},
+			custom: {
+				loading: loading
+			}
+		})
+	},
 };
 
 export default teamService;

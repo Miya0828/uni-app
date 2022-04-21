@@ -26,7 +26,7 @@
 			teamService.queryTeam().then(res => {
 				if (res.data.success) {
 					let timer = null
-					uni.$emit('closeHeartbeat', () => {
+					uni.$on('closeHeartbeat', () => {
 						console.log('closeHeartbeat')
 						clearInterval(timer)
 					})

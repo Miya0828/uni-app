@@ -114,6 +114,13 @@
 		   });  
 		   return true  
 		},
+		onLoad() {
+						
+			store.commit('closeSocket')
+			store.commit('clearUser')
+			uni.$emit('closeHeartbeat')
+			
+		},
 		beforeDestroy() {
 			if (this.smsCountInterval) {
 				clearInterval(this.smsCountInterval);
