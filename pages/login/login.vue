@@ -52,10 +52,13 @@
 			<view class="operLine">
 				<text class="line">第三方账号登录</text>
 			</view>
+			
 			<view class="login-way">
-				<text class="cuIcon-weixin text-green"></text>
-				<image src='/static/login/ic_qq.png'></image>
-				<text class="cuIcon-weibo text-yellow"></text>
+				<view class="login-way-box">
+					<uni-icons type="weixin" size="30"></uni-icons>
+					<uni-icons type="qq" size="30"></uni-icons>
+					<uni-icons type="weibo" size="30"></uni-icons>
+				</view>
 			</view>
 			<view class="login-view-agree">
 				登录即同意，<text selectable="true" class="login-view-agree-title" @tap="showModal" data-target="Modal">《用户服务协议》</text>
@@ -393,8 +396,8 @@
 			}
 		}
 		.login-view-thirdth-way {
-			padding: 40upx 120upx;
 			width: 100%;
+			padding: 40upx 0;
 			position: absolute;  
 			bottom: 20upx;
 			text-align: center;
@@ -428,13 +431,16 @@
 			}
 
 			.login-way {
-				display: flex;
-				justify-content: space-between;
-				margin: 30upx 0;
-				font-size: 60upx;
-				>uni-image{
-					width: 31px;
-					height: 34px;
+				padding: 0 120upx;
+				.login-way-box{
+					display: flex;
+					justify-content: space-between;
+					margin: 30upx 0;
+					font-size: 60upx;
+					>uni-image{
+						width: 31px;
+						height: 34px;
+					}
 				}
 			}
 			.login-view-agree{

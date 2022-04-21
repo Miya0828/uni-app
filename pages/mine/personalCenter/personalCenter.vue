@@ -107,9 +107,10 @@
 				}
 				userService.queryByUserId({userId:userInfo.id}).then((res)=>{
 					if(res.data.success){
-						let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact} = res.data.result;
+						let {sysUser, check_status,realName_Indentity} = res.data.result;
+						let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 						$this.userInfo.id = id;
-						$this.userInfo.avatar = avatar || 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg';
+						$this.userInfo.avatar = avatar || '../../static/mine/ic_avatar.png';
 						$this.userInfo.realname = realname;
 						$this.userInfo.birthday = birthday;
 						$this.userInfo.signature = signature;
@@ -172,7 +173,9 @@
 				this.$refs.popup.close();
 			},
 			onSubmit(){
-				userService.editUser({...this.userInfo}).then((res)=>{
+				let profession = this.userInfo.post;
+				let params = Object.assign({},this.userInfo,{profession});
+				userService.editUser(params).then((res)=>{
 					if(res.data.success){
 						uni.reLaunch({
 							url:"/pages/mine/mine"
