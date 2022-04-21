@@ -19,6 +19,9 @@
 	} from "@/api/index.js";
 	import store from '@/store/index.js';
 	import md5 from '@/js_sdk/js-md5'
+	import configService from '@/common/service/config.service.js';	
+	let staticUrl = configService.staticDomainURL;
+	
 	export default {
 		components: {
 			ChatList,
@@ -186,6 +189,7 @@
 						content,
 						duration: length,
 					}),
+					"videoUrl":type=="video"?content.replace(staticUrl+'/',''):'',
 					"msgType": typeMap[type],
 					"userId": this.userInfo.id
 				}).then(res => {

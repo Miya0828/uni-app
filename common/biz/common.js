@@ -24,7 +24,7 @@ function uploadFile(filePath,callback){
 			uni.hideLoading();
 			let data = res&&JSON.parse(res.data);
 			if(data.success){
-				callback && callback(staticUrl+'/'+data.message);
+				callback && callback(staticUrl+'/'+data.message,res);
 			}
 		},
 		fail:(err) => {
