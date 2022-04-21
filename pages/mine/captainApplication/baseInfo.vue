@@ -96,7 +96,7 @@
 				})
 			},
 			onFinishPersonIntroduce(){
-				let { personalIntroduction } = this.userInfo;
+				let { personalIntroduction = '' } = this.userInfo;
 				uni.navigateTo({
 					url:"/pages/mine/captainApplication/personInfo?personalIntroduction="+personalIntroduction
 				});

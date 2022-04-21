@@ -124,6 +124,8 @@
 	.layer-container {
 		padding: 32rpx;
 		height: 100vh;
+		width: 100vw;
+		box-sizing: border-box;
 		position: relative;
 
 		.layer-container-title {
@@ -216,8 +218,7 @@
 
 		.layer-container-selection {
 			display: flex;
-			margin-bottom: 160rpx;
-
+			margin-bottom: 160rpx;			
 			.layer-container-item {
 				position: relative;
 
@@ -266,7 +267,8 @@
 			padding: 32rpx;
 			bottom: 100rpx;
 			left: 0;
-			width: 100%;
+			box-sizing: border-box;
+			width: 100vw;
 
 			.layer-container-bottom-input {
 				height: 100rpx;

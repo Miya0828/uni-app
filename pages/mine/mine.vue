@@ -187,12 +187,6 @@ export default {
 			}
 		},
 		onGoCertification(){
-			if(this.checkStatus != 2){
-				uni.navigateTo({
-					url:'/pages/mine/captainApplication/baseInfo'
-				})
-				return;
-			}
 			uni.navigateTo({
 				url:'/pages/mine/certification/certification'
 			});
