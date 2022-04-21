@@ -58,8 +58,8 @@
 		</view>
 		<view class="pull-down-modal  bottom-modal" :class="isShowBottomModal?'show':''" >
 			<view class="pull-down-dialog">
-				<button class="margin-sm" @click="onUploadImg">更换图像</button>
-				<button  class="margin-lr-sm margin-bottom-sm" @tap="hideModal">取消</button>
+				<button style="background:#0089FF;color:#FFFFFF" @click="onUploadImg">更换图像</button>
+				<button style="background: rgba(0, 134, 255, 0.1);color:#0089FF" @tap="hideModal">取消</button>
 			</view>
 		</view>
 	</view>
@@ -309,10 +309,15 @@
 		margin-right: auto;
 		width: 680upx;
 		max-width: 100%;
+		background: #FFFFFF;
 		border-radius: 10upx;
 		overflow: hidden;
 		uni-button{
 			border-radius: 24upx;
+			margin: 40upx;
+		}
+		uni-button:after{
+			border: 0;
 		}
 	}
 	
