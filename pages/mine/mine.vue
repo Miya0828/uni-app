@@ -168,23 +168,23 @@ export default {
 			});
 		},
 		onGoPage(url){
-			// if(url){
-			// 	if(url === '/pages/mine/captainApplication/captainGuide'){
-			// 		switch(this.checkStatus){
-			// 			case 2:
-			// 				uni.navigateTo({
-			// 					url
-			// 				});
-			// 				break;
-			// 			default:
-			// 				this.show = true;
-			// 		}
-			// 	}else{
+			if(url){
+				if(url === '/pages/mine/captainApplication/captainGuide'){
+					switch(this.checkStatus){
+						case 2:
+							uni.navigateTo({
+								url
+							});
+							break;
+						default:
+							this.show = true;
+					}
+				}else{
 					uni.navigateTo({
 						url
 					});
-			// 	}
-			// }
+				}
+			}
 		},
 		onGoCertification(){
 			uni.navigateTo({
