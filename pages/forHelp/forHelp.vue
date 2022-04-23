@@ -1,7 +1,7 @@
 <template>
 	<view class="for-help-page">
 		<view class="for-help-page-sos">
-			<view class="for-help-page-item">
+			<view class="for-help-page-item" @click="onGetSOS">
 				<view class="for-help-page-logo for-help-page-logo-sos"></view>
 				<view class="for-help-page-title">一键求助</view>
 			</view> 
@@ -43,6 +43,7 @@
 <script>
 import { forHelpService } from "@/api/index.js";
 import uniStep from "@/components/uni-step/uni-step.vue";
+import store from '@/store/index.js';
 export default {
 	data() {
 		return {
@@ -69,8 +70,8 @@ export default {
 	methods: {
 		onfootFirstaid(){
 			forHelpService.onfootFirstaid({dataType:this.dataType}).then((res)=>{
-				if(res.data){
-					this.faidList = res.data;
+				if(res.data.success){
+					this.faidList = res.data.result;
 				}
 			})
 		},
@@ -89,6 +90,14 @@ export default {
 		tabSelect(e) {
 			this.dataType = e.currentTarget.dataset.id;
 			this.onfootFirstaid();
+		},
+		onGetSOS(){
+			let { id } = store.getters.userInfo || {};
+			forHelpService.uploadWarning({warningType:1,userId:id}).then((res)=>{
+				if(res.data.success){
+					res.data.message&&this.$tip.toast(res.data.message);
+				}
+			})
 		}
 	}
 };
@@ -163,6 +172,7 @@ page{
 				background: #F8F8F8;
 				border-radius: 30upx;
 				margin: 0 26upx;
+				font-size: 24upx;				
 				.for-help-page-nav-item-box-area{
 					flex: 1;
 					height: 70upx;
@@ -204,9 +214,8 @@ page{
 					justify-content: space-between;
 					.title {
 						text-align: justify;
-						width: 180upx;
 						padding-right: 30upx;
-						font-size: 30upx;
+						font-size: 28upx;
 						position: relative;
 						height: 60upx;
 						line-height: 60upx;
