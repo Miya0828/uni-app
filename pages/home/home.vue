@@ -94,24 +94,25 @@
 		<uni-popup ref="popupWarn" type="bottom" class="home-warn-box">
 			<view class="home-warn-box-container">
 				<view class="home-warn-box-container-title">
-					偏离路线
+					{{store.state.deviationId?'偏离路线':''}}
 				</view>
-				<view class="home-warn-box-container-des">
-					<view class="home-warn-box-container-des-left">
+				<view class="home-warn-box-container-des"
+					:style="{'justify-content': store.state.deviationId?'':'center'}">
+					<view class="home-warn-box-container-des-left" @click="uploadWarning(1)">
 						<image src="/static/home/ic_oneclickhelp@3x.png" mode="aspectFit"></image>
 						<view class="home-warn-box-container-des-left-t">
 							一键求助
 						</view>
 					</view>
-					<view class="home-warn-box-container-des-right">
+					<view v-if="store.state.deviationId" class="home-warn-box-container-des-right" @click="routeBack">
 						<image src="/static/home/ic_backtoroute@3x.png" mode="aspectFit"></image>
 						<view class="home-warn-box-container-des-right-t">
 							回到路线
 						</view>
 					</view>
 				</view>
-				<view class="home-warn-box-container-tip">
-					<text>4:58</text>
+				<view v-if="store.state.deviationId" class="home-warn-box-container-tip">
+					<text>{{formatSecond(warningCountdown)}}</text>
 					后将自动求助，请选择回到路线并及时返回
 				</view>
 			</view>
@@ -207,6 +208,8 @@
 	export default {
 		data() {
 			return {
+				store: store,
+				warningCountdown: 300,
 				siteIndex: 0,
 				userId: null,
 				routeId: null,
@@ -322,6 +325,53 @@
 			}
 		},
 		methods: {
+			formatSecond(second) {
+				var m = parseInt(second / 60)
+				var s = String(second % 60).padStart(2, '0')
+				return m + ':' + s
+			},
+			routeBack() {
+				homeService.dealWithWarning({
+
+					"dealWithOpinion": "回到路线",
+					"dealWithPerson": this.userInfo.id,
+					"dealWithStatus": 1,
+					"id": store.state.deviationId
+
+				}).then(res => {
+					console.log(res)
+					if (res.data.success) {						
+						uni.showToast({
+							icon: 'none',
+							title: res.data.message,
+						})
+						setTimeout(() => {
+							this.closeUploadWarning()
+							store.state.deviationId = null
+						}, 1500)
+					}
+				})
+			},
+			closeUploadWarning() {
+				this.$refs.popupWarn.close()
+			},
+			uploadWarning(warningType) {
+				homeService.uploadWarning({
+					"userId": this.userInfo.id,
+					"warningType": warningType // 预警类型 0-路线偏离预警；1-SOS用户求救预警；2-危险区域预警
+				}).then(res => {
+					console.log(res)
+					if (res.data.success) {
+						uni.showToast({
+							icon: 'none',
+							title: res.data.message,
+						})
+						setTimeout(() => {
+							this.closeUploadWarning()
+						}, 1500)
+					}
+				})
+			},
 			toChatRoom(teamId, teamTitle) {
 				uni.navigateTo({
 					url: `/pages/teamChat/chat?title=${teamTitle}&id=${teamId}`
@@ -364,6 +414,25 @@
 			},
 			openWarn() {
 				this.$refs.popupWarn.open()
+
+				if (!store.state.deviationId) {
+					return
+				}
+				if (this.warningCountdown != 300) {
+					return
+				}
+				this.warningCountdown--
+				this.timer2 = setInterval(() => {
+					if (this.warningCountdown == 0) {
+						clearInterval(this.timer2)
+						this.warningCountdown = 300
+						this.closeUploadWarning()
+						// 偏离路线自动求助
+						this.routeBack()
+						return
+					}
+					this.warningCountdown--
+				}, 1000)
 			},
 			openRoute() {
 				if (!store.state.map.route) {
@@ -579,6 +648,16 @@
 				console.log('home:socketMessage')
 				console.log(data)
 
+				if (data.topic != 0) {
+					if (data.topic == 1) {
+						// 偏离预警
+						this.openWarn()
+						store.state.deviationId = data.id
+						// {userId:23313132131321,topic:1,time:2022-04-26 14:55:45,msgTxt:"xxx用户您好，您已偏离路线800米以上，请您回到安全路线上。"，warningType:0,id:15247824154}
+					}
+					return
+				}
+
 				let userId = data.userId
 				let content = JSON.parse(data.msgTxt)
 				console.log(content)
@@ -609,7 +688,7 @@
 			console.log('onShow')
 			this.mergeOptions({
 				currentLayer: store.state.map.layer
-			})			
+			})
 			if (store.state.map.route &&
 				store.state.map.route.onfootRouteInfo &&
 				store.state.map.route.onfootRouteInfo.id != this.routeId) {

@@ -9,7 +9,7 @@
 		<view class="for-help-page-grid for-help-page-item">
 			<uni-grid :column="3" :showBorder="false">
 				<uni-grid-item v-for="(item, index) in usList" :index="index" :key="index">
-					<view class="for-help-page-grid-item-box">
+					<view class="for-help-page-grid-item-box" @click="handleFn(item)">
 						<image class="for-help-page-logo"  :src="item.icon"></image>
 						<view class="for-help-page-title">{{item.title}}</view>
 					</view>
@@ -68,6 +68,14 @@ export default {
 		this.onfootFirstaid();
 	},
 	methods: {
+		handleFn(item){
+			if(item.url){
+				uni.switchTab({
+					url:'/pages/teamChat/teamChat'
+				})
+			}
+			console.log(item)
+		},
 		onfootFirstaid(){
 			forHelpService.onfootFirstaid({dataType:this.dataType}).then((res)=>{
 				if(res.data.success){

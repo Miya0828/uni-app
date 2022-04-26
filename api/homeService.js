@@ -25,6 +25,26 @@ const homeService = {
 		})
 	},
 	/**
+	 * 预警信息上报接口
+	 */
+	uploadWarning(params, loading = false) {
+		return http.post('/tour-pal/sys/warningInfo/uploadWarning', params, {
+			custom: {
+				loading: loading
+			}
+		})
+	},
+	/**
+	 * 预警信息处理接口
+	 */
+	dealWithWarning(params, loading = false) {
+		return http.post('/tour-pal/sys/warningInfo/dealWithWarning', params, {
+			custom: {
+				loading: loading
+			}
+		})
+	},
+	/**
 	 * 路线列表 - 支持分页
 	 */
 	routeList(params, loading = true) {
