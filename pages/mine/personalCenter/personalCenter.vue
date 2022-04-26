@@ -48,7 +48,7 @@
 		<view class="btn">
 			<button @click="onSubmit">保存</button>
 		</view>
-		<view class="team-create-container-uni-popup">
+		<view class="container-uni-popup">
 			<uni-popup ref="popup" type="center">
 				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="onClose"
 					@confirm="confirm">
@@ -96,9 +96,29 @@
 			}
 		},
 		mounted(){
+			this.getUserInfo();
+		},
+		onPullDownRefresh(){
 			this.queryByUserId();
 		},
 		methods: {
+			getUserInfo(){
+				let userInfo = uni.getStorageSync(USER_INFO);
+				if(!userInfo){
+					uni.navigateTo({
+						url:"/pages/login/login"
+					})
+				}
+				let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact} = userInfo;
+				this.userInfo.id = id;
+				this.userInfo.avatar = avatar;
+				this.userInfo.realname = realname;
+				this.userInfo.birthday = birthday;
+				this.userInfo.signature = signature;
+				this.userInfo.post = post;
+				this.userInfo.emergencyContact = emergencyContact;
+				this.userInfo.emergencyContactPhone = telephone;
+			},
 			queryByUserId(){
 				let userInfo = uni.getStorageSync(USER_INFO),$this = this;
 				if(!userInfo){
@@ -107,10 +127,13 @@
 					})
 				}
 				userService.queryByUserId({userId:userInfo.id}).then((res)=>{
+					//关闭下拉刷新
+					uni.stopPullDownRefresh();
 					if(res.data.success){
 						let {sysUser, check_status,realName_Indentity} = res.data.result;
 						store.commit('setUserInfo',sysUser);
 						store.commit('setCheckStatus',check_status);
+						store.commit('setRealNameIndentity',realName_Indentity);
 						let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 						$this.userInfo.id = id;
 						$this.userInfo.avatar = avatar;
@@ -180,7 +203,9 @@
 				let params = Object.assign({},this.userInfo,{profession});
 				userService.editUser(params).then((res)=>{
 					if(res.data.success){
-						store.commit('setUserInfo',this.userInfo);
+						let userInfo = uni.getStorageSync(USER_INFO);
+						let data = Object.assign({},userInfo,this.userInfo);
+						store.commit('setUserInfo',data);
 						uni.reLaunch({
 							url:"/pages/mine/mine"
 						})

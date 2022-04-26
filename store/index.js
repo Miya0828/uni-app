@@ -5,7 +5,8 @@ import {
 	ACCESS_TOKEN,
 	USER_NAME,
 	USER_INFO,
-	CHECK_STATUS
+	CHECK_STATUS,
+	REALNAME_INDETITY
 } from "@/common/util/constants";
 import {
 	teamService
@@ -37,7 +38,8 @@ let store =  new Vuex.Store({
 			orientation: '0',
 			address: ['上海市']
 		},
-		check_status:0
+		check_status:0,
+		realName_Indentity:0,
 	},
 	mutations: {
 		clearUser(state) {
@@ -65,6 +67,10 @@ let store =  new Vuex.Store({
 		setCheckStatus(state,check_status){
 			uni.setStorageSync(CHECK_STATUS, check_status);
 			state.check_status = check_status;
+		},
+		setRealNameIndentity(state,realName_Indentity){
+			uni.setStorageSync(REALNAME_INDETITY, realName_Indentity);
+			state.realName_Indentity = realName_Indentity;
 		},
 		setUserInfo(state, userInfo) {
 			uni.setStorageSync(USER_INFO, userInfo);
@@ -118,7 +124,8 @@ let store =  new Vuex.Store({
 	},
 	getters: {
 		userInfo: state => {state.userInfo=uni.getStorageSync(USER_INFO); return state.userInfo},
-		check_status: state =>{state.check_status=uni.getStorageSync("CHECK_STATUS"); return state.check_status}
+		check_status: state =>{state.check_status=uni.getStorageSync("CHECK_STATUS"); return state.check_status},
+		realName_Indentity:state =>{state.realName_Indentity=uni.getStorageSync("REALNAME_INDETITY"); return state.realName_Indentity},
 	}
 })
 

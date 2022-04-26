@@ -2,6 +2,7 @@ export const ACCESS_TOKEN = 'Access-Token'
 export const USER_NAME = 'login_username';
 export const USER_INFO = 'login_user_info';
 export const CHECK_STATUS = 'check_status';
+export const REALNAME_INDETITY = 'realName_Indentity';
 
 
 const STORAGE_OPTIONS = {

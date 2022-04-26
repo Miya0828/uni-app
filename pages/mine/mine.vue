@@ -103,7 +103,7 @@
 
 <script>
 import { userService } from "@/api/index.js";
-import { ACCESS_TOKEN,USER_INFO } from '@/common/util/constants';
+import { ACCESS_TOKEN,USER_INFO,CHECK_STATUS,REALNAME_INDETITY } from '@/common/util/constants';
 import store from '@/store/index.js';
 export default {
 	data() {
@@ -132,12 +132,33 @@ export default {
 		};
 	},
 	mounted(){
-		this.queryByUserId();
+		this.getUserInfo();
 	},
 	onPullDownRefresh(){
 		this.queryByUserId();
 	},
 	methods: {
+		getUserInfo(){
+			let userInfo = uni.getStorageSync(USER_INFO),
+				check_status = uni.getStorageSync(CHECK_STATUS),
+				realName_Indentity = uni.getStorageSync(REALNAME_INDETITY);
+			if(!userInfo){
+				uni.navigateTo({
+					url:"/pages/login/login"
+				})
+			}
+			let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact} = userInfo;
+			this.userInfo.id = id;
+			this.userInfo.avatar = avatar;
+			this.userInfo.realname = realname;
+			this.userInfo.birthday = birthday;
+			this.userInfo.signature = signature;
+			this.userInfo.post = post;
+			this.userInfo.emergencyContact = emergencyContact;
+			this.userInfo.emergencyContactPhone = telephone;
+			this.check_status = check_status;
+			this.realName_Indentity = realName_Indentity;
+		},
 		queryByUserId(){
 			let userInfo = uni.getStorageSync(USER_INFO),$this = this;
 			if(!userInfo){
@@ -152,6 +173,7 @@ export default {
 					let {sysUser, check_status,realName_Indentity} = res.data.result;
 					store.commit('setUserInfo',sysUser);
 					store.commit('setCheckStatus',check_status);
+					store.commit('setRealNameIndentity',realName_Indentity);
 					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 					$this.userInfo.id = id;
 					$this.userInfo.avatar = avatar;
