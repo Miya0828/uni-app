@@ -29,7 +29,7 @@ let store =  new Vuex.Store({
 		teamRoute: null,
 		team: {},
 		// 偏离预警id
-		deviationId:'1',
+		deviationId:'',
 		map: {
 			layer: 0,
 			route: null,
