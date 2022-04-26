@@ -158,10 +158,11 @@
 				loginService.login(params).then(res => {
 					let {data}  = res;
 					if (data.success) {
-						let {token,userInfo,check_status} = data.result;
+						let {token,userInfo,check_status,realName_Indentity} = data.result;
 						store.commit('setToken',token);
 						store.commit('setUserInfo',userInfo);
 						store.commit('setCheckStatus',check_status);
+						store.commit('setRealNameIndentity',realName_Indentity);
 						uni.reLaunch({
 							url: '/pages/home/home',
 						});
@@ -237,9 +238,11 @@
 				loginService.phoneLogin(loginParams).then((res)=>{
 					let {data}  = res;
 					if (data.success) {
-						let {token,userInfo} = data.result;
+						let {token,userInfo,check_status,realName_Indentity} = data.result;
 						store.commit('setToken',token);
 						store.commit('setUserInfo',userInfo);
+						store.commit('setCheckStatus',check_status);
+						store.commit('setRealNameIndentity',realName_Indentity);
 						uni.reLaunch({
 							url: '/pages/home/home',
 						});
