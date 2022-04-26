@@ -173,6 +173,7 @@ export default {
 					let {sysUser, check_status,realName_Indentity} = res.data.result;
 					store.commit('setUserInfo',sysUser);
 					store.commit('setCheckStatus',check_status);
+					store.commit('setRealNameIndentity',realName_Indentity);
 					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 					$this.userInfo.id = id;
 					$this.userInfo.avatar = avatar;
