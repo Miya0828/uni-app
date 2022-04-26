@@ -101,9 +101,9 @@
 				})
 			},
 			onFinishExperience(){
-				let { teamLeaderExp } = this.userInfo;
+				let { teamLeaderExp = '' } = this.userInfo;
 				uni.navigateTo({
-					url:"/pages/mine/captainApplication/experience?teamLeaderExp="+JSON.stringify(teamLeaderExp),
+					url:"/pages/mine/captainApplication/experience?teamLeaderExp="+teamLeaderExp,
 				})
 			},
 			onAgree(e){

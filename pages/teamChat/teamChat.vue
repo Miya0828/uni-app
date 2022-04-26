@@ -58,14 +58,19 @@
 				if (res.data.success) {
 					console.log(res.data.result)
 					this.teamList = res.data.result
+					this.teamList.forEach(team => {
+						uni.preloadPage({
+							url: `/pages/teamChat/chat?title=${team.teamName}&id=${team.id}`
+						})
+					})
 				}
 			})
 		},
 		methods: {
 			dialogConfirm() {
 				uni.reLaunch({
-					url:'/pages/mine/mine'
-				})				
+					url: '/pages/mine/mine'
+				})
 			},
 			dialogClose() {
 				this.$refs.alertDialog.close()

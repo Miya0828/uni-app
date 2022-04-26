@@ -1,5 +1,5 @@
 <template>
-	<view class="list-wrap" :style="{ 'height': height}">
+	<view class="list-wrap" :style="{'opacity': listOpacity}">
 		<slot name="list-top"></slot>
 		<scroller :style="{ 'justify-content': isScrollerFlex ? 'flex-start' : 'flex-end', direction: 'rtl'}"
 			@tap="chatListClick" ref="scrollerDom" class="list" @loadmore="loadmore" :loadmoreoffset="10">
@@ -44,7 +44,7 @@
 	import ChatVideo from './msg-template/video.vue'
 	import ChatTime from './msg-template/time.vue'
 	import BottomInput from './bottom-input/bottom-input.vue'
-	import moment from '@/static/js/moment/moment.js'		
+	import moment from '@/static/js/moment/moment.js'
 	const dom = weex.requireModule('dom')
 
 	export default {
@@ -81,6 +81,7 @@
 				isScrollerFlex: false,
 				images: [],
 				height: 0,
+				listOpacity: 0
 			}
 		},
 		methods: {
@@ -130,6 +131,10 @@
 						let listContentHeight = res.size.height
 
 						this.isScrollerFlex = (listContentHeight - this.scrollerDomH) > 0
+						
+						setTimeout(()=>{
+							this.listOpacity = 1
+						},50)
 					})
 				})
 			},
@@ -155,7 +160,7 @@
 				this.scrollerBottom()
 			}
 		},
-		mounted() {
+		mounted() {			
 			uni.getSystemInfo({
 				success: (res) => {
 					// console.log(res.model);
@@ -165,7 +170,7 @@
 					// console.log(res.language);
 					// console.log(res.version);
 					// console.log(res.platform);
-					this.height = res.windowHeight
+					// this.height = res.windowHeight					
 				}
 			});
 		},
@@ -188,7 +193,7 @@
 						}
 					})
 					this.images = images
-					this.setIsScroller()
+					this.setIsScroller()									
 				},
 				deep: true,
 				immediate: true
@@ -199,6 +204,8 @@
 <style lang="scss">
 	.list-wrap {
 		background-color: #EDEDED;
+		opacity: 0;
+		flex: 1;
 
 		.list {
 			transform: rotate(180deg);

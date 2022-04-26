@@ -22,7 +22,7 @@
 			}
 		},
 		onLoad(options){
-			this.teamLeaderExp = JSON.parse(options.teamLeaderExp);
+			this.teamLeaderExp = options.teamLeaderExp || '';
 		},
 		methods: {
 			onInput(event){

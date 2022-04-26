@@ -25,6 +25,7 @@
 
 			uni.$on('chat-video-player', (data) => {
 				console.log("chat-video-player")
+				console.log(data)
 				this.src = data.content
 				this.cover = data.cover
 			})
@@ -35,9 +36,9 @@
 			},
 			subNVueHide() {
 				console.log("subNVue close！")
-				this.src = ''				
+				this.src = ''
 			},
-			
+
 			// close() {
 			// 	this.src = ''
 			// 	let win = uni.getCurrentSubNVue()
@@ -57,8 +58,8 @@
 	}
 
 	.video {
+		flex: 1;
 		width: 750rpx;
-		height: auto;
 	}
 
 	.close {

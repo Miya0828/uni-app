@@ -3,7 +3,7 @@ import { ACCESS_TOKEN } from "@/common/util/constants";
 let apiUrl = configService.apiUrl,staticUrl = configService.staticDomainURL;
 
 
-function uploadFile(filePath,callback){
+function uploadFile(filePath,callback,error){
 	let token = uni.getStorageSync(ACCESS_TOKEN);
 	if (!token) {
 		uni.navigateTo({
@@ -21,13 +21,21 @@ function uploadFile(filePath,callback){
 		filePath,
 		name: 'file',
 		success: (res) => {
+			console.log(res)
 			uni.hideLoading();
 			let data = res&&JSON.parse(res.data);
 			if(data.success){
 				callback && callback(staticUrl+'/'+data.message,res);
-			}
+			}else{
+				uni.showToast({
+					icon:'none',
+					title:data.message
+				})
+			}			
 		},
 		fail:(err) => {
+			console.log('uploadFileError',err)
+			error&&error(err)
 			uni.hideLoading();
 		}
 	});

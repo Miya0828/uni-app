@@ -117,7 +117,7 @@
 		onLoad() {
 			store.commit('closeSocket')
 			store.commit('clearUser')
-			uni.$emit('closeHeartbeat')
+			uni.$emit('closeHeartbeat')					
 		},
 		beforeDestroy() {
 			if (this.smsCountInterval) {

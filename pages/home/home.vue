@@ -209,9 +209,10 @@
 			return {
 				siteIndex: 0,
 				userId: null,
+				routeId: null,
 				difficultyLevel: ['', '低', '中', '高'],
-				route: {},				
-				addressObj:{},
+				route: {},
+				addressObj: {},
 				weather: {
 					"obsTime": "2022-04-16T15:06+08:00",
 					"temp": "17",
@@ -406,15 +407,19 @@
 				})
 			},
 			location() {
+				console.log('获取定位')
+				uni.showLoading({
+					title: '获得定位'
+				})
 				uni.getLocation({
 					type: 'wgs84',
 					success: (res) => {
-
+						console.log('成功获取定位')
 						var longitude = res.longitude
 						var latitude = res.latitude
+						// 临时定位
 						longitude = "120.93589338209433"
 						latitude = "28.347535197969975"
-						
 
 						this.getWeather(longitude + ',' + latitude)
 
@@ -425,13 +430,19 @@
 							latitude: latitude,
 							coordinateFlag: !this.option.coordinateFlag,
 						})
-						setTimeout(() => {
-							this.mergeOptions({
-								drawAlreadyFlag: !this.option.drawAlreadyFlag,
-							})
-						}, 100)
-					}
+					},
+					fail(err) {
+						console.log(err)
+					},
+					complete() {
+						uni.hideLoading()
+					},
 				});
+			},
+			drawAlreadyRoute() {
+				this.mergeOptions({
+					drawAlreadyFlag: !this.option.drawAlreadyFlag,
+				})
 			},
 			// 获取天气
 			getWeather(location) {
@@ -445,6 +456,7 @@
 					}
 				})
 			},
+			// 全揽
 			overview() {
 				this.mergeOptions({
 					overviewFlag: !this.option.overviewFlag
@@ -455,17 +467,10 @@
 					url: '/pages/home/layer'
 				});
 			},
-			initMap() {
-				setTimeout(() => {
-					this.mergeOptions({
-						init: true
-					})
-				})
-			},
 			setAddress(addressObj) {
-				this.addressObj = addressObj				
+				this.addressObj = addressObj
 			},
-			uploadPosition(longitude, latitude, altitude) {
+			uploadPosition() {
 				uni.getLocation({
 					type: 'wgs84',
 					success: (res) => {
@@ -502,34 +507,24 @@
 					this.uploadPosition()
 				})
 			},
-			afterInit() {
-				this.drawRoute()
 
-				setTimeout(() => {
-					this.mergeOptions({
-						currentUser: {
-							...this.option.currentUser,
-							avatar: this.userInfo.avatar
-						}
-					})
-				}, 1000)
-			},
 			currentRoute() {
 				homeService.queryRouteByUserId({
 					"userId": this.userInfo.id
 				}).then(res => {
 					if (res.data.result && res.data.result.id) {
+						this.routeId = res.data.result.id
 						homeService.queryRouteSiteByRouteId({
 							id: res.data.result.id
 						}).then(res => {
 							store.state.map.route = res.data.result
-							// console.log(store.state.map.route )
 							this.drawRoute()
 						})
 					}
 				})
 			},
 			drawRoute() {
+				console.log('绘制路线')
 				if (store.state.map.route && store.state.map.route.onfootRouteInfo) {
 					this.route = store.state.map.route.onfootRouteInfo
 					let trackjson = store.state.map.route.routeLngLatMapList
@@ -545,14 +540,36 @@
 			showSite(site) {
 				this.siteIndex = site
 			},
+			updateAvatar() {
+				this.mergeOptions({
+					currentUser: {
+						...this.option.currentUser,
+						avatar: this.userInfo.avatar
+					}
+				})
+			},
+			afterMapInit() {
+				// 初始化render实例
+				this.mergeOptions({
+					init: true
+				})
+
+				uni.hideLoading();
+			},
 		},
 		onUnload() {
 			console.log('onUnload')
-
+			uni.hideLoading();
+		},
+		onHide() {
+			uni.hideLoading();
 		},
 		onLoad() {
+			console.log('onLoad')
 
-			this.initMap()
+			// uni.showLoading({
+			// 	title: '地图加载中'
+			// });			
 			this.listeningGPS()
 
 			this.userInfo = store.state.userInfo
@@ -587,13 +604,18 @@
 
 			})
 
-
 		},
 		onShow() {
+			console.log('onShow')
 			this.mergeOptions({
 				currentLayer: store.state.map.layer
-			})
-
+			})			
+			if (store.state.map.route &&
+				store.state.map.route.onfootRouteInfo &&
+				store.state.map.route.onfootRouteInfo.id != this.routeId) {
+				this.routeId = store.state.map.route.onfootRouteInfo.id
+				this.drawRoute()
+			}
 		}
 	}
 </script>
@@ -637,11 +659,12 @@
 				document.head.appendChild(script)
 			}
 			if (typeof window.T === 'function') {
-				this.initMap()
+				this.createMap()
 			} else {
 				// 动态引入较大类库避免影响页面展示
 				const script = document.createElement('script')
 				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
+				console.log("加载地图")
 				script.src = 'http://api.tianditu.gov.cn/api?v=4.0&tk=db90eeb1243c57a713f5b12fd6662871'
 				script.onload = this.createMap.bind(this)
 
@@ -650,24 +673,28 @@
 		},
 		methods: {
 			update(newValue, oldValue, ownerInstance, instance) {
+				_ownerInstance = ownerInstance
 				if (!oldValue) return
-				if (oldValue.init == false) {
+				if (oldValue.init != newValue.init) {
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
+					_ownerInstance.callMethod('drawRoute')
 				} else if (newValue.coordinateFlag != oldValue.coordinateFlag) {
 					console.log("定位用户位置")
 					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);
 					// map.setViewport(pointsline.concat(new T.LngLat(newValue.longitude, newValue.latitude)))
 					console.log("设置用户位置")
 					currentPositionObj.setLnglat(new T.LngLat(newValue.longitude, newValue.latitude))
-				
+
 					console.log("逆地理编码")
 					var geocode = new T.Geocoder();
-					geocode.getLocation(new T.LngLat(newValue.longitude, newValue.latitude),function(res){
+					geocode.getLocation(new T.LngLat(newValue.longitude, newValue.latitude), function(res) {
 						// console.log(res.addressComponent)
-						_ownerInstance.callMethod('setAddress',res.addressComponent)
+						_ownerInstance.callMethod('setAddress', res.addressComponent)
 					});
-					
+
+					_ownerInstance.callMethod('drawAlreadyRoute')
+
 				} else if (newValue.drawAlreadyFlag != oldValue.drawAlreadyFlag) {
 					if (newValue.trackjson.length) {
 						// console.log('绘制已走过路线')
@@ -681,8 +708,9 @@
 					this.changeLayer(newValue.currentLayer)
 				} else if (newValue.routeFlag != oldValue.routeFlag) {
 					if (newValue.trackjson && newValue.trackjson.length) {
-						console.log("设置路线")
+						console.log("绘制路线")
 						this.drawPath(newValue.trackjson, newValue.footprintsjson)
+						_ownerInstance.callMethod('updateAvatar')
 					}
 				} else if (newValue.currentUser.orientation != oldValue.currentUser.orientation) {
 					// console.log("设置用户方向")
@@ -691,6 +719,7 @@
 					console.log("设置用户头像")
 					currentPositionObj && currentPositionObj.updateImage(newValue.currentUser.avatar ||
 						'static/home/user.png')
+					_ownerInstance.callMethod('location')
 				} else if (newValue.overviewFlag != oldValue.overviewFlag) {
 					console.log("全揽")
 					map.setViewport(pointsline)
@@ -705,7 +734,8 @@
 					minZoom: 1,
 					zoom: 5,
 				});
-				console.log('初始化地图')
+				console.log('加载地图 完成')
+				console.log('创建地图')
 				map.centerAndZoom(new T.LngLat(longitude, latitude), 14);
 				map.setMaxBounds(new T.LngLatBounds(new T.LngLat(0, 90), new T.LngLat(180, -90)));
 
@@ -718,8 +748,7 @@
 				})
 
 				// currentPositionObj.updatedStatus('red')
-				_ownerInstance.callMethod('afterInit')
-				_ownerInstance.callMethod('location')
+				_ownerInstance.callMethod('afterMapInit')
 
 			},
 			addTouristPosition(tourist) {
@@ -856,7 +885,7 @@
 						this.setOptions(options);
 					},
 
-					onAdd: function(map) {
+					onAdd: function() {
 						this.map = map;
 						var container = this._container = document.createElement("div");
 						container.style.position = "absolute";
@@ -976,8 +1005,7 @@
 						this.setOptions(options);
 						this._text = text;
 					},
-
-					onAdd: function(map) {
+					onAdd: function() {
 						this.map = map;
 						var div = this._div = document.createElement("div");
 						div.style.position = "absolute";
@@ -1484,6 +1512,7 @@
 		}
 
 		.home-container-map {
+			z-index: 999;
 			height: 100vh;
 			width: 100vw;
 		}
@@ -1518,7 +1547,7 @@
 			z-index: 1000;
 			top: 10%;
 			right: 32rpx;
-			width: 80rpx;			
+			width: 80rpx;
 		}
 
 		.home-container-right-top {
@@ -1526,7 +1555,7 @@
 			width: 80rpx;
 			box-sizing: border-box;
 			border-radius: 20rpx;
-			background: #FFFFFF;			
+			background: #FFFFFF;
 			margin-bottom: 12rpx;
 
 			.home-container-right-top-fankui,

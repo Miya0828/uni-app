@@ -207,7 +207,6 @@
 						font-weight: 400;
 					}
 				}
-
 				.route-container-item-distance {
 					font-size: 22rpx;
 					font-weight: 400;

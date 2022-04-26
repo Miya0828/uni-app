@@ -221,9 +221,9 @@ export default {
 
 			uni.chooseVideo({
 				sourceType: ['camera', 'album'],
-				compressed: false,
+				compressed: true,
 				success: (res) => {
-					// console.log(res)
+					console.log(res)
 					
 					uploadFile(res.tempFilePath, (_path) => {						
 						 this.addMsg({
@@ -246,7 +246,7 @@ export default {
 				count: 1,
 				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 				success: (res) => {
-					
+					console.log(res)
 					uploadFile(res.tempFilePaths[0], (_path) => {
 						 this.addMsg({
 						 	type: 'image',

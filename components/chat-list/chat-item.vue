@@ -1,5 +1,5 @@
 <template>
-	<view :class="classes" @click="">
+	<view :class="classes">
 		<view class="time" v-if="showTime">
 			<Time :time="time"></Time>
 		</view>
