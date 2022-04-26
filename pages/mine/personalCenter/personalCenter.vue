@@ -48,7 +48,7 @@
 		<view class="btn">
 			<button @click="onSubmit">保存</button>
 		</view>
-		<view class="team-create-container-uni-popup">
+		<view class="container-uni-popup">
 			<uni-popup ref="popup" type="center">
 				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="onClose"
 					@confirm="confirm">

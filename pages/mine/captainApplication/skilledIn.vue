@@ -11,7 +11,7 @@
 			<view class="skilled-in-container-address-content">
 				<view class="skilled-in-container-address-content-left">
 					<image src="/static/mine/ic_position@3x.png" mode="aspectFit"></image>
-					<text>{{currentLocation}}</text>
+					<text>{{currentLocation?currentLocation:'定位中...'}}</text>
 				</view>
 				<view class="skilled-in-container-address-content-right" @click="getLocation">
 					重新定位
