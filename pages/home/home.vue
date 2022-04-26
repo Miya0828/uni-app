@@ -487,8 +487,8 @@
 						var longitude = res.longitude
 						var latitude = res.latitude
 						// 临时定位
-						longitude = "120.93589338209433"
-						latitude = "28.347535197969975"
+						// longitude = "120.93589338209433"
+						// latitude = "28.347535197969975"
 
 						this.getWeather(longitude + ',' + latitude)
 
