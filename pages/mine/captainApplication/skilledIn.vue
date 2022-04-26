@@ -1,8 +1,8 @@
 <template>
 	<view class="skilled-in-container">
 		<view class="skilled-in-container-header">
-			<uni-search-bar class="uni-mt-10" radius="5" placeholder="地名、地名首字母" clearButton="auto"
-				cancelButton="none" @confirm="search" />
+			<uni-search-bar class="uni-mt-10" radius="5" placeholder="地名" clearButton="auto"
+			 @confirm="search" @cancel="cancel" cancel-text="取消" />
 		</view>
 		<view class="skilled-in-container-address">
 			<view class="skilled-in-container-address-des">
@@ -11,9 +11,9 @@
 			<view class="skilled-in-container-address-content">
 				<view class="skilled-in-container-address-content-left">
 					<image src="/static/mine/ic_position@3x.png" mode="aspectFit"></image>
-					<text>永州市道县</text>
+					<text>{{currentLocation}}</text>
 				</view>
-				<view class="skilled-in-container-address-content-right">
+				<view class="skilled-in-container-address-content-right" @click="getLocation">
 					重新定位
 				</view>
 			</view>
@@ -30,8 +30,8 @@
 		<view class="list-cont">
 			<scroll-view class="scrool-more" style="height: 100%" scroll-y="true" scroll-with-animation="true">
 				<view class="skilled-in-container-list">
-					<uni-collapse accordion @change="change">
-						<uni-collapse-item :title="item.key" v-for="(item) of area" :open="isIncludeElement(item)">
+					<uni-collapse accordion>
+						<uni-collapse-item :title="item.key" v-for="(item) of searchArea" :open="isIncludeElement(item)">
 							<view class="skilled-in-container-city-list">
 								<view v-for="ite of item.value" class="list" @click="getSelectedTypes(ite.code)">
 									<view class="item">
@@ -57,8 +57,10 @@
 	export default {
 		data() {
 			return {
+				searchArea:[],
 				area:[],
-				selected:[]
+				selected:[],
+				currentLocation:""
 			}
 		},
 		onLoad(options){
@@ -74,16 +76,13 @@
 		},
 		mounted(){
 			this.queryArea();
+			this.getLocation();
 		},
 		methods: {
-			change(e) {
-				console.log(e);
-			},
 			search(res) {
-				uni.showToast({
-					title: '搜索：' + res.value,
-					icon: 'none'
-				})
+				if(res.value){
+					this.queryAreaByName(res.value);
+				}
 			},
 			cancel(res) {
 				uni.showToast({
@@ -118,8 +117,46 @@
 							area.push({key:item.province,value:item.cities});
 						}
 						this.area = area;
+						this.searchArea = area;
 					}
 				})
+			},
+			queryAreaByName(value){
+				let arrayList = [];
+				for(let item of this.area){
+					if(item.key.indexOf(value) > -1){
+						arrayList.push(item);
+						continue;
+					}
+					for(let ite of item.value){
+						if(ite.name.indexOf(value) > -1){
+							arrayList.push(item);
+							continue;
+						}
+					}
+				}
+				this.searchArea = arrayList;
+			},
+			getLocation(){
+				let _this = this;
+				uni.getLocation({
+					type: 'wgs84',
+					success: function(res) {
+						let point = new plus.maps.Point(res.longitude, res.latitude);
+						plus.maps.Map.reverseGeocode(
+							point,
+							{},
+							function(event) {
+								let address = event.address; // 转换后的地理位置
+								let point = event.coord; // 转换后的坐标信息
+								let coordType = event.coordType; // 转换后的坐标系类型
+								let reg = /.+?(省|市|自治区|自治州|县|区)/g;
+								_this.currentLocation = address.match(reg).join(' ');
+							},
+							function(e) {}
+						);
+					}
+				});
 			},
 			onFinish(){
 				uni.$emit("beGoodAtRegion",this.selected.join(','));

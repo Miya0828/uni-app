@@ -133,11 +133,9 @@ export default {
 	},
 	mounted(){
 		this.queryByUserId();
-		this.queryIdentityCard();
 	},
 	onPullDownRefresh(){
 		this.queryByUserId();
-		this.queryIdentityCard();
 	},
 	methods: {
 		queryByUserId(){
@@ -152,6 +150,8 @@ export default {
 				uni.stopPullDownRefresh();
 				if(res.data.success){
 					let {sysUser, check_status,realName_Indentity} = res.data.result;
+					store.commit('setUserInfo',sysUser);
+					store.commit('setCheckStatus',check_status);
 					let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 					$this.userInfo.id = id;
 					$this.userInfo.avatar = avatar;
@@ -189,20 +189,6 @@ export default {
 		onGoCertification(){
 			uni.navigateTo({
 				url:'/pages/mine/certification/certification'
-			});
-		},
-		queryIdentityCard(){
-			let _this = this;
-			userService.queryIdentityCard().then((res)=>{
-				//关闭下拉刷新
-				uni.stopPullDownRefresh();
-				let data = res.data;
-				if(data.success){
-					if(!data.result) return;
-					let { checkStatus, checkMsg } = data.result;
-					_this.checkStatus = checkStatus;
-					_this.checkMsg = checkMsg;
-				}
 			});
 		},
 		modifyUser(){

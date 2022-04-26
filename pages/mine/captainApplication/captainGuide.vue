@@ -41,7 +41,7 @@
 		},
 		methods: {
 			onGoBack(){
-				uni.switchTab({
+				uni.navigateBack({
 					url:'/pages/mine/mine'
 				});
 			}

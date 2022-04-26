@@ -22,7 +22,7 @@
 			}
 		},
 		onLoad(options){
-			this.teamLeaderExp = options.teamLeaderExp || '';
+			this.teamLeaderExp = options.teamLeaderExp || '';			
 		},
 		methods: {
 			onInput(event){

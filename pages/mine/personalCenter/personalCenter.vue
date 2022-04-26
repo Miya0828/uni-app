@@ -109,6 +109,8 @@
 				userService.queryByUserId({userId:userInfo.id}).then((res)=>{
 					if(res.data.success){
 						let {sysUser, check_status,realName_Indentity} = res.data.result;
+						store.commit('setUserInfo',sysUser);
+						store.commit('setCheckStatus',check_status);
 						let {id,avatar,birthday,signature,post,realname,telephone,emergencyContact,checkStatus} = sysUser;
 						$this.userInfo.id = id;
 						$this.userInfo.avatar = avatar;
@@ -175,10 +177,10 @@
 			},
 			onSubmit(){
 				let profession = this.userInfo.post;
-				store.commit('setUserInfo',this.userInfo);
 				let params = Object.assign({},this.userInfo,{profession});
 				userService.editUser(params).then((res)=>{
 					if(res.data.success){
+						store.commit('setUserInfo',this.userInfo);
 						uni.reLaunch({
 							url:"/pages/mine/mine"
 						})
