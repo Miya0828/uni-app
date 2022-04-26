@@ -41,7 +41,7 @@
 			imageClick() {
 
 				console.log(this.data.content)
-				if (this.data.content.includes('_doc/uniapp_save/')) {
+				if (this.data.content.includes('doc/uniapp_save/')) {
 					this.toVideoPlayer()
 					return
 				} else {
