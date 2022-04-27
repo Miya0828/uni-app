@@ -651,8 +651,8 @@
 				if (data.topic != 0) {
 					if (data.topic == 1) {
 						// 偏离预警
-						this.openWarn()
 						store.state.deviationId = data.id
+						this.openWarn()
 						// {userId:23313132131321,topic:1,time:2022-04-26 14:55:45,msgTxt:"xxx用户您好，您已偏离路线800米以上，请您回到安全路线上。"，warningType:0,id:15247824154}
 					}
 					return

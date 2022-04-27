@@ -80,7 +80,7 @@
 				console.log(content)
 
 
-				if (this.userInfo.id != userId) {
+				if (this.userInfo.id != userId || data.warningType) {
 					content.right = false
 					this.listData.unshift(content)
 				}
