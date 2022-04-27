@@ -46,18 +46,17 @@
 				</uni-icons>
 		</view>
 		<view class="personal-center-group">
-			<text class="item password-title">新密码</text>
 			<input class="passwordInput" placeholder="6-12位,必须包含大小写字母及数字" :type="passwordType" v-model="password"></input>
 			<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowPassword"></image>
 		</view>
 		<view class="personal-center-group">
-			<text class="item password-title">确认密码</text>
 			<input class="passwordInput" placeholder="输入密码确认" :type="confirmPasswordType" v-model="confirmPassword"></input>
 			<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowConfirmPassword"></image>
 		</view>
 		<view class="btn">
 			<button @click="onSubmit">保存</button>
 		</view>
+		<view style="height: 100upx;"></view>
 		<view class="container-uni-popup">
 			<uni-popup ref="popup" type="center">
 				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="onClose"
@@ -237,7 +236,6 @@
 <style lang="less">
 .personal-center{
 	background-color:rgba(248, 248, 248, 1);
-	height: 100vh;
 	position: relative;
 	.personal-center-group {
 		background-color: #ffffff;
@@ -272,12 +270,10 @@
 			line-height: 60upx;
 			color: #333333;
 		}
-		.password-title{
-			width:120upx
-		}
 		.passwordInput{
 			flex: 1;
-			padding:0 30upx;
+			padding-right:20upx;
+			font-size: 28upx;
 		}
 		.personal-center-group-avatar {
 			font-variant: small-caps;
@@ -310,13 +306,13 @@
 	}
 	.btn{
 		width: 100%;
-		position: absolute;  
-		bottom: 100upx;
 		font-size: 32upx;
+		margin: 60upx 0 0 0;
 		button{
 			color:#0089FF;
 			margin-left: 50upx;
 			margin-right: 50upx;
+			margin-bottom: 100upx;
 			border-radius: 38upx;
 			background: rgba(0, 134, 255, 0.1);
 		}
