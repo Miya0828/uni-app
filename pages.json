@@ -300,6 +300,25 @@
 				"navigationBarTitleText": "团队认证申请"
 			}
 		}
+        ,{
+            "path" : "pages/mine/personalCenter/clipImage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人头像",
+                "app-plus": {
+                	"titleNView": {
+                		"titleSize": "20px",
+                		"buttons": [{
+                			"color": "#000000",
+                			"text": "\ue614",
+                			"fontSrc": "/static/font/iconfont.ttf",
+                			"fontSize": "20px"
+                		}]
+                	}
+                }
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

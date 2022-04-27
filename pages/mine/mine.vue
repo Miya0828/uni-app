@@ -1,14 +1,14 @@
 <template>
 	<view class="minePage">
 		<view class="center-bg">
-			<view class="mine-page-top-part">
+			<view class="mine-page-top-part" @click="modifyUser">
 				<view class="mine-page-top-part-left">
 					<image v-bind:src="userInfo.avatar || '/static/mine/ic_avatar.png'"  mode="scaleToFill"></image>
 				</view>
 				<view class="mine-page-top-part-right">
 					<view class="user-info">
 						<text class="userName">{{userInfo.realname}}</text>
-						<image src="../../static/mine/ic_edit.png"  @click="modifyUser"></image>
+						<image src="../../static/mine/ic_edit.png"></image>
 					</view>
 					<view class="description">{{userInfo.signature}}</view>
 					<view class="person-introduce">
@@ -35,7 +35,7 @@
 				<view class="list-content-menu">
 					<view class="mine-page-group mine-page-group-item radius" @click="onGoPage('/pages/mine/certification/certification')">
 						<text class="item title">实名认证</text>
-						<image v-if="check_status == 2" src="@/static/mine/ic_verifiedIdCard.png"></image>
+						<image v-if="realName_Indentity == 2" src="@/static/mine/ic_verifiedIdCard.png"></image>
 						<image v-else src="@/static/mine/ic_notcertified.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
@@ -47,7 +47,7 @@
 					</view>
 					<view class="mine-page-group bottom-boder" @click="onGoPage('/pages/mine/captainApplication/captainGuide')">
 						<text class="item title">成为队长</text>
-						<image  v-if="realName_Indentity == 2"  src="@/static/mine/ic_verifiedTeam.png"></image>
+						<image  v-if="check_status == 2"  src="@/static/mine/ic_verifiedTeam.png"></image>
 						<image v-else src="@/static/mine/ic_notcertifiedTeam.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { userService } from "@/api/index.js";
+import { userService,loginService } from "@/api/index.js";
 import { ACCESS_TOKEN,USER_INFO,CHECK_STATUS,REALNAME_INDETITY } from '@/common/util/constants';
 import store from '@/store/index.js';
 export default {
@@ -192,7 +192,7 @@ export default {
 		onGoPage(url){
 			if(url){
 				if(url === '/pages/mine/captainApplication/captainGuide'){
-					switch(this.checkStatus){
+					switch(this.realName_Indentity){
 						case 2:
 							uni.navigateTo({
 								url
@@ -221,12 +221,16 @@ export default {
 		onClose(){
 			this.show = false;
 		},
-		logout() {
-			store.commit('clearUser')
-			uni.$emit('closeHeartbeat')
-			
-			uni.reLaunch({
-				url: '/pages/login/login',				
+		logout(){
+			loginService.logout().then((res)=>{
+				if(res.data.success){
+					store.commit('clearUser')
+					uni.$emit('closeHeartbeat')
+					
+					uni.reLaunch({
+						url: '/pages/login/login',				
+					});
+				}
 			});
 		}
 	}
