@@ -1,22 +1,16 @@
 <template>
     <view class="clipImage">
-		<view class="pic-box">
-			<image class="pic" :src="avatar || '/static/mine/ic_avatar.png'" mode="aspectFill" @click="onPreview(avatar || '/static/mine/ic_avatar.png')"></image>
+	<view class="pic-box">
+		<image class="pic" :src="imageUrl || '/static/mine/ic_avatar.png'" mode="aspectFill" v-if="!url" @click="onPreview(imageUrl || '/static/mine/ic_avatar.png')"></image>
+	</view>
+	<image :src="url" v-if="url" mode="widthFix"></image>
+	<l-clipper v-if="show" :image-url="imageUrl"  @success="onSuccess" @cancel="onCancel"/>
+	<view class="pull-down-modal  bottom-modal" :class="isShowBottomModal?'show':''" >
+		<view class="pull-down-dialog">
+			<button style="background:#0089FF;color:#FFFFFF" @click="chooseImage">更换图像</button>
+			<button style="background: rgba(0, 134, 255, 0.1);color:#0089FF" @tap="hideModal">取消</button>
 		</view>
-        <gmy-img-cropper
-            ref="gmyImgCropper"
-            quality="0.5"
-            cropperType="free"
-            fileType="jpg"
-            imgSrc=""
-            @getImg="getImg"
-        ></gmy-img-cropper>
-		<view class="pull-down-modal  bottom-modal" :class="isShowBottomModal?'show':''" >
-			<view class="pull-down-dialog">
-				<button style="background:#0089FF;color:#FFFFFF" @click="onUploadImg">更换图像</button>
-				<button style="background: rgba(0, 134, 255, 0.1);color:#0089FF" @tap="hideModal">取消</button>
-			</view>
-		</view>
+	</view>
     </view>
 </template>
 
@@ -27,13 +21,12 @@
 	import store from '@/store/index.js';
 	import { userService } from "@/api/index.js";
     export default {
-        components:{
-            gmyImgCropper
-        },
         data() {
             return {
 				isShowBottomModal:false,
-				avatar:''
+				show: false,
+				url: '',
+				imageUrl:'',
             }
         },
 		mounted(){
@@ -43,7 +36,7 @@
 					url:"/pages/login/login"
 				})
 			}
-			this.avatar = userInfo.avatar;
+			this.imageUrl = userInfo.avatar;
 		},
         methods: {
 			onNavigationBarButtonTap() {
@@ -53,18 +46,32 @@
 			hideModal(){
 				this.isShowBottomModal = false;
 			},
-            onUploadImg:function(){
-				this.isShowBottomModal = false;
-                // 调用实例的chooseImg方法，拉起图片选择界面，待图片选择完毕后直接进入图片截取界面
-                this.$refs.gmyImgCropper.chooseImage();
-            },
-
-            // 点击完成时，返回截取图片的临时路径
-            getImg:function(e){
+			/* 选择图片  */
+			chooseImage: function() {
+				let _this = this;
+				uni.chooseImage({
+					success: function(res) {
+						_this.imageUrl = res.tempFilePaths[0],
+						_this.isShowBottomModal = false;
+						_this.show = true;
+					},
+				});
+			},
+			onCancel(){
+				let userInfo = uni.getStorageSync(USER_INFO),$this = this;
+				if(!userInfo){
+					uni.navigateBack({
+						url:"/pages/login/login"
+					})
+				}
+				this.show = false;
+				this.imageUrl = userInfo.avatar;
+			},
+			onSuccess(event){
 				let userInfo = uni.getStorageSync(USER_INFO);
-				this.avatar = e;
-                this.imgCropperShow = false;
-				uploadFile(e,(path)=>{
+				this.imageUrl = event.url;
+				this.show = false;
+				uploadFile(event.url,(path)=>{
 					userInfo.avatar = path;
 					userService.editUser(userInfo).then((res)=>{
 						if(res.data.success){
@@ -75,7 +82,7 @@
 						}
 					})
 				});
-            },
+			},
 			onPreview(url){
 				// 预览图片
 				uni.previewImage({
