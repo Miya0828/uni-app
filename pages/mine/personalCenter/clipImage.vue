@@ -74,13 +74,13 @@
 			},
 			onSuccess(event){
 				let userInfo = uni.getStorageSync(USER_INFO);
-				this.imageUrl = event.url;
-				this.show = false;
 				uploadFile(event.url,(path)=>{
 					userInfo.avatar = path;
 					console.log("path",path);
 					userService.editUser(userInfo).then((res)=>{
 						if(res.data.success){
+							this.imageUrl = event.url;
+							this.show = false;
 							store.commit('setUserInfo',userInfo);
 						}
 					})
