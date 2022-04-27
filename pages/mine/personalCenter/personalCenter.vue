@@ -97,6 +97,9 @@
 				isShowConfirmPassword:false,
 			}
 		},
+		onShow(){
+			this.getUserInfo();
+		},
 		computed:{
 			getStyle(){
 				return {                
@@ -112,9 +115,9 @@
 		},
 		methods: {
 			getUserInfo(){
-				let userInfo =  store.getters.userInfo;
+				let userInfo = store.state.userInfo;
 				if(!userInfo){
-					uni.navigateTo({
+					uni.reLaunch({
 						url:"/pages/login/login"
 					})
 				}
@@ -129,9 +132,9 @@
 				this.userInfo.emergencyContactPhone = telephone;
 			},
 			queryByUserId(){
-				let userInfo = uni.getStorageSync(USER_INFO),$this = this;
+				let userInfo = store.getters.userInfo,$this = this;
 				if(!userInfo){
-					uni.navigateBack({
+					uni.reLaunch({
 						url:"/pages/login/login"
 					})
 				}

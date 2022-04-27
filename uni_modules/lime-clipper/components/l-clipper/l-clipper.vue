@@ -267,7 +267,6 @@ export default {
 			handler: async function(url) {
 				this.getImageInfo(url)
 			},
-			// immediate: true,
 		},
 		clipSize({ widthVal, heightVal }) {
 			let { minWidth, minHeight } = this;

@@ -31,7 +31,7 @@
 		mounted(){
 			let userInfo = uni.getStorageSync(USER_INFO),$this = this;
 			if(!userInfo){
-				uni.navigateBack({
+				uni.reLaunch({
 					url:"/pages/login/login"
 				})
 			}
@@ -50,16 +50,22 @@
 				let _this = this;
 				uni.chooseImage({
 					success: function(res) {
-						_this.imageUrl = res.tempFilePaths[0],
-						_this.isShowBottomModal = false;
-						_this.show = true;
+						uni.compressImage({
+						  src: res.tempFilePaths[0],
+						  quality: 80,
+						  success: res => {
+						    _this.imageUrl = res.tempFilePath,
+						    _this.isShowBottomModal = false;
+						    _this.show = true;
+						  }
+						})
 					},
 				});
 			},
 			onCancel(){
 				let userInfo = uni.getStorageSync(USER_INFO),$this = this;
 				if(!userInfo){
-					uni.navigateBack({
+					uni.reLaunch({
 						url:"/pages/login/login"
 					})
 				}
@@ -72,12 +78,10 @@
 				this.show = false;
 				uploadFile(event.url,(path)=>{
 					userInfo.avatar = path;
+					console.log("path",path);
 					userService.editUser(userInfo).then((res)=>{
 						if(res.data.success){
 							store.commit('setUserInfo',userInfo);
-							uni.navigateTo({
-								url:"/pages/mine/personalCenter/personalCenter"
-							})
 						}
 					})
 				});

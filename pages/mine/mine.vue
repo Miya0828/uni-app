@@ -143,7 +143,7 @@ export default {
 				check_status = uni.getStorageSync(CHECK_STATUS),
 				realName_Indentity = uni.getStorageSync(REALNAME_INDETITY);
 			if(!userInfo){
-				uni.navigateTo({
+				uni.reLaunch({
 					url:"/pages/login/login"
 				})
 			}
