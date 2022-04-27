@@ -89,7 +89,7 @@
 				phoneNo: '',
 				username:'Miya1',
 				smsCode: '',
-				password:'P@ssw0rd',
+				password:'P@ssw0rd1',
 				array: ['+86'],
 				index: 0,
 				modalName:'',
