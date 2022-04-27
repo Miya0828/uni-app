@@ -15,7 +15,5 @@
             "通用组件"
         ]
     },
-    "dependencies": {
-        "gmy-img-cropper": "^1.3.0"
-    }
+    "dependencies": {}
 }

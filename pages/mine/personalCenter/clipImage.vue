@@ -15,7 +15,6 @@
 </template>
 
 <script>
-    import gmyImgCropper from '@/components/gmy-img-cropper/gmy-img-cropper.vue';
 	import { USER_INFO } from "@/common/util/constants";
 	import { uploadFile } from "@/common/biz/common.js";
 	import store from '@/store/index.js';
