@@ -226,7 +226,7 @@
 						let userInfo = uni.getStorageSync(USER_INFO);
 						let data = Object.assign({},userInfo,this.userInfo);
 						store.commit('setUserInfo',data);
-						uni.reLaunch({
+						uni.navigateBack({
 							url:"/pages/mine/mine"
 						})
 					}

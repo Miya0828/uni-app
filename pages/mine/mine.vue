@@ -137,9 +137,12 @@ export default {
 	onPullDownRefresh(){
 		this.queryByUserId();
 	},
+	onShow(){
+		this.getUserInfo();
+	},
 	methods: {
 		getUserInfo(){
-			let userInfo = uni.getStorageSync(USER_INFO),
+			let userInfo = store.state.userInfo,
 				check_status = uni.getStorageSync(CHECK_STATUS),
 				realName_Indentity = uni.getStorageSync(REALNAME_INDETITY);
 			if(!userInfo){
