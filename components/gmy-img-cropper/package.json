@@ -1,0 +1,42 @@
+{
+  "_from": "gmy-img-cropper",
+  "_id": "gmy-img-cropper@1.3.0",
+  "_inBundle": false,
+  "_integrity": "sha512-8vYx4n/xmUVIqrdu+PjsnTMnjtfbhBjgMub/swuQEFpC4j+mDtSUOUTQcAdUOODPy4b0ZO2zvp0wauvEshKOeA==",
+  "_location": "/gmy-img-cropper",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "gmy-img-cropper",
+    "name": "gmy-img-cropper",
+    "escapedName": "gmy-img-cropper",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmmirror.com/gmy-img-cropper/-/gmy-img-cropper-1.3.0.tgz",
+  "_shasum": "65fc1f15d7658f65e29b736aff1d8ec5ec9b965a",
+  "_spec": "gmy-img-cropper",
+  "_where": "/Users/miya/Documents/旅游项目/project/uni-app",
+  "author": {
+    "name": "mingyong.g"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "img-cropper cropper",
+  "keywords": [
+    "cropper"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "gmy-img-cropper",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.3.0"
+}

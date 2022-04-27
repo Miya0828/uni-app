@@ -196,7 +196,7 @@
 					{name:'phone',checkType:'phoneno',errorMsg:'请输入正确的手机号码'},
 					{name:'captcha',checkType:'zipcode',errorMsg:'请输入6位数的验证码'},
 					{name:"username", checkType : "notnull", checkRule:"",  errorMsg:"请输入账号"},
-				    {name:"password", checkType : "password", checkRule:"",errorMsg:"密码格式不正确"},
+				    {name:"password", checkType : "password", checkRule:"",errorMsg:"6-12位,必须包含大小写字母及数字"},
 					{name:"confirmPassword", checkType : "same", checkRule:formData.password,errorMsg:"两次密码不一致"},
 					{name:"realname", checkType : "notnull", checkRule:"",  errorMsg:"请输入姓名"},
 					{name:"birthday", checkType : "notnull", checkRule:"",  errorMsg:"请输入出生日期"},

@@ -1,6 +1,6 @@
 <template>
 	<view class="personal-center">
-		<view class="personal-center-group" @click="onShowBottomModal">
+		<view class="personal-center-group" @click="onGoToUploadImg">
 				<text class="item title">头像</text>
 				<view class="personal-center-group-avatar" @click.stop="onPreview(userInfo.avatar)" :style="getStyle"></view>
 				<uni-icons color="#3D3D3D" type="forward" size="18">
@@ -45,6 +45,16 @@
 				<uni-icons color="#3D3D3D" type="forward" size="18">
 				</uni-icons>
 		</view>
+		<view class="personal-center-group">
+			<text class="item password-title">新密码</text>
+			<input class="passwordInput" placeholder="6-12位,必须包含大小写字母及数字" :type="passwordType" v-model="password"></input>
+			<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowPassword"></image>
+		</view>
+		<view class="personal-center-group">
+			<text class="item password-title">确认密码</text>
+			<input class="passwordInput" placeholder="输入密码确认" :type="confirmPasswordType" v-model="confirmPassword"></input>
+			<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowConfirmPassword"></image>
+		</view>
 		<view class="btn">
 			<button @click="onSubmit">保存</button>
 		</view>
@@ -56,18 +66,13 @@
 				</uni-popup-dialog>
 			</uni-popup>
 		</view>
-		<view class="pull-down-modal  bottom-modal" :class="isShowBottomModal?'show':''" >
-			<view class="pull-down-dialog">
-				<button style="background:#0089FF;color:#FFFFFF" @click="onUploadImg">更换图像</button>
-				<button style="background: rgba(0, 134, 255, 0.1);color:#0089FF" @tap="hideModal">取消</button>
-			</view>
-		</view>
 	</view>
 </template>
 <script>
-	import { userService } from "@/api/index.js";
+	import { userService, } from "@/api/index.js";
 	import { USER_INFO } from "@/common/util/constants";
 	import { uploadFile } from "@/common/biz/common.js";
+	import graceChecker from "@/common/biz/graceChecker.js";
 	import store from '@/store/index.js';
 	export default {
 		data() {
@@ -85,7 +90,12 @@
 				title: '请输入',
 				value: '',
 				type: '',
-				isShowBottomModal:false
+				password:'',
+				confirmPassword:'',
+				passwordType:'password',
+				confirmPasswordType:'password',
+				isShowPassword:false,
+				isShowConfirmPassword:false,
 			}
 		},
 		computed:{
@@ -103,7 +113,7 @@
 		},
 		methods: {
 			getUserInfo(){
-				let userInfo = uni.getStorageSync(USER_INFO);
+				let userInfo =  store.getters.userInfo;
 				if(!userInfo){
 					uni.navigateTo({
 						url:"/pages/login/login"
@@ -147,29 +157,21 @@
 					
 				});
 			},
+			onShowPassword(){
+				this.isShowPassword = !this.isShowPassword;
+				this.passwordType = this.isShowPassword?'text':'password';
+			},
+			onShowConfirmPassword(){
+				this.isShowConfirmPassword = !this.isShowConfirmPassword;
+				this.confirmPasswordType = this.isShowConfirmPassword?'text':'password';
+			},
 			bindDateChange(e) {
 				this.birthday = e.detail.value;
 			},
-			onShowBottomModal(){
-				this.isShowBottomModal = true;
-			},
-			hideModal(){
-				this.isShowBottomModal = false;
-			},
-			onUploadImg(){
-				let $this = this;
-				this.isShowBottomModal = false;
-				uni.chooseImage({
-					count: 1,
-					sizeType: ['original', 'compressed'],
-					sourceType: ['album'],
-					success: function(chooseImageRes){
-						let {tempFilePaths} = chooseImageRes;
-						uploadFile(tempFilePaths[0],(path)=>{
-							$this.userInfo.avatar = path;
-						});
-					}
-				});
+			onGoToUploadImg(){
+				uni.navigateTo({
+					url:"/pages/mine/personalCenter/clipImage"
+				})
 			},
 			onPreview(url){
 				// 预览图片
@@ -201,6 +203,22 @@
 			onSubmit(){
 				let profession = this.userInfo.post;
 				let params = Object.assign({},this.userInfo,{profession});
+				if(this.password){
+					let rule = [
+					    {name:"password", checkType : "password", checkRule:"",errorMsg:"6-12位,必须包含大小写字母及数字"},
+						{name:"confirmPassword", checkType : "same", checkRule:this.password,errorMsg:"两次密码不一致"},
+					];
+					let checkRes = graceChecker.check(
+						{
+							password:this.password,
+							confirmPassword:this.confirmPassword
+						}, rule);
+					if(!checkRes){
+					    uni.showToast({ title: graceChecker.error, icon: "none" });
+						return;
+					}
+					params =  Object.assign({},params,{password:this.password});
+				}
 				userService.editUser(params).then((res)=>{
 					if(res.data.success){
 						let userInfo = uni.getStorageSync(USER_INFO);
@@ -230,6 +248,11 @@
 		margin-top: 20upx;
 		margin-bottom: 20upx;
 		justify-content: space-between;
+		.icon-eye{
+			width: 36upx;
+			height: 36upx;
+			margin-right: 16upx;
+		}
 		&.personal-center-group-flex{
 			display: flex;
 			justify-content: space-between;
@@ -248,6 +271,13 @@
 			height: 60upx;
 			line-height: 60upx;
 			color: #333333;
+		}
+		.password-title{
+			width:120upx
+		}
+		.passwordInput{
+			flex: 1;
+			padding:0 30upx;
 		}
 		.personal-center-group-avatar {
 			font-variant: small-caps;
