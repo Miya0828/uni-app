@@ -204,28 +204,8 @@
 				console.log('newValue.flag', newValue.flag)
 				if (!oldValue) return
 				if (newValue.flag != oldValue.flag) {
-					console.log("逆地理编码")
 					var geocode = new T.Geocoder();
 					geocode.getLocation(new T.LngLat(newValue.longitude, newValue.latitude), function(res) {
-						console.log(res.addressComponent)
-						// _ownerInstance.callMethod('setAddress', res.addressComponent)
-						// let address = res.addressComponent.address; // 转换后的地理位置
-						// let point = event.coord; // 转换后的坐标信息
-						// let coordType = event.coordType; // 转换后的坐标系类型
-						// let reg = /.+?(省|市|自治区|自治州|县|区)/g;
-
-						// "address": "申滨路1058弄76号",
-						// "city": "上海市",
-						// "county_code": "156310112",
-						// "nation": "中国",
-						// "poi_position": "东北",
-						// "county": "闵行区",
-						// "city_code": "156310000",
-						// "address_position": "东北",
-						// "poi": "西亚超市",
-						// "province_code": "156310000",
-						// "province": "上海市",
-						// "road": "申长路",
 						let {
 							address,
 							province,
@@ -233,7 +213,7 @@
 							county
 						} = res.addressComponent
 
-						var currentLocation = (province == city ? province : (province + city)) + county + address
+						let currentLocation = (province == city ? province : (province + city)) + county;
 						_ownerInstance.callMethod('setAddress', currentLocation)
 					});
 				}
