@@ -53,6 +53,8 @@
 	import uniStep from "@/components/uni-step/uni-step.vue";
 	import { userService } from "@/api/index.js";
 	import graceChecker from '@/common/biz/graceChecker.js';
+	import { CHECK_STATUS,REALNAME_INDETITY } from '@/common/util/constants';
+	import store from '@/store/index.js';
 	export default {
 		components:{
 			uniStep
@@ -141,6 +143,7 @@
 				}
 				userService.uploadTeamLeader(param).then((res)=>{
 					if(res.data.success){
+						store.commit('setCheckStatus',2);
 						uni.navigateTo({
 							url:"/pages/mine/captainApplication/checking"
 						})

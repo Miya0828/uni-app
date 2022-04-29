@@ -58,6 +58,8 @@
 import { pathToBase64, base64ToPath } from '@/js_sdk/mmmm-image-tools/index.js';
 import { uploadFile } from "@/common/biz/common.js";
 import { userService } from "@/api/index.js";
+import { REALNAME_INDETITY } from '@/common/util/constants';
+import store from '@/store/index.js';
 export default {
 	data() {
 		return {
@@ -146,6 +148,7 @@ export default {
 			}
 			userService.certification(this.userInfo).then((res)=>{
 				if(res.data.success){
+					store.commit('setRealNameIndentity',2);
 					uni.navigateTo({
 						url:"/pages/mine/certification/checking"
 					})

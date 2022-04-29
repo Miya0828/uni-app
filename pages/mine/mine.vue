@@ -35,7 +35,7 @@
 				<view class="list-content-menu">
 					<view class="mine-page-group mine-page-group-item radius" @click="onGoPage('/pages/mine/certification/certification')">
 						<text class="item title">实名认证</text>
-						<image v-if="realName_Indentity == 2" src="@/static/mine/ic_verifiedIdCard.png"></image>
+						<image v-if="realName_Indentity == 2" src="@/static/mine/ic_verifiedTeam.png"></image>
 						<image v-else src="@/static/mine/ic_notcertified.png"></image>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
@@ -195,14 +195,38 @@ export default {
 		onGoPage(url){
 			if(url){
 				if(url === '/pages/mine/captainApplication/captainGuide'){
-					switch(this.realName_Indentity){
-						case 2:
-							uni.navigateTo({
-								url
-							});
-							break;
-						default:
-							this.show = true;
+					if(this.realName_Indentity == 2 && this.check_status != 2){
+						uni.navigateTo({
+							url
+						});
+					}else if(this.realName_Indentity == 2 && this.check_status == 2){
+						uni.showModal({
+							title: '提示',
+							content: '已认证，重新开始申请',
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url
+									});
+								}
+							}
+						});
+					}else{
+						this.show = true;
+					}
+				}else if(url === '/pages/mine/certification/certification'){
+					if(this.realName_Indentity == 2){
+						uni.showModal({
+							title: '提示',
+							content: '已认证，重新开始申请',
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url
+									});
+								}
+							}
+						});
 					}
 				}else{
 					uni.navigateTo({

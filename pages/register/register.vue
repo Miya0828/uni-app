@@ -19,11 +19,11 @@
 				</view>
 				<view class="register-page-group">
 					<input placeholder="6-12位,必须包含大小写字母及数字" :type="passwordType" name="password"></input>
-					<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowPassword"></image>
+					<uni-icons :type="passwordType=='password'?'eye-slash':'eye'" size="24" @tap="onShowPassword"></uni-icons>
 				</view>
 				<view class="register-page-group">
 					<input placeholder="输入密码确认" :type="confirmPasswordType" name="confirmPassword"></input>
-					<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowConfirmPassword"></image>
+					<uni-icons :type="confirmPasswordType=='password'?'eye-slash':'eye'" size="24" @tap="onShowConfirmPassword"></uni-icons>
 				</view>
 				<view class="register-page-group">
 					<input placeholder="请输入昵称" name="realname"></input>

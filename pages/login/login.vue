@@ -11,7 +11,7 @@
 				</view>
 				<view class="login-view-group">
 					<input placeholder="请输入登录密码" :type="passwordType" v-model="password"></input>
-					<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowPassword"></image>
+					<uni-icons :type="passwordType=='password'?'eye-slash':'eye'" size="24" @tap="onShowPassword"></uni-icons>
 				</view>
 				<view class="login-view-btn-box">
 					<button @click="onLogin">登录</button>
