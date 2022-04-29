@@ -47,11 +47,11 @@
 		</view>
 		<view class="personal-center-group">
 			<input class="passwordInput" placeholder="6-12位,必须包含大小写字母及数字" :type="passwordType" v-model="password"></input>
-			<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowPassword"></image>
+			<uni-icons :type="passwordType=='password'?'eye-slash':'eye'" size="24" @tap="onShowPassword"></uni-icons>
 		</view>
 		<view class="personal-center-group">
 			<input class="passwordInput" placeholder="输入密码确认" :type="confirmPasswordType" v-model="confirmPassword"></input>
-			<image class="icon-eye" src="/static/login/ic_eye.png" @tap="onShowConfirmPassword"></image>
+			<uni-icons :type="confirmPasswordType=='password'?'eye-slash':'eye'" size="24" @tap="onShowConfirmPassword"></uni-icons>
 		</view>
 		<view class="btn">
 			<button @click="onSubmit">保存</button>
