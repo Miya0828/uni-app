@@ -5,7 +5,7 @@
 				头像
 			</view>
 			<view class="team-create-container-item-box">
-				<image :src="form.avatar" mode="aspectFit"></image>
+				<image :src="form.avatar" mode="aspectFit" @click.stop="preview(form.avatar)"></image>
 				<uni-icons class="team-create-container-item-box-arrow" color="#3D3D3D" type="forward" size="18">
 				</uni-icons>
 			</view>
@@ -51,9 +51,8 @@
 		</view>
 		<view class="team-create-container-image-clip">
 			<image :src="url" v-if="url" mode="widthFix"></image>
-			<l-clipper v-if="show" :image-url="imageUrl" @success="url = $event.url; show = false"
+			<l-clipper v-if="show" :image-url="imageUrl" @success="clipSuccess"
 				@cancel="show = false" />
-			<button @tap="show = true">裁剪</button>
 		</view>
 		<view class="team-create-container-save">
 			<view class="team-create-container-save-btn" @click="save">
@@ -83,10 +82,10 @@
 	export default {
 		data() {
 			return {
-				imageUrl: 'https://img12.360buyimg.com/pop/s1180x940_jfs/t1/97205/26/1142/87801/5dbac55aEf795d962/48a4d7a63ff80b8b.jpg',
+				imageUrl: '',
 				show: false,
 				url: '',
-				
+
 				title: '请输入',
 				value: '',
 				type: '',
@@ -113,6 +112,12 @@
 			}
 		},
 		methods: {
+			preview(url){
+				if(!url)return
+				uni.previewImage({
+					urls: [url]
+				});
+			},
 			chooseRouteLine() {
 				uni.navigateTo({
 					url: '/pages/home/route?teamCreate=1',
@@ -124,11 +129,24 @@
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					sourceType: ['album'], //从相册选择
 					success: (res) => {
-						uploadFile(res.tempFilePaths[0], (path) => {
-							this.form.avatar = path
-						});
+						uni.compressImage({
+						  src: res.tempFilePaths[0],
+						  quality: 80,
+						  success: res => {
+							  this.imageUrl = res.tempFilePath
+							  this.show = true							  						
+						  }
+						})
+						
 					}
 				});
+			},
+			clipSuccess(e){
+				console.log(e)
+				uploadFile(e.url, (path) => {			
+					this.form.avatar = path
+					this.show = false
+				});			
 			},
 			changeValue(type) {
 				console.log(type)

@@ -5,7 +5,7 @@
 				头像
 			</view>
 			<view class="team-create-container-item-box">
-				<image class="team-create-container-item-box-avatar" :src="form.avatar" mode="aspectFit"></image>
+				<image class="team-create-container-item-box-avatar" @click.stop="preview(form.avatar)" :src="form.avatar" mode="aspectFit"></image>
 				<uni-icons v-if="isLoader" class="team-create-container-item-box-arrow" color="#3D3D3D" type="forward"
 					size="18">
 				</uni-icons>
@@ -92,7 +92,11 @@
 					:colorDark="colorDark" :colorLight="colorLight"></yz-qr>
 			</view>
 		</uni-popup>
-
+		<view class="team-create-container-image-clip">
+			<image :src="url" v-if="url" mode="widthFix"></image>
+			<l-clipper v-if="show" :image-url="imageUrl" @success="clipSuccess"
+				@cancel="show = false" />
+		</view>
 		<view class="team-create-container-uni-popup">
 			<uni-popup ref="popup" type="center">
 				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="close"
@@ -116,6 +120,10 @@
 		data() {
 			return {
 
+				imageUrl: '',
+				show: false,
+				url: '',
+				
 				qrPath: '',
 				text: 'hello',
 				size: 200,
@@ -162,6 +170,12 @@
 			}
 		},
 		methods: {
+			preview(url){
+				if(!url)return
+				uni.previewImage({
+					urls: [url]
+				});
+			},
 			initData(currentTeam) {
 				this.form.id = currentTeam.id
 				this.form.avatar = currentTeam.teamIcon
@@ -198,11 +212,23 @@
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					sourceType: ['album'], //从相册选择
 					success: (res) => {
-						uploadFile(res.tempFilePaths[0], (path) => {
-							this.form.avatar = path
-						});
+						uni.compressImage({
+						  src: res.tempFilePaths[0],
+						  quality: 80,
+						  success: res => {
+							  this.imageUrl = res.tempFilePath
+							  this.show = true							  						
+						  }
+						})
 					}
 				});
+			},
+			clipSuccess(e){
+				console.log(e)
+				uploadFile(e.url, (path) => {			
+					this.form.avatar = path
+					this.show = false
+				});			
 			},
 			changeValue(type) {
 				if (!this.isLoader) {
