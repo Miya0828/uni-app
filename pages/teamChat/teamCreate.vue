@@ -49,7 +49,12 @@
 				</uni-icons>
 			</view>
 		</view>
-
+		<view class="team-create-container-image-clip">
+			<image :src="url" v-if="url" mode="widthFix"></image>
+			<l-clipper v-if="show" :image-url="imageUrl" @success="url = $event.url; show = false"
+				@cancel="show = false" />
+			<button @tap="show = true">裁剪</button>
+		</view>
 		<view class="team-create-container-save">
 			<view class="team-create-container-save-btn" @click="save">
 				保存
@@ -78,6 +83,10 @@
 	export default {
 		data() {
 			return {
+				imageUrl: 'https://img12.360buyimg.com/pop/s1180x940_jfs/t1/97205/26/1142/87801/5dbac55aEf795d962/48a4d7a63ff80b8b.jpg',
+				show: false,
+				url: '',
+				
 				title: '请输入',
 				value: '',
 				type: '',
@@ -201,6 +210,8 @@
 		height: 100vh;
 		background: #F8F8F8;
 		padding-top: 18rpx;
+
+		.team-create-container-image-clip {}
 
 		.team-create-container-uni-popup {
 			background-color: pink;

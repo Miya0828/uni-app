@@ -75,7 +75,7 @@
 			dialogClose() {
 				this.$refs.alertDialog.close()
 			},
-			createTeam() {
+			createTeam() {				
 				if (store.state.check_status != 2) {
 					this.$refs.alertDialog.open()
 					return

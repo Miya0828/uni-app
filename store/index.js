@@ -31,7 +31,7 @@ let store =  new Vuex.Store({
 		// 偏离预警id
 		deviationId:'',
 		map: {
-			layer: 0,
+			layer: 1,
 			route: null,
 			longitude: 116.40769,
 			latitude: 39.89945,

@@ -210,13 +210,19 @@
 		{
 			"path": "pages/mine/captainApplication/personInfo",
 			"style": {
-				"navigationBarTitleText": "个人介绍"
+				"navigationBarTitleText": "个人介绍",
+				"app-plus": {
+					"softinputMode": "adjustResize"
+				}
 			}
 		},
 		{
 			"path": "pages/mine/captainApplication/experience",
 			"style": {
-				"navigationBarTitleText": "领队经验"
+				"navigationBarTitleText": "领队经验",
+				"app-plus": {
+					"softinputMode": "adjustResize"
+				}
 			}
 		},
 		{
@@ -328,7 +334,7 @@
 		"style": {
 			"app-plus": {
 				"animationType": "slide-in-left",
-				"animationDuration": 200
+				"animationDuration": 200				
 			}
 		}
 	},

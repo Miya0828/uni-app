@@ -340,7 +340,7 @@
 
 				}).then(res => {
 					console.log(res)
-					if (res.data.success) {						
+					if (res.data.success) {
 						uni.showToast({
 							icon: 'none',
 							title: res.data.message,
@@ -686,9 +686,10 @@
 		},
 		onShow() {
 			console.log('onShow')
-			this.mergeOptions({
-				currentLayer: store.state.map.layer
-			})
+				this.mergeOptions({
+					currentLayer: store.state.map.layer
+				})
+			
 			if (store.state.map.route &&
 				store.state.map.route.onfootRouteInfo &&
 				store.state.map.route.onfootRouteInfo.id != this.routeId) {
@@ -758,6 +759,10 @@
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
 					_ownerInstance.callMethod('drawRoute')
+					
+					console.log("设置图层")
+					this.changeLayer(newValue.currentLayer)
+					
 				} else if (newValue.coordinateFlag != oldValue.coordinateFlag) {
 					console.log("定位用户位置")
 					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);
@@ -782,9 +787,6 @@
 							latitude: newValue.latitude
 						}, newValue.footprintsjson)
 					}
-				} else if (newValue.currentLayer != oldValue.currentLayer) {
-					console.log("设置图层")
-					this.changeLayer(newValue.currentLayer)
 				} else if (newValue.routeFlag != oldValue.routeFlag) {
 					if (newValue.trackjson && newValue.trackjson.length) {
 						console.log("绘制路线")
@@ -805,6 +807,9 @@
 				} else if (newValue.touristFlag != oldValue.touristFlag) {
 					console.log("获取最新驴友位置")
 					this.addTouristPosition(newValue.tourist)
+				}else if (newValue.currentLayer != oldValue.currentLayer) {
+					console.log("设置图层")
+					this.changeLayer(newValue.currentLayer)
 				}
 			},
 			createMap() {
