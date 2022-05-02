@@ -30,7 +30,7 @@
 						console.log('closeHeartbeat')
 						clearInterval(timer)
 					})
-					var second = 10;
+					var second = 60;
 					(function heartbeat() {
 						timer = setInterval(() => {
 							uni.$emit('triggerHeartbeat', '❤')

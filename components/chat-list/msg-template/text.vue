@@ -65,6 +65,7 @@
 		.chat-text {
 			color: rgba(51, 51, 51, 100);
 			font-size: 32rpx;
+			width: 400rpx;
 		}
 
 		&.chat-text-right-wrap {
