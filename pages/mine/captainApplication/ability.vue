@@ -5,16 +5,19 @@
 			<view class="ability-tips">本页内容仅用于平台审核，不对其他用户公开</view>
 			<view class="ability-group" @click="onUploadTourGuide">
 					<text class="item title">导游证</text>
+					<view class="content flag" v-if="userInfo.guideCertificates">已上传</view>
 					<uni-icons color="#3D3D3D" type="forward" size="18">
 					</uni-icons>
 			</view>
 			<view class="ability-group" @click="onUploadTeamLeader">
 					<text class="item title">领队证</text>
+					<view class="content flag" v-if="userInfo.teamLeaderCertificates">已上传</view>
 					<uni-icons color="#3D3D3D" type="forward" size="18">
 					</uni-icons>
 			</view>
 			<view class="ability-group" @click="onFinishExperience">
 					<text class="item title">领队经验</text>
+					<view class="content" v-if="userInfo.teamLeaderExp">{{this.cutString(userInfo.teamLeaderExp,15)}}</view>
 					<uni-icons color="#3D3D3D" type="forward" size="18">
 					</uni-icons>
 			</view>
@@ -90,6 +93,15 @@
 			
 		},
 		methods: {
+			cutString(text, numSub){
+				 if(text == null){
+					return "";
+				 }
+				 if(text.length > numSub){
+					return text.substring(0, numSub - 1) + "...";
+				 }
+				 return text;
+			},
 			onUploadTourGuide(){
 				let { guideCertificatesNumber,guideCertificates } = this.userInfo;
 				uni.navigateTo({
@@ -179,6 +191,13 @@
 				position: relative;
 				height: 60upx;
 				line-height: 60upx;
+			}
+			.content{
+				flex:1;
+				text-align: left;
+				&.flag{
+					color: #0089FF;
+				}
 			}
 			input {
 				flex: 1;

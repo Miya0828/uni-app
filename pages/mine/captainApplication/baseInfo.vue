@@ -9,16 +9,19 @@
 				</view>
 				<view class="baseInfo-group" @click="onFinishPersonIntroduce">
 						<text class="item title">个人介绍</text>
+						<view class="content" v-if="userInfo.personalIntroduction">{{this.cutString(userInfo.personalIntroduction,15)}}</view>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
 				</view>
 				<view class="baseInfo-group baseInfo-group-skill" @click="onFinishSkilledIn">
 						<text class="item title">擅长区域</text>
+						<view class="content" v-if="userInfo.beGoodAtRegion">{{this.cutString(userInfo.beGoodAtRegion,15)}}</view>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
 				</view>
 				<view class="baseInfo-group baseInfo-group-area" @click="onFinishGoodType()">
 						<text class="item title">擅长类型</text>
+						<view class="content" v-if="userInfo.beGoodAtType">{{this.cutString(userInfo.beGoodAtType,15)}}</view>
 						<uni-icons color="#3D3D3D" type="forward" size="18">
 						</uni-icons>
 				</view>
@@ -68,6 +71,15 @@
 			});
 		},
 		methods: {
+			cutString(text, numSub){
+				 if(text == null){
+					return "";
+				 }
+				 if(text.length > numSub){
+					return text.substring(0, numSub - 1) + "...";
+				 }
+				 return text;
+			},
 			queryTeamLeader(){
 				userService.queryTeamLeader().then((res)=>{
 					let data = res.data;
@@ -160,6 +172,10 @@
 			height: 60upx;
 			line-height: 60upx;
 			color: #333333;
+		}
+		.content{
+			flex:1;
+			text-align: left;
 		}
 		input {
 			flex: 1;

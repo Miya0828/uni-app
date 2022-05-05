@@ -8,7 +8,7 @@
 		</view>
 		<view class="personal-center-group" @click="onChange('realname')">
 				<text class="item title">昵称</text>
-				<view>{{userInfo.realname}}</view>
+				<view>{{this.cutString(userInfo.realname,15)}}</view>
 				<uni-icons color="#3D3D3D" type="forward" size="18">
 				</uni-icons>
 		</view>
@@ -23,19 +23,19 @@
 		</view>
 		<view class="personal-center-group" @click="onChange('signature')">
 				<text class="item title">个性签名</text>
-				<view>{{userInfo.signature}}</view>
+				<view>{{this.cutString(userInfo.signature,15)}}</view>
 				<uni-icons color="#3D3D3D" type="forward" size="18">
 				</uni-icons>
 		</view>
 		<view class="personal-center-group" @click="onChange('post')">
 				<text class="item title">职业</text>
-				<view>{{userInfo.post}}</view>
+				<view>{{this.cutString(userInfo.post,15)}}</view>
 				<uni-icons color="#3D3D3D" type="forward" size="18">
 				</uni-icons>
 		</view>
 		<view class="personal-center-group" @click="onChange('emergencyContact')">
 				<text class="item title">紧急联系人</text>
-				<view>{{userInfo.emergencyContact}}</view>
+				<view>{{this.cutString(userInfo.emergencyContact,15)}}</view>
 				<uni-icons color="#3D3D3D" type="forward" size="18">
 				</uni-icons>
 		</view>
@@ -61,7 +61,7 @@
 			<uni-popup ref="popup" type="center">
 				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="onClose"
 					@confirm="confirm">
-					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value" />
+					<uni-easyinput :focus="true" :maxlength="maxLen" :clearable="false" type="textarea" v-model="value" />
 				</uni-popup-dialog>
 			</uni-popup>
 		</view>
@@ -89,12 +89,18 @@
 				title: '请输入',
 				value: '',
 				type: '',
+				maxLen:0,
 				password:'',
 				confirmPassword:'',
 				passwordType:'password',
 				confirmPasswordType:'password',
 				isShowPassword:false,
 				isShowConfirmPassword:false,
+				realnameLen:10,
+				signatureLen:200,
+				postLen:50,
+				emergencyContactLen:10,
+				emergencyContactPhoneLen:11,
 			}
 		},
 		onShow(){
@@ -114,6 +120,15 @@
 			this.queryByUserId();
 		},
 		methods: {
+			cutString(text, numSub){
+				 if(text == null){
+					return "";
+				 }
+				 if(text.length > numSub){
+					return text.substring(0, numSub - 1) + "...";
+				 }
+				 return text;
+			},
 			getUserInfo(){
 				let userInfo = store.state.userInfo;
 				if(!userInfo){
@@ -192,6 +207,7 @@
 			},
 			onChange(type){
 				this.type = type;
+				this.maxLen = this[type+'Len'];
 				this.value = this.userInfo[type];
 				this.$refs.popup.open();
 			},
@@ -220,6 +236,19 @@
 						return;
 					}
 					params =  Object.assign({},params,{password:this.password});
+				}
+				if(params.emergencyContactPhone){
+					let rule = [
+					    {name:'emergencyContactPhone',checkType:'phoneno',errorMsg:'紧急人联系电话格式不正确'},
+					];
+					let checkRes = graceChecker.check(
+						{
+							emergencyContactPhone:params.emergencyContactPhone,
+						}, rule);
+					if(!checkRes){
+					    uni.showToast({ title: graceChecker.error, icon: "none" });
+						return;
+					}
 				}
 				userService.editUser(params).then((res)=>{
 					if(res.data.success){

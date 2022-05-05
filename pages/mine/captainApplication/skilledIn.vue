@@ -36,10 +36,10 @@
 						<uni-collapse-item :title="item.key" v-for="(item) of searchArea"
 							:open="isIncludeElement(item)">
 							<view class="skilled-in-container-city-list">
-								<view v-for="ite of item.value" class="list" @click="getSelectedTypes(ite.code)">
+								<view v-for="ite of item.value" class="list" @click="getSelectedTypes(ite.name)">
 									<view class="item">
 										<text>{{ite.name}}</text>
-										<uni-icons v-if="(selected.includes(ite.code))" color="#0089FF"
+										<uni-icons v-if="(selected.includes(ite.name))" color="#0089FF"
 											type="checkmarkempty" size="18"></uni-icons>
 									</view>
 								</view>
@@ -103,7 +103,7 @@
 			isIncludeElement(data) {
 				let flag = false;
 				for (let item of data.value) {
-					if (this.selected.includes(item.code)) {
+					if (this.selected.includes(item.name)) {
 						flag = true;
 						break;
 					}
