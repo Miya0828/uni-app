@@ -1,7 +1,7 @@
 let BASE_URL = '';
 
 if (process.env.NODE_ENV == 'development') {
-    BASE_URL = 'http://119.23.214.167:8080' // 开发环境
+    BASE_URL = 'http://119.23.214.166:8080' // 开发环境
 } else {
 	BASE_URL = 'http://119.23.214.166:8080' // 生产环境
 }
