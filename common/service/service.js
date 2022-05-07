@@ -83,11 +83,23 @@ http.interceptor.response(
 			if (response.config.custom.loading) {
 				uni.hideLoading()
 			}
+			if(response.errMsg){
+				uni.showToast({
+					icon: 'none',
+					title: "请求超时，请检查网络或重试",
+					duration: 2000
+				});
+				return;
+			}
 			let data = response.data;
 			const token = uni.getStorageSync(ACCESS_TOKEN);
 			switch (data.code) {
 				case 403:
-					tip.error('拒绝访问');
+					uni.showToast({
+						icon: 'none',
+						title: "拒绝访问",
+						duration: 2000
+					});
 					break;
 				case 401:
 					uni.showToast({
@@ -117,10 +129,10 @@ http.interceptor.response(
 				case 504:
 					break;
 				default:
-					tip.error({
-						duration: 0,
-						forbidClick: true,
-						message: data.message
+					uni.showToast({
+						icon: 'none',
+						title: data.message,
+						duration: 2000
 					});
 					break;
 			}

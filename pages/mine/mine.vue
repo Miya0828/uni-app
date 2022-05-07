@@ -227,6 +227,10 @@ export default {
 								}
 							}
 						});
+					}else{
+						uni.navigateTo({
+							url
+						});
 					}
 				}else{
 					uni.navigateTo({
@@ -253,7 +257,7 @@ export default {
 				if(res.data.success){
 					store.commit('clearUser')
 					uni.$emit('closeHeartbeat')
-					
+					store.commit('closeSocket')
 					uni.reLaunch({
 						url: '/pages/login/login',				
 					});
