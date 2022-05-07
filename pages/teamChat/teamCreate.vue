@@ -10,7 +10,7 @@
 				</uni-icons>
 			</view>
 		</view>
-		<view class="team-create-container-item mb20" @click="changeValue('teamName')">
+		<view class="team-create-container-item mb20" @click="changeValue('teamName',15)">
 			<view class="team-create-container-item-title">
 				团队名称
 			</view>
@@ -37,7 +37,7 @@
 		</view>
 
 
-		<view class="team-create-container-item" @click="changeValue('teamIntroduce')">
+		<view class="team-create-container-item" @click="changeValue('teamIntroduce',500)">
 			<view class="team-create-container-item-title">
 				团队介绍
 			</view>
@@ -51,8 +51,7 @@
 		</view>
 		<view class="team-create-container-image-clip">
 			<image :src="url" v-if="url" mode="widthFix"></image>
-			<l-clipper v-if="show" :image-url="imageUrl" @success="clipSuccess"
-				@cancel="show = false" />
+			<l-clipper v-if="show" :image-url="imageUrl" @success="clipSuccess" @cancel="show = false" />
 		</view>
 		<view class="team-create-container-save">
 			<view class="team-create-container-save-btn" @click="save">
@@ -64,7 +63,8 @@
 			<uni-popup ref="popup" type="center">
 				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="close"
 					@confirm="confirm">
-					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value" />
+					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value"
+						:maxlength="maxlength" />
 				</uni-popup-dialog>
 			</uni-popup>
 		</view>
@@ -85,7 +85,7 @@
 				imageUrl: '',
 				show: false,
 				url: '',
-
+				maxlength: -1,
 				title: '请输入',
 				value: '',
 				type: '',
@@ -112,8 +112,8 @@
 			}
 		},
 		methods: {
-			preview(url){
-				if(!url)return
+			preview(url) {
+				if (!url) return
 				uni.previewImage({
 					urls: [url]
 				});
@@ -130,26 +130,27 @@
 					sourceType: ['album'], //从相册选择
 					success: (res) => {
 						uni.compressImage({
-						  src: res.tempFilePaths[0],
-						  quality: 80,
-						  success: res => {
-							  this.imageUrl = res.tempFilePath
-							  this.show = true							  						
-						  }
+							src: res.tempFilePaths[0],
+							quality: 80,
+							success: res => {
+								this.imageUrl = res.tempFilePath
+								this.show = true
+							}
 						})
-						
+
 					}
 				});
 			},
-			clipSuccess(e){
+			clipSuccess(e) {
 				console.log(e)
-				uploadFile(e.url, (path) => {			
+				uploadFile(e.url, (path) => {
 					this.form.avatar = path
 					this.show = false
-				});			
+				});
 			},
-			changeValue(type) {
+			changeValue(type, maxlength) {
 				console.log(type)
+				this.maxlength = maxlength
 				this.type = type
 				this.value = this.form[type]
 				this.$refs.popup.open()
@@ -288,6 +289,10 @@
 					font-size: 28rpx;
 					font-weight: 500;
 					color: #000000;
+					max-width: 400rpx;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 
 				image {

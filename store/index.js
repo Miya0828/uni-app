@@ -19,17 +19,17 @@ Vue.use(Vuex)
 
 var socketTask = null
 var userId = null
-let store =  new Vuex.Store({
+let store = new Vuex.Store({
 	state: {
 		token: '',
 		userInfo: {
 			id: null
 		},
-		check_status:0,
+		check_status: 0,
 		teamRoute: null,
 		team: {},
 		// 偏离预警id
-		deviationId:'',
+		deviationId: '',
 		map: {
 			layer: 1,
 			route: null,
@@ -38,8 +38,8 @@ let store =  new Vuex.Store({
 			orientation: '0',
 			address: ['上海市']
 		},
-		check_status:0,
-		realName_Indentity:0,
+		check_status: 0,
+		realName_Indentity: 0,
 	},
 	mutations: {
 		clearUser(state) {
@@ -58,17 +58,17 @@ let store =  new Vuex.Store({
 			teamService.queryTeam().then(res => {
 				if (res.data.success) {
 					var teamList = res.data.result
-					if(teamList.length){
+					if (teamList.length) {
 						store.commit('startSocket')
 					}
 				}
 			})
 		},
-		setCheckStatus(state,check_status){
+		setCheckStatus(state, check_status) {
 			uni.setStorageSync(CHECK_STATUS, check_status);
 			state.check_status = check_status;
 		},
-		setRealNameIndentity(state,realName_Indentity){
+		setRealNameIndentity(state, realName_Indentity) {
 			uni.setStorageSync(REALNAME_INDETITY, realName_Indentity);
 			state.realName_Indentity = realName_Indentity;
 		},
@@ -80,15 +80,15 @@ let store =  new Vuex.Store({
 			console.log('closeSocket')
 			uni.closeSocket();
 		},
-		startSocket(state) {			
+		startSocket(state) {
 			console.log("socket:==" + userId)
 			if (userId != state.userInfo.id) {
 				userId = state.userInfo.id
 				uni.closeSocket();
 				socketTask = uni.connectSocket({
-					url: apiUrl.replace('http','ws')+'/tour-pal/websocket/_app' + userId,
+					url: apiUrl.replace('http', 'ws') + '/tour-pal/websocket/_app' + userId,
 					complete: () => {
-						console.log("start connectSocket")
+						console.log("start connectSocket userId = ", userId)
 					}
 				});
 
@@ -97,6 +97,10 @@ let store =  new Vuex.Store({
 				});
 				uni.onSocketClose(function(res) {
 					console.log('WebSocket 已关闭！');
+					console.log('30秒后尝试重连socket');
+					setTimeout(() => {
+						store.commit('startSocket')
+					}, 30 * 1000)
 				});
 				uni.onSocketOpen(function(res) {
 					console.log('WebSocket连接已打开！');
@@ -123,9 +127,18 @@ let store =  new Vuex.Store({
 
 	},
 	getters: {
-		userInfo: state => {state.userInfo=uni.getStorageSync(USER_INFO); return state.userInfo},
-		check_status: state =>{state.check_status=uni.getStorageSync("CHECK_STATUS"); return state.check_status},
-		realName_Indentity:state =>{state.realName_Indentity=uni.getStorageSync("REALNAME_INDETITY"); return state.realName_Indentity},
+		userInfo: state => {
+			state.userInfo = uni.getStorageSync(USER_INFO);
+			return state.userInfo
+		},
+		check_status: state => {
+			state.check_status = uni.getStorageSync("CHECK_STATUS");
+			return state.check_status
+		},
+		realName_Indentity: state => {
+			state.realName_Indentity = uni.getStorageSync("REALNAME_INDETITY");
+			return state.realName_Indentity
+		},
 	}
 })
 

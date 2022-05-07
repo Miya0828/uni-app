@@ -72,9 +72,9 @@
 			uni.$on('socketMessage', (data) => {
 				console.log('chat=========')
 				console.log(data)
-				if (data.topic != 0) {
-					return
-				}
+				// if (data.topic != 0) {
+				// 	return
+				// }
 				let userId = data.userId
 				let content = JSON.parse(data.msgTxt)
 				console.log(content)

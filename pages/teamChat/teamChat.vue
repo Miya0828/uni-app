@@ -124,7 +124,7 @@
 
 			.team-chat-container-item-box {
 				padding: 0 20rpx;
-
+				overflow: hidden;
 				.team-chat-container-item-title {
 					font-size: 30rpx;
 					font-weight: 400;
@@ -136,6 +136,10 @@
 					font-size: 26rpx;
 					font-weight: 400;
 					color: #666666;
+					width: 100%;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 			}
 		}

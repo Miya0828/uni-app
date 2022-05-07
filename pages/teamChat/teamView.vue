@@ -5,13 +5,14 @@
 				头像
 			</view>
 			<view class="team-create-container-item-box">
-				<image class="team-create-container-item-box-avatar" @click.stop="preview(form.avatar)" :src="form.avatar" mode="aspectFit"></image>
+				<image class="team-create-container-item-box-avatar" @click.stop="preview(form.avatar)"
+					:src="form.avatar" mode="aspectFit"></image>
 				<uni-icons v-if="isLoader" class="team-create-container-item-box-arrow" color="#3D3D3D" type="forward"
 					size="18">
 				</uni-icons>
 			</view>
 		</view>
-		<view class="team-create-container-item" @click="changeValue('teamName')">
+		<view class="team-create-container-item" @click="changeValue('teamName',15)">
 			<view class="team-create-container-item-title">
 				团队名称
 			</view>
@@ -24,7 +25,7 @@
 				</uni-icons>
 			</view>
 		</view>
-		<view class="team-create-container-item mb20" @click="changeValue('teamIntroduce')">
+		<view class="team-create-container-item mb20" @click="changeValue('teamIntroduce',500)">
 			<view class="team-create-container-item-title">
 				团队介绍
 			</view>
@@ -94,14 +95,14 @@
 		</uni-popup>
 		<view class="team-create-container-image-clip">
 			<image :src="url" v-if="url" mode="widthFix"></image>
-			<l-clipper v-if="show" :image-url="imageUrl" @success="clipSuccess"
-				@cancel="show = false" />
+			<l-clipper v-if="show" :image-url="imageUrl" @success="clipSuccess" @cancel="show = false" />
 		</view>
 		<view class="team-create-container-uni-popup">
 			<uni-popup ref="popup" type="center">
 				<uni-popup-dialog :title="title" mode="input" :duration="2000" :before-close="true" @close="close"
 					@confirm="confirm">
-					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value" />
+					<uni-easyinput :focus="true" :clearable="false" type="textarea" v-model="value"
+						:maxlength="maxlength" />
 				</uni-popup-dialog>
 			</uni-popup>
 		</view>
@@ -123,7 +124,7 @@
 				imageUrl: '',
 				show: false,
 				url: '',
-				
+				maxlength: '',
 				qrPath: '',
 				text: 'hello',
 				size: 200,
@@ -170,8 +171,8 @@
 			}
 		},
 		methods: {
-			preview(url){
-				if(!url)return
+			preview(url) {
+				if (!url) return
 				uni.previewImage({
 					urls: [url]
 				});
@@ -213,28 +214,28 @@
 					sourceType: ['album'], //从相册选择
 					success: (res) => {
 						uni.compressImage({
-						  src: res.tempFilePaths[0],
-						  quality: 80,
-						  success: res => {
-							  this.imageUrl = res.tempFilePath
-							  this.show = true							  						
-						  }
+							src: res.tempFilePaths[0],
+							quality: 80,
+							success: res => {
+							 this.imageUrl = res.tempFilePath
+								this.show = true
+							}
 						})
 					}
 				});
 			},
-			clipSuccess(e){
+			clipSuccess(e) {
 				console.log(e)
-				uploadFile(e.url, (path) => {			
+				uploadFile(e.url, (path) => {
 					this.form.avatar = path
 					this.show = false
-				});			
+				});
 			},
-			changeValue(type) {
+			changeValue(type, maxlength) {
 				if (!this.isLoader) {
 					return
 				}
-
+				this.maxlength = maxlength
 				this.type = type
 				this.value = this.form[type]
 				this.$refs.popup.open()
@@ -389,6 +390,10 @@
 					font-size: 28rpx;
 					font-weight: 500;
 					color: #000000;
+					max-width: 400rpx;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 
 				.team-create-container-item-box-avatar {

@@ -8,12 +8,13 @@
 	import {
 		teamService
 	} from "@/api/index.js";	
-	
+		
 	export default {
 		globalData: {
 			text: 'text'
 		},
 		onLaunch: function() {
+			console.log('onLaunch',uni.getStorageSync(ACCESS_TOKEN))
 			if (!uni.getStorageSync(ACCESS_TOKEN)) {
 				uni.reLaunch({
 					url: '/pages/login/login'

@@ -353,6 +353,7 @@
 				})
 			},
 			closeUploadWarning() {
+				this.warningCountdown = 300
 				this.$refs.popupWarn.close()
 			},
 			uploadWarning(warningType) {
@@ -603,7 +604,9 @@
 						trackjson: trackjson
 					})
 				} else {
-					this.currentRoute()
+					if (uni.getStorageSync(ACCESS_TOKEN)) {						
+						this.currentRoute()
+					}
 				}
 			},
 			showSite(site) {
@@ -634,11 +637,11 @@
 			uni.hideLoading();
 		},
 		onLoad() {
-			console.log('onLoad')
-
+			console.log('onLoad')			
 			// uni.showLoading({
 			// 	title: '地图加载中'
 			// });			
+			
 			this.listeningGPS()
 
 			this.userInfo = store.state.userInfo
@@ -648,14 +651,19 @@
 				console.log('home:socketMessage')
 				console.log(data)
 
-				if (data.topic != 0) {
-					if (data.topic == 1) {
-						// 偏离预警
-						store.state.deviationId = data.id
-						this.openWarn()
-						// {userId:23313132131321,topic:1,time:2022-04-26 14:55:45,msgTxt:"xxx用户您好，您已偏离路线800米以上，请您回到安全路线上。"，warningType:0,id:15247824154}
-					}
-					return
+				// if (data.topic != 0) {
+				// 	if (data.topic == 1) {
+				// 		// 偏离预警
+				// 		store.state.deviationId = data.id
+				// 		this.openWarn()
+				// 		// {userId:23313132131321,topic:1,time:2022-04-26 14:55:45,msgTxt:"xxx用户您好，您已偏离路线800米以上，请您回到安全路线上。"，warningType:0,id:15247824154}
+				// 	}
+				// 	return
+				// }
+				if (data.warningType == 0) {
+					// 偏离预警
+					store.state.deviationId = data.id
+					this.openWarn()
 				}
 
 				let userId = data.userId
@@ -686,10 +694,16 @@
 		},
 		onShow() {
 			console.log('onShow')
-				this.mergeOptions({
-					currentLayer: store.state.map.layer
-				})
-			
+			if (!uni.getStorageSync(ACCESS_TOKEN)) {
+				uni.reLaunch({
+					url: '/pages/login/login'
+				})				
+				return
+			}
+			this.mergeOptions({
+				currentLayer: store.state.map.layer
+			})
+
 			if (store.state.map.route &&
 				store.state.map.route.onfootRouteInfo &&
 				store.state.map.route.onfootRouteInfo.id != this.routeId) {
@@ -759,10 +773,10 @@
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
 					_ownerInstance.callMethod('drawRoute')
-					
+
 					console.log("设置图层")
 					this.changeLayer(newValue.currentLayer)
-					
+
 				} else if (newValue.coordinateFlag != oldValue.coordinateFlag) {
 					console.log("定位用户位置")
 					map.centerAndZoom(new T.LngLat(newValue.longitude, newValue.latitude), 16);
@@ -807,7 +821,7 @@
 				} else if (newValue.touristFlag != oldValue.touristFlag) {
 					console.log("获取最新驴友位置")
 					this.addTouristPosition(newValue.tourist)
-				}else if (newValue.currentLayer != oldValue.currentLayer) {
+				} else if (newValue.currentLayer != oldValue.currentLayer) {
 					console.log("设置图层")
 					this.changeLayer(newValue.currentLayer)
 				}
@@ -1272,7 +1286,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss">	
 	.home-container {
 		position: relative;
 
