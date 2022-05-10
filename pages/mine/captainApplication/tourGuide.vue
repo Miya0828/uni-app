@@ -104,11 +104,8 @@
 			background-repeat: no-repeat;
 			border: 2upx dashed #000;
 			uni-image{
-				width: 220upx;
-				height: 280upx;
-				position: relative;
-				top: 70upx;
-				right: -6upx;
+				width: 100%;
+				height: 100%;
 			}
 		}
 	}
