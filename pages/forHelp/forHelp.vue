@@ -48,12 +48,12 @@ export default {
 	data() {
 		return {
 			usList: [
-			  {icon: '/static/forHelp/SketchPng1', title: '自助报警柱位置' },
-			  {icon: '/static/forHelp/SketchPng2', title: '下载离线地图' },
-			  {icon: '/static/forHelp/SketchPng3', title: '周围驴友救助' },
-			  {icon: '/static/forHelp/SketchPng4', title: '附近警示点' },
-			  {icon: '/static/forHelp/SketchPng5', title: '短时天气预警' },
-			  {icon: '/static/forHelp/SketchPng6', title: '队内紧急联络', url:'/pages/forHelp/chat'},
+			  {icon: '/static/forHelp/ic_zzbjzwz.png', title: '自助报警柱位置' },
+			  {icon: '/static/forHelp/ic_llglzx.png', title: '联络管理中心' },
+			  {icon: '/static/forHelp/ic_zwlyqz.png', title: '周围驴友救助' },
+			  {icon: '/static/forHelp/ic_fjjsd.png', title: '附近警示点' },
+			  {icon: '/static/forHelp/ic_dstqyj.png', title: '短时天气预警' },
+			  {icon: '/static/forHelp/ic_dnjjll.png', title: '队内紧急联络', url:'/pages/forHelp/chat'},
 			],
 			tabList:[
 				'学习急救',
