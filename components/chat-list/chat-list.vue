@@ -6,7 +6,7 @@
 			<!-- 用于定位到底部-->
 			<div ref="rowTop"></div>
 
-			<view ref="item" class="item-wrap">
+			<view ref="item" class="item-wrap" @tap="chatListClick">
 				<view v-for="(item, index) in list" :key="item.id">
 					<ChatItem :isError="item.isError" @retry="retryClick(item)" :showIsRead="showIsRead"
 						:isRead="item.isRead" :time="item.time" :showTime="item.showTime"
@@ -159,7 +159,7 @@
 				this.$emit('sendMessage', options)
 				this.scrollerBottom()
 			}
-		},
+		},		
 		mounted() {			
 			uni.getSystemInfo({
 				success: (res) => {
@@ -206,8 +206,8 @@
 		background-color: #EDEDED;
 		opacity: 0;
 		flex: 1;
-
-		.list {
+		
+		.list {			
 			transform: rotate(180deg);
 		}
 

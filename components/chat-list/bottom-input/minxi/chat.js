@@ -46,7 +46,7 @@ export default {
 				height: this.showBoxTools ? boxHeight + 'px' : 0
 			}
 		}
-	},
+	},	
 	created(info) {
 		// 获取底部安全区域高度 兼容苹果X 以上机型 
 		if (this.isSafeArea) {
@@ -58,9 +58,11 @@ export default {
 		this.keyboardHeightChange()
 		this.onRecorderManager()
 	},
-	onShow() {},
+	onShow() {
+		console.log('onShow')
+	},
 	onHide() {
-
+		console.log('onhide')		
 	},
 	onUnload() {},
 	methods: {
@@ -123,7 +125,7 @@ export default {
 			// #endif
 		},
 		// 键盘监听
-		keyboardHeightChange() {
+		keyboardHeightChange() {			
 			uni.onKeyboardHeightChange(res => {
 				this.$emit('keyboardHeightChange', res.height)
 				if (res.height) {
@@ -232,7 +234,7 @@ export default {
 						 	length: res.duration
 						 })
 					});
-										
+					this.showBoxTools = false
 				},
 				fail(err) {
 					console.log(err)
@@ -254,7 +256,7 @@ export default {
 						 })
 					});
 					
-										
+					this.showBoxTools = false
 				},
 				fail(err) {
 					console.log(err)
@@ -299,6 +301,7 @@ export default {
 				content,
 				length
 			})
+						
 		},
 		// 切换语音录制模式
 		clickVoice() {
@@ -333,6 +336,7 @@ export default {
 		// 失去焦点触发
 		textareaBlur() {
 			this.$refs.textareaRef && this.$refs.textareaRef.blur()
+						
 		},
 		keyboardInput() {
 			console.log(222)

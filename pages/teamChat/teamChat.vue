@@ -59,9 +59,18 @@
 					console.log(res.data.result)
 					this.teamList = res.data.result
 					this.teamList.forEach(team => {
+						
 						uni.preloadPage({
 							url: `/pages/teamChat/chat?title=${team.teamName}&id=${team.id}`
 						})
+						
+						uni.setStorage({
+							key: 'preloadPageUrls',
+							data: `/pages/teamChat/chat?title=${team.teamName}&id=${team.id}`,
+							success: function () {
+								console.log('success');
+							}
+						});
 					})
 				}
 			})

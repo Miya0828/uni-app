@@ -25,6 +25,9 @@
 			store.state.userInfo = uni.getStorageSync(USER_INFO)			
 			// 是否有teamChat&&判断token是否过期
 			teamService.queryTeam().then(res => {
+				uni.reLaunch({
+					url: '/pages/home/home'
+				})
 				if (res.data.success) {
 					let timer = null
 					uni.$on('closeHeartbeat', () => {

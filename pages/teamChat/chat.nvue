@@ -41,7 +41,16 @@
 				pageSize: 20,
 			}
 		},
+		onHide() {
+			console.log('onHide')
+			this.$refs.chatList.chatListClick()
+		
+		},
 		onShow() {
+			store.state.userInfo = uni.getStorageSync(USER_INFO)
+			// console.log(store.getters.userInfo.avatar);
+			this.userInfo = store.state.userInfo
+			
 			this.getHistory()
 			uni.setNavigationBarTitle({
 				title: this.team.title
@@ -52,7 +61,13 @@
 			uni.preloadPage({
 				url: `/pages/teamChat/chat?title=${options.title}&id=${options.id}`
 			})
-
+			uni.setStorage({
+				key: 'preloadPageUrls',
+				data: `/pages/teamChat/chat?title=${options.title}&id=${options.id}`,
+				success: function () {
+					console.log('success');
+				}
+			});
 			this.pageNo = 1
 			this.pageSize = 20
 
@@ -60,17 +75,15 @@
 			if (value) {
 				this.listData = value
 			}
-
-			store.state.userInfo = uni.getStorageSync(USER_INFO)
-			// console.log(store.getters.userInfo.avatar);
-			this.userInfo = store.state.userInfo
+			
 
 			this.team = options
 			// console.log(options)			
 
+			
 
-			uni.$on('socketMessage', (data) => {
-				console.log('chat=========')
+			uni.$on('socketMessage', (data) => {				
+				console.log('chat:socketMessage')
 				console.log(data)
 				// if (data.topic != 0) {
 				// 	return

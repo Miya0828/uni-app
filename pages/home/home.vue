@@ -805,7 +805,9 @@
 					if (newValue.trackjson && newValue.trackjson.length) {
 						console.log("绘制路线")
 						this.drawPath(newValue.trackjson, newValue.footprintsjson)
-						_ownerInstance.callMethod('updateAvatar')
+						setTimeout(()=>{
+							_ownerInstance.callMethod('updateAvatar')
+						},500)
 					}
 				} else if (newValue.currentUser.orientation != oldValue.currentUser.orientation) {
 					// console.log("设置用户方向")

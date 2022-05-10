@@ -43,7 +43,21 @@ let store = new Vuex.Store({
 	},
 	mutations: {
 		clearUser(state) {
+			console.log('clearUser')						
+			uni.getStorage({
+				key: 'preloadPageUrls',
+				success: function(res) {
+					console.log('preloadPageUrls',res.data)
+					uni.unPreloadPage({
+						url: res.data
+					})
+				},
+				fail(e) {
+					console.log(e)
+				}
+			});
 			uni.clearStorage();
+			userId = null
 			state.token = ''
 			state.userInfo = {
 				id: null
@@ -78,11 +92,13 @@ let store = new Vuex.Store({
 		},
 		closeSocket() {
 			console.log('closeSocket')
-			uni.closeSocket();
+			uni.closeSocket({
+				reason: 1001
+			});
 		},
 		startSocket(state) {
 			console.log("socket:==" + userId)
-			if (userId != state.userInfo.id) {
+			if (state.userInfo.id && (userId != state.userInfo.id)) {
 				userId = state.userInfo.id
 				uni.closeSocket();
 				socketTask = uni.connectSocket({
@@ -96,9 +112,11 @@ let store = new Vuex.Store({
 					console.log('WebSocket连接打开失败，请检查！');
 				});
 				uni.onSocketClose(function(res) {
+					console.log(res)
 					console.log('WebSocket 已关闭！');
 					console.log('30秒后尝试重连socket');
 					setTimeout(() => {
+						console.log('尝试重连socket');
 						store.commit('startSocket')
 					}, 30 * 1000)
 				});

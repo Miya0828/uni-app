@@ -66,8 +66,8 @@ http.interceptor.response(
 		if (response.config.custom.loading) {
 			uni.hideLoading();
 		}
-		let data = response.data;		
-		if(!data.success){
+		let data = response.data;
+		if (!data.success) {
 			uni.showToast({
 				icon: 'none',
 				title: data.message,
@@ -78,21 +78,17 @@ http.interceptor.response(
 		return response;
 	}, (response) => {
 		// 请求错误做点什么
-		console.log('error',response)
+		console.log('error', response)
 		if (response) {
 			if (response.config.custom.loading) {
 				uni.hideLoading()
 			}
-			if(response.errMsg){
-				uni.showToast({
-					icon: 'none',
-					title: "请求超时，请检查网络或重试",
-					duration: 2000
-				});
-				return;
-			}
-			let data = response.data;
-			const token = uni.getStorageSync(ACCESS_TOKEN);
+			let data = response.data || {
+				"success": false,
+				"message": response.errMsg,
+				"code": -1,				
+			};
+			
 			switch (data.code) {
 				case 403:
 					uni.showToast({
@@ -107,15 +103,15 @@ http.interceptor.response(
 						title: data.message,
 						duration: 2000
 					});
-																			
+
 					store.commit('closeSocket')
 					store.commit('clearUser')
 					uni.$emit('closeHeartbeat')
-					
+
 					uni.reLaunch({
 						url: '/pages/login/login'
 					})
-					
+
 					break;
 				case 500:
 					uni.showToast({
@@ -131,9 +127,9 @@ http.interceptor.response(
 				default:
 					uni.showToast({
 						icon: 'none',
-						title: data.message,
+						title: "请求超时，请检查网络或重试",
 						duration: 2000
-					});
+					});					
 					break;
 			}
 			return data.result || {};
