@@ -330,9 +330,7 @@
 						uni.reLaunch({
 							url: '/pages/home/home',
 						});
-					} else {
-						this.$tip.toast(res.data.message);
-					}
+					} 
 				})
 			},
 			goToRegister(){
