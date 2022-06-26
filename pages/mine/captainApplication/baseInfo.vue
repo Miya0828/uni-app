@@ -60,13 +60,13 @@
 			this.queryTeamLeader();
 		},
 		onLoad(){
-			uni.$once("personalIntroduction",data=>{
+			uni.$on("personalIntroduction",data=>{
 				this.userInfo.personalIntroduction = data;
 			});
-			uni.$once("beGoodAtRegion",data=>{
+			uni.$on("beGoodAtRegion",data=>{
 				this.userInfo.beGoodAtRegion = data;
 			});
-			uni.$once("beGoodAtType",data=>{
+			uni.$on("beGoodAtType",data=>{
 				this.userInfo.beGoodAtType = data;
 			});
 		},

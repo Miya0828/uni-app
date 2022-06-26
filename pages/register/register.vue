@@ -228,7 +228,6 @@
 						this.startSMSTimer();
 					} else {
 						this.smsCountDown = 0;
-						this.$tip.toast(res.data.message);
 					}
 				});
 			},
@@ -308,8 +307,6 @@
 							animationType: 'slide-in-left',
 							animationDuration: 200
 						});
-					}else {
-						this.$tip.toast(res.data.message);
 					}
 				})
 			},
