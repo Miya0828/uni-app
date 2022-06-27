@@ -124,6 +124,7 @@
 				}).then(res => {
 					console.log(res)
 					if (res.data.success) {
+						this.isCompleted = true
 						if (this.pageNo == 1) {
 							this.listData = []
 						}
@@ -136,8 +137,7 @@
 							});
 							return
 						}
-						console.log(records)
-						this.isCompleted = true
+						console.log(records)						
 						records.forEach(item => {
 
 							let userId = item.userId
@@ -150,7 +150,7 @@
 							}
 
 							this.listData.push(content)
-						})
+						})						
 					}
 				})
 			},

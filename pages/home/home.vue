@@ -304,6 +304,7 @@
 					currentLayer: 0,
 					// 路线更新
 					routeFlag: false,
+					clearRouteFlag: false,
 					footprintsjson: [],
 					trackjson: [],
 					// 全揽
@@ -541,6 +542,7 @@
 				this.addressObj = addressObj
 			},
 			uploadPosition() {
+				console.log("上传定位数据")
 				uni.getLocation({
 					type: 'wgs84',
 					success: (res) => {
@@ -588,26 +590,41 @@
 							id: res.data.result.id
 						}).then(res => {
 							store.state.map.route = res.data.result
-							this.drawRoute()
+							if (store.state.map.route && store.state.map.route.onfootRouteInfo && store
+								.state.map.route.routeLngLatMapList.length) {
+								this.drawRoute()
+							}
 						})
 					}
 				})
 			},
 			drawRoute() {
 				console.log('绘制路线')
-				if (store.state.map.route && store.state.map.route.onfootRouteInfo) {
+				console.log(store.state.map.route)
+				if (store.state.map.route && store.state.map.route.onfootRouteInfo && store.state.map.route
+					.routeLngLatMapList.length) {
+					console.log('---------------')
 					this.route = store.state.map.route.onfootRouteInfo
 					let trackjson = store.state.map.route.routeLngLatMapList
-					this.mergeOptions({
-						routeFlag: !this.option.routeFlag,
-						footprintsjson: store.state.map.route.siteList.sort((a, b) => a.routeSort - b.routeSort),
-						trackjson: trackjson
-					})
+					setTimeout(() => {
+						this.mergeOptions({
+							routeFlag: !this.option.routeFlag,
+							footprintsjson: store.state.map.route.siteList.sort((a, b) => a.routeSort - b
+								.routeSort),
+							trackjson: trackjson
+						})
+					}, 1000)
 				} else {
-					if (uni.getStorageSync(ACCESS_TOKEN)) {						
+					if (uni.getStorageSync(ACCESS_TOKEN)) {
 						this.currentRoute()
 					}
 				}
+			},
+			clearRoute() {
+				console.log('清理路线')
+				this.mergeOptions({
+					clearRouteFlag: !this.option.clearRouteFlag,
+				})
 			},
 			showSite(site) {
 				this.siteIndex = site
@@ -637,11 +654,11 @@
 			uni.hideLoading();
 		},
 		onLoad() {
-			console.log('onLoad')			
+			console.log('onLoad')
 			// uni.showLoading({
 			// 	title: '地图加载中'
 			// });			
-			
+
 			this.listeningGPS()
 
 			this.userInfo = store.state.userInfo
@@ -697,19 +714,39 @@
 			if (!uni.getStorageSync(ACCESS_TOKEN)) {
 				uni.reLaunch({
 					url: '/pages/login/login'
-				})				
+				})
 				return
 			}
+			store.state.map.route = uni.getStorageSync("store.state.map.route");
+
 			this.mergeOptions({
 				currentLayer: store.state.map.layer
 			})
 
+			// console.log(store.state.map.route.onfootRouteInfo.id, this.routeId)
 			if (store.state.map.route &&
-				store.state.map.route.onfootRouteInfo &&
-				store.state.map.route.onfootRouteInfo.id != this.routeId) {
-				this.routeId = store.state.map.route.onfootRouteInfo.id
+				store.state.map.route.onfootRouteInfo) {
+				if (store.state.map.route.routeLngLatMapList.length == 0) {
+					this.clearRoute()
+					setTimeout(() => {
+						this.location()
+					}, 500)
+					this.routeId = store.state.map.route.onfootRouteInfo.id
+				} else if (store.state.map.route.onfootRouteInfo.id != this.routeId) {
+					console.log("========================")
+					this.routeId = store.state.map.route.onfootRouteInfo.id
+					this.drawRoute()
+				}
+			} else {
 				this.drawRoute()
 			}
+			// if (store.state.map.route &&
+			// 	store.state.map.route.onfootRouteInfo && store.state.map.route.routeLngLatMapList.length &&
+			// 	store.state.map.route.onfootRouteInfo.id != this.routeId) {
+
+			// } else {
+
+			// }
 		}
 	}
 </script>
@@ -772,7 +809,7 @@
 				if (oldValue.init != newValue.init) {
 					console.log("初始化render实例")
 					_ownerInstance = ownerInstance
-					_ownerInstance.callMethod('drawRoute')
+					// _ownerInstance.callMethod('drawRoute')
 
 					console.log("设置图层")
 					this.changeLayer(newValue.currentLayer)
@@ -805,9 +842,9 @@
 					if (newValue.trackjson && newValue.trackjson.length) {
 						console.log("绘制路线")
 						this.drawPath(newValue.trackjson, newValue.footprintsjson)
-						setTimeout(()=>{
+						setTimeout(() => {
 							_ownerInstance.callMethod('updateAvatar')
-						},500)
+						}, 500)
 					}
 				} else if (newValue.currentUser.orientation != oldValue.currentUser.orientation) {
 					// console.log("设置用户方向")
@@ -823,7 +860,12 @@
 				} else if (newValue.touristFlag != oldValue.touristFlag) {
 					console.log("获取最新驴友位置")
 					this.addTouristPosition(newValue.tourist)
-				} else if (newValue.currentLayer != oldValue.currentLayer) {
+				} else if (newValue.clearRouteFlag != oldValue.clearRouteFlag) {
+					console.log("清理路线")
+					this.clearPath()
+				}
+
+				if (newValue.currentLayer != oldValue.currentLayer) {
 					console.log("设置图层")
 					this.changeLayer(newValue.currentLayer)
 				}
@@ -938,6 +980,15 @@
 					_ownerInstance.callMethod('showSite', site)
 				}
 
+			},
+			clearPath() {
+				footPrintSet.forEach(foot => {
+					map.removeOverLay(foot)
+				})
+				// 清空上次线段集合
+				pointsline = []
+				// 清除上次路线
+				lineObj && map.removeOverLay(lineObj);
 			},
 			drawPath(trackjson, footprintsjson) {
 				// console.log(trackjson)
@@ -1091,7 +1142,7 @@
 				var userPositionObj = new definedOverlay(point, orientation, {});
 				setTimeout(() => {
 					userPositionObj.updateImage(avatar)
-					userPositionObj.updatedzIndex(zIndex--)
+					userPositionObj.updatedzIndex(zIndex++)
 				})
 				map.addOverLay(userPositionObj);
 				return userPositionObj
@@ -1185,7 +1236,7 @@
 				var point = new T.LngLat(lng, lat);
 				var pdefinedOverlay = new definedOverlay(point, content, {});
 				setTimeout(() => {
-					pdefinedOverlay.updatedzIndex(zIndex--)
+					pdefinedOverlay.updatedzIndex(zIndex++)
 				})
 				footPrintSet.push(pdefinedOverlay)
 				map.addOverLay(pdefinedOverlay);
@@ -1288,7 +1339,7 @@
 	}
 </script>
 
-<style lang="scss">	
+<style lang="scss">
 	.home-container {
 		position: relative;
 

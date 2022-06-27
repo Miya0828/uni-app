@@ -34,12 +34,12 @@
 				<swiper :current="currentBoxTools - 1" class="fun_swiper" disable-touch>
 					<swiper-item>
 						<div class="swiper_item">
-							<emoji-box v-show="currentBoxTools==1" @setEmoj="setEmoj" :emojiList="emojiList"></emoji-box>
+							<emoji-box v-if="currentBoxTools==1" @setEmoj="setEmoj" :emojiList="emojiList"></emoji-box>
 						</div>
 					</swiper-item>
 					<swiper-item>
 						<div class="swiper_item">
-							<tool-box v-show="currentBoxTools==2" :menu="menu" @toolItem="toolItem"></tool-box>
+							<tool-box v-if="currentBoxTools==2" :menu="menu" @toolItem="toolItem"></tool-box>
 						</div>
 					</swiper-item>
 				</swiper>

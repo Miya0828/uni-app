@@ -47,6 +47,9 @@ export default {
 			}
 		}
 	},	
+	onBackPress(){
+		console.log('onBackPress')
+	},
 	created(info) {
 		// 获取底部安全区域高度 兼容苹果X 以上机型 
 		if (this.isSafeArea) {
@@ -72,6 +75,7 @@ export default {
 		// 关闭输入状态
 		closeToolsBoxAndKeyboard() {
 			this.showBoxTools = false
+			this.currentBoxTools = 0
 			this.textareaBlur()
 		},
 

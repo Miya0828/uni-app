@@ -6,7 +6,7 @@
 
 				<view class="route-container-item" @click="chooseRoute(item)">
 					<view class="route-container-item-pic">
-						<image :src="configService.staticDomainURL+'/'+item.scenicSpotImg" mode="aspectFit"></image>
+						<image :src="item.scenicSpotImg" mode="aspectFit"></image>
 					</view>
 					<view class="route-container-item-des">
 						<view class="route-container-item-des-title">
@@ -55,12 +55,14 @@
 		},
 		methods: {
 			getRouteList() {
+				// console.log(this.pageNo)
 				homeService.routeList({
-					pageNo: this.pageNo++,
+					pageNo: this.pageNo,
 					pageSize: 10
 				}).then(res => {
 					if (res.data.code == 200) {
-						// console.log(res.data.result)
+						this.pageNo++
+						// console.log(res.data.result.records.length)
 						this.routeList.push(...res.data.result.records)
 					}
 				})
@@ -80,11 +82,20 @@
 				}).then(res => {
 					console.log(res)
 				})
+				console.log(route)
 				homeService.queryRouteSiteByRouteId({
 					id: parseInt(route.id)
 				}).then(res => {
-					// console.log(res.data.result)
+					console.log(res.data.result)
+					if(!res.data.result){
+						res.data.result = {
+							"onfootRouteInfo": route,
+							"siteList": [],
+							"routeLngLatMapList": []
+						}
+					}
 					store.state.map.route = res.data.result
+					uni.setStorageSync("store.state.map.route", store.state.map.route);
 					uni.navigateBack({
 						delta: 2
 					});

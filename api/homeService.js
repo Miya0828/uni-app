@@ -48,7 +48,8 @@ const homeService = {
 	 * 路线列表 - 支持分页
 	 */
 	routeList(params, loading = true) {
-		return http.get('/tour-pal/sys/route/list', params, {
+		return http.get('/tour-pal/sys/route/list', {
+			params,
 			custom: {
 				loading: loading
 			}
