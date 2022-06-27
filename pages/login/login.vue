@@ -253,9 +253,7 @@
 						uni.reLaunch({
 							url: '/pages/home/home',
 						});
-					} else {
-						this.$tip.toast(res.data.message);
-					}
+					} 
 				});
 			},
 			onSMSSend() {
@@ -277,7 +275,6 @@
 						this.startSMSTimer();
 					} else {
 						this.smsCountDown = 0;
-						this.$tip.toast(res.data.message);
 					}
 				});
 			},
@@ -333,9 +330,7 @@
 						uni.reLaunch({
 							url: '/pages/home/home',
 						});
-					} else {
-						this.$tip.toast(res.data.message);
-					}
+					} 
 				})
 			},
 			goToRegister(){
